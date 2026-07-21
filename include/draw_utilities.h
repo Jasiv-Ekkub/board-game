@@ -1,0 +1,4 @@
+#ifndef DRAW_UTILITIES_H
+#define DRAW_UTILITIES_H
+
+#endif //DRAW_UTILITIES_H
