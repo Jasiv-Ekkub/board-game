@@ -8,5 +8,5 @@ uniform vec4 colDiffuse;
 
 void main()
 {
-	finalColor = colDiffuse * 0.5 * (max(dot(fragmentNormal, vec3(0,2,1)),0.2));
+	finalColor = vec4((colDiffuse * 0.5 * (max(dot(fragmentNormal, vec3(0,2,1)),0.2))).xyz, colDiffuse.w);
 }
