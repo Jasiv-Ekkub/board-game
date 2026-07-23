@@ -1,22 +1,25 @@
 #include <draw_utilities.h>
+#include <board_info.h>
+#include <stdbool.h>
 
-#define BORDER 8
-#define DIVIDER 50
-#define WIDTH 150
-#define HEIGHT 250
+#define BORDER 16
+#define DIVIDER 100
+#define WIDTH 300
+#define HEIGHT 500
 
-#define FONT_SIZE 20 
+#define FONT_SIZE 50 
 #define FONT_SPACING 1
 
-#define NAME_OFFSET 60
-#define COMMENT_OFFSET 30
+#define NAME_OFFSET 120
+#define COMMENT_OFFSET 60
 
 #define BOARD_LIGHT WHITE
 #define BOARD_DARK BLACK 
 
+Font font;
+
 void ImageDrawTextCentered(Image* image, const char* text, Vector2 position, Color color)
 {
-	Font font = GetFontDefault();
 	Vector2 origin = MeasureTextEx(font, text, FONT_SIZE, FONT_SPACING);
 	origin.x /= 2;
 	origin.y /= 2;
@@ -54,7 +57,7 @@ Image LoadEdgeFieldImage(const char* name, const char* comment, Color color)
 Image LoadEdgeFieldRotatedImage(const char* name, const char* comment, Color color)
 {
 	Image fieldImage = LoadEdgeFieldImage(name, comment, color);
-	ImageRotate(&fieldImage, 90);
+	ImageRotateCCW(&fieldImage);
 	return fieldImage;
 }
 
@@ -69,10 +72,24 @@ Image LoadCornerFieldBaseImage()
 	return fieldImage;
 }
 
+void ImageDrawBoardFieldImage(Image* boardImage, FieldInfo fieldInfo, int x, int y, bool flipped)
+{
+	char buffer[20] = {0};
+	GetFieldComment(buffer, 20, fieldInfo);
+
+	Image fieldImage = LoadEdgeFieldImage(fieldInfo.name, buffer, fieldInfo.color);
+	if(flipped) ImageRotate(&fieldImage, 90);
+	ImageDrawImage(boardImage, fieldImage, x, y, WHITE);
+	UnloadImage(fieldImage);
+
+}
+
 Texture2D LoadBoardTexture(int size)
 {
+	font = GetFontDefault();
 	int pixelSize = size * WIDTH + 2 * HEIGHT;
-	Image boardImage = GenImageColor(pixelSize, pixelSize, (Color){0,0,0,0});
+	Image boardImage = GenImageColor(pixelSize, pixelSize, BLACK);
+	ImageDrawRectangle(&boardImage, HEIGHT, HEIGHT, pixelSize-HEIGHT*2, pixelSize-HEIGHT*2, (Color){0});
 
 	Image cornerFieldImage = LoadCornerFieldBaseImage();
 	
@@ -82,19 +99,24 @@ Texture2D LoadBoardTexture(int size)
 	ImageDrawImage(&boardImage, cornerFieldImage, 0, sideOffset, WHITE);
 	ImageDrawImage(&boardImage, cornerFieldImage, sideOffset, sideOffset, WHITE);
 	UnloadImage(cornerFieldImage);
-
-	Image edgeFieldImage = LoadEdgeFieldImage("Warszawa", "-$100", RED);
-	Image edgeFieldRotatedImage = LoadEdgeFieldRotatedImage("Wadowice", "$2137", YELLOW);
+	
 	for(int i=0; i<size; ++i)
 	{
-		ImageDrawImage(&boardImage, edgeFieldImage, i*WIDTH + HEIGHT, 0, WHITE);
-		ImageDrawImage(&boardImage, edgeFieldImage, i*WIDTH + HEIGHT, sideOffset, WHITE);
-
-		ImageDrawImage(&boardImage, edgeFieldRotatedImage, 0, i*WIDTH + HEIGHT, WHITE);
-		ImageDrawImage(&boardImage, edgeFieldRotatedImage, sideOffset, i*WIDTH + HEIGHT, WHITE);
+		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i], HEIGHT + i * WIDTH, 0, false);
+		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i + size], sideOffset, HEIGHT + i * WIDTH, true);
+		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i + size*2], HEIGHT + (size - i - 1) * WIDTH, sideOffset, false);
+		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i + size*3], 0 , HEIGHT + (size - i - 1) * WIDTH, true);
 	}
-
+	
 	Texture2D boardTexture = LoadTextureFromImage(boardImage);
+	GenTextureMipmaps(&boardTexture);
 	UnloadImage(boardImage);
 	return boardTexture;
+}
+
+Model LoadBoardModel(Texture2D texture, int size)
+{
+	Model boardModel = LoadModelFromMesh(GenMeshPlane(size, size, 4, 4));
+	boardModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
+	return boardModel;
 }
