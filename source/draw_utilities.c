@@ -2,98 +2,21 @@
 #include <board_info.h>
 #include <stdbool.h>
 
-#define BORDER 16
-#define DIVIDER 100
-#define WIDTH 300
-#define HEIGHT 500
-
-#define FONT_SIZE 50 
-#define FONT_SPACING 1
-
-#define NAME_OFFSET 120
-#define COMMENT_OFFSET 60
-
-#define BOARD_LIGHT WHITE
-#define BOARD_DARK BLACK 
+Image LoadCornerFieldBaseImage();
+void ImageDrawBoardFieldImage(Image* boardImage, FieldInfo fieldInfo, int x, int y, bool flipped);
 
 Font font;
-
-void ImageDrawTextCentered(Image* image, const char* text, Vector2 position, Color color)
-{
-	Vector2 origin = MeasureTextEx(font, text, FONT_SIZE, FONT_SPACING);
-	origin.x /= 2;
-	origin.y /= 2;
-
-	position.x -= origin.x;
-	position.y -= origin.y;
-
-	ImageDrawTextEx(image, font, text, position, FONT_SIZE, FONT_SPACING, color);
-}
-
-Image LoadEdgeFieldBaseImage()
-{
-	Image fieldImage = GenImageColor(WIDTH, HEIGHT, BOARD_LIGHT);
-	ImageDrawRectangle(&fieldImage, 0, 0, WIDTH, BORDER, BOARD_DARK);
-	ImageDrawRectangle(&fieldImage, 0, HEIGHT - BORDER, WIDTH, BORDER, BOARD_DARK);
-	ImageDrawRectangle(&fieldImage, 0, 0, BORDER, HEIGHT, BOARD_DARK);
-	ImageDrawRectangle(&fieldImage, WIDTH - BORDER, 0, BORDER, HEIGHT, BOARD_DARK);
-
-	return fieldImage;
-}
-
-Image LoadEdgeFieldImage(const char* name, const char* comment, Color color)
-{
-	Image fieldImage = LoadEdgeFieldBaseImage();
-	
-	ImageDrawRectangle(&fieldImage, BORDER, BORDER, WIDTH-2*BORDER, DIVIDER-BORDER, color);
-	ImageDrawRectangle(&fieldImage, 0, DIVIDER, WIDTH, BORDER, BOARD_DARK);
-	
-	ImageDrawTextCentered(&fieldImage, name, (Vector2){WIDTH/2, HEIGHT - NAME_OFFSET}, BOARD_DARK);
-	ImageDrawTextCentered(&fieldImage, comment, (Vector2){WIDTH/2, HEIGHT - COMMENT_OFFSET}, BOARD_DARK);
-
-	return fieldImage;
-}
-
-Image LoadEdgeFieldRotatedImage(const char* name, const char* comment, Color color)
-{
-	Image fieldImage = LoadEdgeFieldImage(name, comment, color);
-	ImageRotateCCW(&fieldImage);
-	return fieldImage;
-}
-
-Image LoadCornerFieldBaseImage()
-{
-	Image fieldImage = GenImageColor(HEIGHT, HEIGHT, BOARD_LIGHT);
-	ImageDrawRectangle(&fieldImage, 0, 0, HEIGHT , BORDER, BOARD_DARK);
-	ImageDrawRectangle(&fieldImage, 0, HEIGHT - BORDER, HEIGHT , BORDER, BOARD_DARK);
-	ImageDrawRectangle(&fieldImage, 0, 0, BORDER, HEIGHT, BOARD_DARK);
-	ImageDrawRectangle(&fieldImage, HEIGHT - BORDER, 0, BORDER, HEIGHT, BOARD_DARK);
-
-	return fieldImage;
-}
-
-void ImageDrawBoardFieldImage(Image* boardImage, FieldInfo fieldInfo, int x, int y, bool flipped)
-{
-	char buffer[20] = {0};
-	GetFieldComment(buffer, 20, fieldInfo);
-
-	Image fieldImage = LoadEdgeFieldImage(fieldInfo.name, buffer, fieldInfo.color);
-	if(flipped) ImageRotate(&fieldImage, 90);
-	ImageDrawImage(boardImage, fieldImage, x, y, WHITE);
-	UnloadImage(fieldImage);
-
-}
 
 Texture2D LoadBoardTexture(int size)
 {
 	font = GetFontDefault();
-	int pixelSize = size * WIDTH + 2 * HEIGHT;
+	int pixelSize = size * boardInfo.graphicalInfo.width + 2 * boardInfo.graphicalInfo.height;
 	Image boardImage = GenImageColor(pixelSize, pixelSize, BLACK);
-	ImageDrawRectangle(&boardImage, HEIGHT, HEIGHT, pixelSize-HEIGHT*2, pixelSize-HEIGHT*2, (Color){0});
+	ImageDrawRectangle(&boardImage, boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.height, pixelSize-boardInfo.graphicalInfo.height*2, pixelSize-boardInfo.graphicalInfo.height*2, (Color){0});
 
 	Image cornerFieldImage = LoadCornerFieldBaseImage();
 	
-	int sideOffset = pixelSize - HEIGHT;
+	int sideOffset = pixelSize - boardInfo.graphicalInfo.height;
 	ImageDrawImage(&boardImage, cornerFieldImage, 0, 0, WHITE);
 	ImageDrawImage(&boardImage, cornerFieldImage, sideOffset, 0, WHITE);
 	ImageDrawImage(&boardImage, cornerFieldImage, 0, sideOffset, WHITE);
@@ -102,10 +25,10 @@ Texture2D LoadBoardTexture(int size)
 	
 	for(int i=0; i<size; ++i)
 	{
-		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i], HEIGHT + i * WIDTH, 0, false);
-		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i + size], sideOffset, HEIGHT + i * WIDTH, true);
-		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i + size*2], HEIGHT + (size - i - 1) * WIDTH, sideOffset, false);
-		ImageDrawBoardFieldImage(&boardImage, fieldRegistry[i + size*3], 0 , HEIGHT + (size - i - 1) * WIDTH, true);
+		ImageDrawBoardFieldImage(&boardImage, boardInfo.fieldRegistry[i], boardInfo.graphicalInfo.height + i * boardInfo.graphicalInfo.width, 0, false);
+		ImageDrawBoardFieldImage(&boardImage, boardInfo.fieldRegistry[i + size], sideOffset, boardInfo.graphicalInfo.height + i * boardInfo.graphicalInfo.width, true);
+		ImageDrawBoardFieldImage(&boardImage, boardInfo.fieldRegistry[i + size*2], boardInfo.graphicalInfo.height + (size - i - 1) * boardInfo.graphicalInfo.width, sideOffset, false);
+		ImageDrawBoardFieldImage(&boardImage, boardInfo.fieldRegistry[i + size*3], 0 , boardInfo.graphicalInfo.height + (size - i - 1) * boardInfo.graphicalInfo.width, true);
 	}
 	
 	Texture2D boardTexture = LoadTextureFromImage(boardImage);
@@ -119,4 +42,71 @@ Model LoadBoardModel(Texture2D texture, int size)
 	Model boardModel = LoadModelFromMesh(GenMeshPlane(size, size, 4, 4));
 	boardModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 	return boardModel;
+}
+
+
+//---
+void ImageDrawTextCentered(Image* image, const char* text, Vector2 position, Color color)
+{
+	Vector2 origin = MeasureTextEx(font, text, boardInfo.graphicalInfo.fontSize, boardInfo.graphicalInfo.fontSpacing);
+	origin.x /= 2;
+	origin.y /= 2;
+
+	position.x -= origin.x;
+	position.y -= origin.y;
+
+	ImageDrawTextEx(image, font, text, position, boardInfo.graphicalInfo.fontSize, boardInfo.graphicalInfo.fontSpacing, color);
+}
+
+
+//---
+Image LoadEdgeFieldBaseImage()
+{
+	Image fieldImage = GenImageColor(boardInfo.graphicalInfo.width, boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.boardLight);
+	ImageDrawRectangle(&fieldImage, 0, 0, boardInfo.graphicalInfo.width, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.boardDark);
+	ImageDrawRectangle(&fieldImage, 0, boardInfo.graphicalInfo.height - boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.width, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.boardDark);
+	ImageDrawRectangle(&fieldImage, 0, 0, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.boardDark);
+	ImageDrawRectangle(&fieldImage, boardInfo.graphicalInfo.width - boardInfo.graphicalInfo.border, 0, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.boardDark);
+
+	return fieldImage;
+}
+
+Image LoadEdgeFieldImage(const char* name, const char* comment, Color color)
+{
+	Image fieldImage = LoadEdgeFieldBaseImage();
+	
+	ImageDrawRectangle(&fieldImage, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.width-2*boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.divider-boardInfo.graphicalInfo.border, color);
+	ImageDrawRectangle(&fieldImage, 0, boardInfo.graphicalInfo.divider, boardInfo.graphicalInfo.width, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.boardDark);
+	
+	ImageDrawTextCentered(&fieldImage, name, (Vector2){boardInfo.graphicalInfo.width/2, boardInfo.graphicalInfo.height - boardInfo.graphicalInfo.nameOffset}, boardInfo.graphicalInfo.boardDark);
+	ImageDrawTextCentered(&fieldImage, comment, (Vector2){boardInfo.graphicalInfo.width/2, boardInfo.graphicalInfo.height - boardInfo.graphicalInfo.commentOffset}, boardInfo.graphicalInfo.boardDark);
+
+	return fieldImage;
+}
+
+
+//---
+Image LoadCornerFieldBaseImage()
+{
+	Image fieldImage = GenImageColor(boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.boardLight);
+	ImageDrawRectangle(&fieldImage, 0, 0, boardInfo.graphicalInfo.height , boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.boardDark);
+	ImageDrawRectangle(&fieldImage, 0, boardInfo.graphicalInfo.height - boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.height , boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.boardDark);
+	ImageDrawRectangle(&fieldImage, 0, 0, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.boardDark);
+	ImageDrawRectangle(&fieldImage, boardInfo.graphicalInfo.height - boardInfo.graphicalInfo.border, 0, boardInfo.graphicalInfo.border, boardInfo.graphicalInfo.height, boardInfo.graphicalInfo.boardDark);
+
+	return fieldImage;
+}
+
+
+//---
+void ImageDrawBoardFieldImage(Image* boardImage, FieldInfo fieldInfo, int x, int y, bool flipped)
+{
+	char buffer[20] = {0};
+	GetFieldComment(buffer, 20, fieldInfo);
+
+	Image fieldImage = LoadEdgeFieldImage(fieldInfo.name, buffer, fieldInfo.color);
+	if(flipped) ImageRotate(&fieldImage, 90);
+	ImageDrawImage(boardImage, fieldImage, x, y, WHITE);
+	UnloadImage(fieldImage);
+
 }

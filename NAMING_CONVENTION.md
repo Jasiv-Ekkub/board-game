@@ -14,3 +14,9 @@ camelCase:
 snake\_case:
 
 - filenames
+
+
+UPPER\_SNAKE\_CASE:
+
+- macros
+- enums
