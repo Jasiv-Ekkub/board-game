@@ -1,24 +1,41 @@
 #include <game_context.h>
 
-GameContext gameContext = {0};
+void UpdateGameContext(GameContext* gameContext);
+void UnloadGameContext(GameContext gameContext);
 
-void InitializeGameContext()
+GameContext LoadGameContext()
 {
-	gameContext.camera3D = (Camera3D){0};
-	gameContext.camera3D.position = (Vector3){-10, 10, 10};
-	gameContext.camera3D.target = (Vector3){0, 0, 0};
-	gameContext.camera3D.up = (Vector3){0, 1, 0};
-	gameContext.camera3D.fovy = 5;
-	gameContext.camera3D.projection = CAMERA_ORTHOGRAPHIC;
+	GameContext gameContext = {0};
+	
+	gameContext.camera3D = (Camera3D){
+		.position = (Vector3){-10, 10, 10},
+		.target = (Vector3){0, 0, 0},
+		.up = (Vector3){0, 1, 0},
+		.fovy = 5,
+		.projection = CAMERA_ORTHOGRAPHIC,
+	};
+
+	gameContext.deltaTime = 0;
+
+	gameContext.screenBounds.width = GetRenderWidth();
+	gameContext.screenBounds.height = GetRenderHeight();
+
+	return gameContext;
 }
 
-void UpdateGameContext()
+void UpdateGameContext(GameContext* gameContext)
 {
-	gameContext.deltaTime = GetFrameTime();
+	gameContext->deltaTime = GetFrameTime();
 
 	if(IsWindowResized())
 	{
-		gameContext.screenBounds.width = GetRenderWidth();
-		gameContext.screenBounds.height = GetRenderHeight();
+		gameContext->screenBounds.width = GetRenderWidth();
+		gameContext->screenBounds.height = GetRenderHeight();
 	}
+}
+
+//Placeholder for potential changes
+void UnloadGameContext(GameContext gameContext)
+{
+
 }

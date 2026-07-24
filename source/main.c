@@ -1,54 +1,42 @@
-#include <game_context.h>
-#include <draw_utilities.h>
-#include <board_info.h>
+#include <board.h>
 
 int main()
 {
 	InitWindow(1440, 810, "Board game");
+	GameContext gameContext = LoadGameContext();
+	Board board = LoadBoard("default", 12);
 
 	Shader shader = LoadShader("resource/shaders/directional_light.vs", "resource/shaders/directional_light.fs");
 	Model pawn = LoadModel("resource/models/pawn.glb");
-
-	InitializeGameContext();
-	LoadBoardInfo("resource/info/field_info.json");
-	
-	Texture2D boardTexture = LoadBoardTexture(6);
-	Model boardModel = LoadBoardModel(boardTexture, 6);
-
-	Rectangle tmpRect = {0,0,boardTexture.width,boardTexture.height};
-	Rectangle tmpRect2 = {5,5,800,800};
-
 	pawn.materials[0].shader = shader;
+	Vector3 pawnPosition = {1, 0, 0};
 
 	while(!WindowShouldClose())
 	{
-		UpdateGameContext();
-
+		UpdateGameContext(&gameContext);
 		if(IsKeyPressed(KEY_F4)) ToggleFullscreen();
 
+		pawnPosition.x += pawnPosition.z * gameContext.deltaTime;
+		pawnPosition.z -= pawnPosition.x * gameContext.deltaTime;
+
 		BeginDrawing();
+			ClearBackground((Color){85, 85, 85, 255});
+			DrawFPS(10, 10);
 
-		ClearBackground((Color){85, 55, 55, 255});
+			UpdateBoard(&board, gameContext);
 
-		BeginMode3D(gameContext.camera3D);
+			BeginMode3D(gameContext.camera3D);
 
-		DrawModel(pawn, (Vector3){0}, 0.25, RED);
-		DrawModel(boardModel, (Vector3){0}, 1.0f, WHITE);
-		//DrawGrid(10, 1);
-		
-		EndMode3D();
-		
-		//DrawTexturePro(boardTexture, tmpRect, tmpRect2, (Vector2){0}, 0, WHITE);
-
+				DrawModel(pawn, pawnPosition, 0.25, RED);
+				DrawGrid(10, 1);			
+			EndMode3D();
 		EndDrawing();
 	}
-	
-	UnloadModel(boardModel);
-	UnloadTexture(boardTexture);
-
 	UnloadModel(pawn);
 
-	CloseWindow();
 
+	UnloadBoard(board);	
+	UnloadGameContext(gameContext);
+	CloseWindow();
 	return 0;
 }

@@ -9,9 +9,8 @@ typedef struct GameContext {
 	Camera3D camera3D;
 } GameContext;
 
-extern GameContext gameContext;
-
-void InitializeGameContext();
-void UpdateGameContext();
+GameContext LoadGameContext();
+void UpdateGameContext(GameContext* gameContext);
+void UnloadGameContext(GameContext gameContext);
 
 #endif //GAME_CONTEXT_H
