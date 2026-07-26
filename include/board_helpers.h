@@ -3,6 +3,9 @@
 
 #include <board.h>
 
-void LoadFieldsDefault(uint16_t size, Field* fields);
+void LoadFieldsDefault(Board* board);
+void LoadGraphicsDefault(Board* board);
+
+Texture2D LoadBoardTexture(Board board);
 
 #endif //BOARD_HELPERS_H

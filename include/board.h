@@ -5,9 +5,11 @@
 #include <raylib.h>
 #include <stdint.h>
 
+#define FIELD_NAME_LENGTH 32
+
 typedef struct Field
 {
-	char name[32];
+	char name[FIELD_NAME_LENGTH];
 	int16_t value;
 	uint8_t buildingLevel;
 	uint8_t ownerId;
@@ -22,26 +24,31 @@ typedef struct Player
 
 typedef struct BoardGraphics
 {
-	int fieldBorder;
-	int fieldDivider;
+	int borderWidth;
+	int dividerOffset;
 	int fieldWidth;
-	int fieldHeight;
+	int cornerSize;
 
+	Font font;
 	float fontSize;
 	float fontSpacing;
 
 	int nameOffset;
 	int commentOffset;
 
-	Color boardLight;
-	Color boardDark;
+	struct
+	{
+		Color light;
+		Color medium;
+		Color dark;
+	} colorPalette;
 
 	Texture2D boardTexture;
 } BoardGraphics;
 
 typedef struct Board
 {
-	uint16_t size;
+	uint16_t fieldCount;
 	Field fields[256];
 
 	uint8_t playerCount;

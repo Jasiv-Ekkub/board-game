@@ -4,7 +4,8 @@ int main()
 {
 	InitWindow(1440, 810, "Board game");
 	GameContext gameContext = LoadGameContext();
-	Board board = LoadBoard("default", 12);
+	int tmp = 16;
+	Board board = LoadBoard("default", tmp);
 
 	Shader shader = LoadShader("resource/shaders/directional_light.vs", "resource/shaders/directional_light.fs");
 	Model pawn = LoadModel("resource/models/pawn.glb");
@@ -15,6 +16,12 @@ int main()
 	{
 		UpdateGameContext(&gameContext);
 		if(IsKeyPressed(KEY_F4)) ToggleFullscreen();
+		else if(IsKeyPressed(KEY_F5))
+		{
+			UnloadBoard(board);
+			tmp += 4;
+			board = LoadBoard("default", tmp);
+		}
 
 		pawnPosition.x += pawnPosition.z * gameContext.deltaTime;
 		pawnPosition.z -= pawnPosition.x * gameContext.deltaTime;
@@ -23,13 +30,14 @@ int main()
 			ClearBackground((Color){85, 85, 85, 255});
 			DrawFPS(10, 10);
 
-			UpdateBoard(&board, gameContext);
 
 			BeginMode3D(gameContext.camera3D);
 
 				DrawModel(pawn, pawnPosition, 0.25, RED);
 				DrawGrid(10, 1);			
 			EndMode3D();
+			
+			UpdateBoard(&board, gameContext);
 		EndDrawing();
 	}
 	UnloadModel(pawn);
