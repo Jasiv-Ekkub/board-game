@@ -48,6 +48,7 @@ typedef struct Board
 	Player players[4];
 
 	Texture2D boardTexture;
+	Model boardModel;
 
 	BoardGraphics graphics;
 } Board;

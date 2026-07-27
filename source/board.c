@@ -32,18 +32,23 @@ Board LoadBoard(const char* filename, uint16_t size)
 	board.boardTexture = LoadBoardTexture(board, renderData);
 	UnloadRenderData(renderData);
 
+	board.boardModel = LoadModelFromMesh(GenMeshPlane(2, 2, 3, 4));
+	board.boardModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = board.boardTexture;
+
 	printf("GAMEINFO: Loaded board\n");
 	return board;
 }
 
 void UpdateBoard(Board* board, GameContext gameContext)
 {
-	DrawTexturePro(board->boardTexture, (Rectangle){0, 0, board->boardTexture.width, board->boardTexture.height}, (Rectangle){5, 5, 800, 800}, (Vector2){0}, 0, WHITE);
+	//DrawTexturePro(board->boardTexture, (Rectangle){0, 0, board->boardTexture.width, board->boardTexture.height}, (Rectangle){5, 5, 800, 800}, (Vector2){0}, 0, WHITE);
+	DrawModel(board->boardModel, (Vector3){0}, 1, WHITE);
 }
 
 void UnloadBoard(Board board)
 {
 	UnloadTexture(board.boardTexture);
+	UnloadModel(board.boardModel);
 	printf("GAMEINFO: Unloaded board\n");
 }
 

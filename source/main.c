@@ -33,11 +33,10 @@ int main()
 
 			BeginMode3D(gameContext.camera3D);
 
-				DrawModel(pawn, pawnPosition, 0.25, RED);
+				DrawModel(pawn, pawnPosition, 0.0625, RED);
 				DrawGrid(10, 1);			
+				UpdateBoard(&board, gameContext);
 			EndMode3D();
-			
-			UpdateBoard(&board, gameContext);
 		EndDrawing();
 	}
 	UnloadModel(pawn);
