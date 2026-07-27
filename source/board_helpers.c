@@ -1,5 +1,6 @@
 #include <board_helpers.h>
 #include <stdio.h>
+#include <string.h>
 
 Color colors[3] = {RED, GREEN, BLUE};
 
@@ -11,52 +12,79 @@ void LoadFieldsDefault(Board* board)
 	for(uint16_t i=0; i<fieldCount; ++i)
 	{
 
-		board->fields[i] = (Field){
-			.value = 0,
-			.buildingLevel = 0,
-			.ownerId = 0,
-		};
-
-
 		uint16_t qi = i % quarter;
 		if(qi == quarter / 2)
 		{
-			snprintf(board->fields[i].name, FIELD_NAME_LENGTH, "Chance");
-			board->fields[i].color = GRAY;
+			board->fields[i] = (Field){
+				.name = "Chance",
+				.type = CHANCE,
+				.comment = "Draw a card",
+				.color = GRAY,
+			};
 		}
 		else
 		{
+			board->fields[i] = (Field){
+				.value = 0,
+				.type = PROPERTY,
+				.buildingLevel = 0,
+				.ownerId = 0,
+				.color = colors[i%3],
+			};
+
 			snprintf(board->fields[i].name, FIELD_NAME_LENGTH, "Wasteland %i", i);
-			board->fields[i].color = colors[i%3];
 		}
 
 	}
 }
 
-void LoadGraphicsDefault(Board* board)
+BoardGraphics LoadGraphics()
 {
-	const int fontSize = 30;
-	board->graphics = (BoardGraphics){
+	printf("GAMEINFO: Load graphics data\n");
+	return (BoardGraphics){
 		.borderWidth = 6,
 		.dividerOffset = 40,
 		.fieldWidth = 200,
 		.cornerSize = 350,
+	};
+}
+
+BoardRenderData LoadRenderData()
+{
+	printf("GAMEINFO: Loaded render data\n");
+	BoardRenderData renderData = {
 
 		.font = LoadFontEx("resource/font/Cabal.ttf", 120, 0, 0),
-		.fontSize = fontSize,
+		.fontSize = 30,
 		.fontSpacing = 1,
 
 		.nameOffset = 70,
 		.commentOffset = 30,
 
-		.colorPalette = {WHITE, GRAY, BLACK},
+		.colorPalette = {WHITE, BLACK},
+		
+		.cornerImageScale = 250,
 
-		.boardTexture = {0},
+		.cornerImages = {
+			GenImageChecked(500, 500, 2, 2, RED, BLUE),
+			GenImageChecked(500, 500, 2, 2, GREEN, BLUE),
+			GenImageChecked(500, 500, 2, 2, RED, GREEN),
+			GenImageChecked(500, 500, 2, 2, RED, PINK),
+		}
 	};
+	
+	for(int i=4; i--;) ImageRotate(&renderData.cornerImages[i], 45);
+	
+	return renderData;
 }
 
-void DrawBoardCorner(Image* image, BoardGraphics graphics, const char* name, Rectangle rectangle);
-void DrawBoardEdge(Image* image, BoardGraphics graphics, Rectangle rectangle, Field field);
+void UnloadRenderData(BoardRenderData renderData)
+{
+	printf("GAMEINFO: Unloaded render data\n");
+	UnloadFont(renderData.font);
+
+	for(int i=4; i--;) UnloadImage(renderData.cornerImages[i]);
+}
 
 void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, float rotation, float fontSize, float spacing, Color tint)
 {
@@ -73,143 +101,87 @@ void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 positi
 	UnloadImage(textImage);
 }
 
-Texture2D LoadBoardTexture(Board board)
+void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData renderData, uint8_t cornerImageId, const char* name, Rectangle rectangle)
 {
-	uint16_t edgeLength = board.fieldCount/4;
-	const BoardGraphics graphics = board.graphics;
+	ImageDrawRectangleRec(image, rectangle, renderData.colorPalette.light);
 
-	uint64_t cornerOffset = graphics.cornerSize + graphics.borderWidth * 2;
-	uint64_t edgeOffset = graphics.fieldWidth + graphics.borderWidth;
+	Image* cornerImage = &renderData.cornerImages[cornerImageId];
+	ImageDrawImagePro(
+		image, renderData.cornerImages[cornerImageId],
+		(Rectangle){0, 0, cornerImage->width, cornerImage->height},
+		(Rectangle){
+			rectangle.x + (rectangle.width - renderData.cornerImageScale)/2,
+			rectangle.y + (rectangle.height - renderData.cornerImageScale)/2,
+			renderData.cornerImageScale,
+			renderData.cornerImageScale,
+		}, (Vector2){0},
+		45, WHITE);	
 
-	uint64_t sideOffset = cornerOffset + edgeOffset * edgeLength - graphics.borderWidth;
-	uint64_t pixelSize = sideOffset + cornerOffset;
-	
-	Image image = GenImageColor(pixelSize, pixelSize, graphics.colorPalette.dark);
-
-	//Start
-	DrawBoardCorner(&image, graphics, "Start", (Rectangle){
-		graphics.borderWidth,
-		graphics.borderWidth + sideOffset,
-		graphics.cornerSize,
-		graphics.cornerSize,
-		});
-	//Prison
-	DrawBoardCorner(&image, graphics, "Prison", (Rectangle){
-		graphics.borderWidth,
-		graphics.borderWidth,
-		graphics.cornerSize,
-		graphics.cornerSize,
-		});
-	//Free parking
-	DrawBoardCorner(&image, graphics, "Free parking", (Rectangle){
-		graphics.borderWidth + sideOffset,
-		graphics.borderWidth,
-		graphics.cornerSize,
-		graphics.cornerSize,
-		});
-	//Policeman
-	DrawBoardCorner(&image, graphics, "Policeman", (Rectangle){
-		graphics.borderWidth + sideOffset,
-		graphics.borderWidth + sideOffset,
-		graphics.cornerSize,
-		graphics.cornerSize,
-		});
-
-	for(uint16_t i=0; i<edgeLength; ++i)
-	{
-		DrawBoardEdge(&image, graphics, (Rectangle){
-			cornerOffset + i * edgeOffset,
-			graphics.borderWidth,
-			graphics.fieldWidth,
-			graphics.cornerSize,
-			}, board.fields[edgeLength + i]);
-		
-		DrawBoardEdge(&image, graphics, (Rectangle){
-			cornerOffset + i * edgeOffset,
-			graphics.borderWidth + sideOffset,
-			graphics.fieldWidth,
-			graphics.cornerSize,
-			}, board.fields[4*edgeLength - i - 1]);
-	}
-	ImageRotateCCW(&image);
-	for(uint16_t i=0; i<edgeLength; ++i)
-	{
-		DrawBoardEdge(&image, graphics, (Rectangle){
-			cornerOffset + i * edgeOffset,
-			graphics.borderWidth,
-			graphics.fieldWidth,
-			graphics.cornerSize,
-			}, board.fields[2*edgeLength + i]);
-		
-		DrawBoardEdge(&image, graphics, (Rectangle){
-			cornerOffset + i * edgeOffset,
-			graphics.borderWidth + sideOffset,
-			graphics.fieldWidth,
-			graphics.cornerSize,
-			}, board.fields[edgeLength - i - 1]);
-	}
-	ImageRotateCW(&image);
-
-	ImageDrawRectangleRec(&image, (Rectangle){cornerOffset, cornerOffset, sideOffset-cornerOffset, sideOffset-cornerOffset}, graphics.colorPalette.light);
-	ImageDrawTextSpec(&image, graphics.font, "SASALELE", (Vector2){pixelSize/2, pixelSize/2}, 45, 120, 1, graphics.colorPalette.dark);
-
-	Texture2D texture = LoadTextureFromImage(image);
-	UnloadImage(image);
-	GenTextureMipmaps(&texture);
-	return texture;
-}
-
-void DrawBoardCorner(Image* image, BoardGraphics graphics, const char* name, Rectangle rectangle)
-{
-	ImageDrawRectangleRec(image, rectangle, graphics.colorPalette.light);
-	
 	ImageDrawTextSpec(
 		image,
-		graphics.font,
+		renderData.font,
 		name,
-		(Vector2){rectangle.x + rectangle.width/2, rectangle.y + rectangle.height/2},
+		(Vector2){rectangle.x + rectangle.width/4, rectangle.y + 3*rectangle.height/4},
 		45,
-		graphics.fontSize,
-		graphics.fontSpacing,
-		graphics.colorPalette.dark);
+		renderData.fontSize,
+		renderData.fontSpacing,
+		renderData.colorPalette.dark);
 }
 
-void DrawBoardEdge(Image* image, BoardGraphics graphics, Rectangle rectangle, Field field)
+void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderData, Rectangle rectangle, Field field)
 {
-	ImageDrawRectangleRec(image, (Rectangle){
-		rectangle.x,
-		rectangle.y,
-		rectangle.width,
-		graphics.dividerOffset,
-		}, field.color);
+	char buffer[FIELD_NAME_LENGTH] = {0};
+	switch(field.type)
+	{
+		case PROPERTY:
+			ImageDrawRectangleRec(image, (Rectangle){
+				rectangle.x,
+				rectangle.y,
+				rectangle.width,
+				graphics.dividerOffset,
+				}, field.color);
 
-	uint64_t offset = graphics.dividerOffset + graphics.borderWidth;
+			uint64_t offset = graphics.dividerOffset + graphics.borderWidth;
 
-	ImageDrawRectangleRec(image, (Rectangle){
-		rectangle.x,
-		rectangle.y + offset,
-		rectangle.width,
-		rectangle.height - offset,
-		}, graphics.colorPalette.light);
+			ImageDrawRectangleRec(image, (Rectangle){
+				rectangle.x,
+				rectangle.y + offset,
+				rectangle.width,
+				rectangle.height - offset,
+				}, renderData.colorPalette.light);
+
+			snprintf(buffer, FIELD_NAME_LENGTH, "$%i", field.value);
+			break;
+		default:
+			ImageDrawRectangleRec(image, (Rectangle){
+				rectangle.x,
+				rectangle.y,
+				rectangle.width,
+				rectangle.height,
+				}, renderData.colorPalette.light);
+			strncpy(buffer, field.comment, FIELD_NAME_LENGTH);
+			break;
+	};
 
 	ImageDrawTextSpec(
 		image,
-		graphics.font,
+		renderData.font,
 		field.name,
-		(Vector2){rectangle.x + rectangle.width/2, rectangle.y + rectangle.height - graphics.nameOffset},
+		(Vector2){rectangle.x + rectangle.width/2, rectangle.y + rectangle.height - renderData.nameOffset},
 		0,
-		graphics.fontSize,
-		graphics.fontSpacing,
-		BLACK);
+		renderData.fontSize,
+		renderData.fontSpacing,
+		renderData.colorPalette.dark);
+	
 
 	ImageDrawTextSpec(
 		image,
-		graphics.font,
-		"Placeholder",
-		(Vector2){rectangle.x + rectangle.width/2, rectangle.y + rectangle.height - graphics.commentOffset},
+		renderData.font,
+		buffer,
+		(Vector2){rectangle.x + rectangle.width/2, rectangle.y + rectangle.height - renderData.commentOffset},
 		0,
-		graphics.fontSize,
-		graphics.fontSpacing,
-		BLACK);
+		renderData.fontSize,
+		renderData.fontSpacing,
+		renderData.colorPalette.dark);
 }
 

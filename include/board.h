@@ -7,12 +7,21 @@
 
 #define FIELD_NAME_LENGTH 32
 
+typedef enum FieldType { PROPERTY, CHANCE } FieldType;
+
 typedef struct Field
 {
 	char name[FIELD_NAME_LENGTH];
-	int16_t value;
-	uint8_t buildingLevel;
-	uint8_t ownerId;
+	FieldType type;
+	union
+	{
+		struct {
+			int16_t value;
+			uint8_t buildingLevel;
+			uint8_t ownerId;
+		};
+		char comment[FIELD_NAME_LENGTH];
+	};
 	Color color;
 } Field;
 
@@ -28,22 +37,6 @@ typedef struct BoardGraphics
 	int dividerOffset;
 	int fieldWidth;
 	int cornerSize;
-
-	Font font;
-	float fontSize;
-	float fontSpacing;
-
-	int nameOffset;
-	int commentOffset;
-
-	struct
-	{
-		Color light;
-		Color medium;
-		Color dark;
-	} colorPalette;
-
-	Texture2D boardTexture;
 } BoardGraphics;
 
 typedef struct Board
@@ -53,6 +46,8 @@ typedef struct Board
 
 	uint8_t playerCount;
 	Player players[4];
+
+	Texture2D boardTexture;
 
 	BoardGraphics graphics;
 } Board;
