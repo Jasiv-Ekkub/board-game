@@ -39,4 +39,6 @@ void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData rende
 void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderData, Rectangle rectangle, Field field);
 void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, float rotation, float fontSize, float spacing, Color tint);
 
+Vector2 CalculateFieldCenter(Board board, uint16_t fieldNumber);
+
 #endif //BOARD_HELPERS_H

@@ -19,24 +19,27 @@ typedef struct Field
 			int16_t value;
 			uint8_t buildingLevel;
 			uint8_t ownerId;
+			Color color;
 		};
 		char comment[FIELD_NAME_LENGTH];
 	};
-	Color color;
 } Field;
 
 typedef struct Player
 {
 	char name[32];
-	int16_t money;
+	int16_t position;
+	Color color;
 } Player;
 
 typedef struct BoardGraphics
 {
-	int borderWidth;
-	int dividerOffset;
-	int fieldWidth;
-	int cornerSize;
+	uint64_t borderWidth;
+	uint64_t dividerOffset;
+	uint64_t fieldWidth;
+	uint64_t cornerSize;
+
+	uint64_t pixelSize;
 } BoardGraphics;
 
 typedef struct Board
@@ -50,7 +53,12 @@ typedef struct Board
 	Texture2D boardTexture;
 	Model boardModel;
 
+	Shader pawnShader;
+	Model pawnModel;
+
 	BoardGraphics graphics;
+
+	float FOOBAR;
 } Board;
 
 void DebugPrintAllFields(Board board);

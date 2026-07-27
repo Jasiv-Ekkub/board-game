@@ -32,7 +32,7 @@ void LoadFieldsDefault(Board* board)
 				.color = colors[i%3],
 			};
 
-			snprintf(board->fields[i].name, FIELD_NAME_LENGTH, "Wasteland %i", i);
+			snprintf(board->fields[i].name, FIELD_NAME_LENGTH, "Land %i", i);
 		}
 
 	}
@@ -44,8 +44,8 @@ BoardGraphics LoadGraphics()
 	return (BoardGraphics){
 		.borderWidth = 6,
 		.dividerOffset = 40,
-		.fieldWidth = 200,
-		.cornerSize = 350,
+		.fieldWidth = 250,
+		.cornerSize = 400,
 	};
 }
 
@@ -55,8 +55,8 @@ BoardRenderData LoadRenderData()
 	BoardRenderData renderData = {
 
 		.font = LoadFontEx("resource/font/Cabal.ttf", 120, 0, 0),
-		.fontSize = 30,
-		.fontSpacing = 1,
+		.fontSize = 36,
+		.fontSpacing = 0,
 
 		.nameOffset = 70,
 		.commentOffset = 30,
@@ -185,3 +185,85 @@ void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderD
 		renderData.colorPalette.dark);
 }
 
+Vector2 CalculateFieldCenter(Board board, uint16_t fieldNumber)
+{
+	BoardGraphics graphics = board.graphics;
+	uint16_t quarter = board.fieldCount/4 + 1;
+	uint64_t offsetCorner = graphics.borderWidth + graphics.cornerSize/2;
+	
+	Vector2 position = {0};
+
+	uint16_t sideId = fieldNumber/quarter;
+	uint16_t sideFieldId = fieldNumber%quarter;
+	if(sideFieldId == 0)
+	{
+		switch(sideId)
+		{
+			case 0:
+				position = (Vector2){
+					offsetCorner,
+					graphics.pixelSize - offsetCorner,
+				};
+				break;
+			case 1:
+				position = (Vector2){
+					offsetCorner,
+					offsetCorner,
+				};
+				break;
+			case 2:
+				position = (Vector2){
+					graphics.pixelSize - offsetCorner,
+					offsetCorner,
+				};
+				break;
+			case 3:
+				position = (Vector2){
+					graphics.pixelSize - offsetCorner,
+					graphics.pixelSize - offsetCorner,
+				};
+				break;
+		}
+	}
+	else
+	{
+		uint64_t offsetEdgeBase = offsetCorner*2 + graphics.fieldWidth/2;
+		uint64_t offsetEdge = graphics.fieldWidth + graphics.borderWidth;
+
+		uint64_t edgeOffsetFinal =  offsetEdgeBase + offsetEdge*(sideFieldId - 1);
+		switch(sideId)
+		{
+			case 0:
+				position = (Vector2){
+					offsetCorner,
+					graphics.pixelSize - edgeOffsetFinal,
+				};
+				break;
+			case 1:
+				position = (Vector2){
+					edgeOffsetFinal,
+					offsetCorner,
+				};
+				break;
+			case 2:
+				position = (Vector2){
+					graphics.pixelSize - offsetCorner,
+					edgeOffsetFinal,
+				};
+				break;
+			case 3:
+				position = (Vector2){
+					graphics.pixelSize - edgeOffsetFinal,
+					graphics.pixelSize - offsetCorner,
+				};
+				break;
+		}
+	}
+
+	Vector2 finalPosition = {
+		(float)position.x / graphics.pixelSize * 2 - 1,
+		(float)position.y / graphics.pixelSize * 2 - 1,
+	};
+
+	return finalPosition;
+}
