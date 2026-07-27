@@ -17,9 +17,8 @@ void LoadFieldsDefault(Board* board)
 		{
 			board->fields[i] = (Field){
 				.name = "Chance",
-				.type = CHANCE,
+				.type = ACTION,
 				.comment = "Draw a card",
-				.color = GRAY,
 			};
 		}
 		else
@@ -101,88 +100,14 @@ void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 positi
 	UnloadImage(textImage);
 }
 
-void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData renderData, uint8_t cornerImageId, const char* name, Rectangle rectangle)
+void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData renderData, Rectangle rectangle, Field field)
 {
 	ImageDrawRectangleRec(image, rectangle, renderData.colorPalette.light);
-
-	Image* cornerImage = &renderData.cornerImages[cornerImageId];
-	ImageDrawImagePro(
-		image, renderData.cornerImages[cornerImageId],
-		(Rectangle){0, 0, cornerImage->width, cornerImage->height},
-		(Rectangle){
-			rectangle.x + (rectangle.width - renderData.cornerImageScale)/2,
-			rectangle.y + (rectangle.height - renderData.cornerImageScale)/2,
-			renderData.cornerImageScale,
-			renderData.cornerImageScale,
-		}, (Vector2){0},
-		45, WHITE);	
-
-	ImageDrawTextSpec(
-		image,
-		renderData.font,
-		name,
-		(Vector2){rectangle.x + rectangle.width/4, rectangle.y + 3*rectangle.height/4},
-		45,
-		renderData.fontSize,
-		renderData.fontSpacing,
-		renderData.colorPalette.dark);
 }
 
 void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderData, Rectangle rectangle, Field field)
 {
-	char buffer[FIELD_NAME_LENGTH] = {0};
-	switch(field.type)
-	{
-		case PROPERTY:
-			ImageDrawRectangleRec(image, (Rectangle){
-				rectangle.x,
-				rectangle.y,
-				rectangle.width,
-				graphics.dividerOffset,
-				}, field.color);
-
-			uint64_t offset = graphics.dividerOffset + graphics.borderWidth;
-
-			ImageDrawRectangleRec(image, (Rectangle){
-				rectangle.x,
-				rectangle.y + offset,
-				rectangle.width,
-				rectangle.height - offset,
-				}, renderData.colorPalette.light);
-
-			snprintf(buffer, FIELD_NAME_LENGTH, "$%i", field.value);
-			break;
-		default:
-			ImageDrawRectangleRec(image, (Rectangle){
-				rectangle.x,
-				rectangle.y,
-				rectangle.width,
-				rectangle.height,
-				}, renderData.colorPalette.light);
-			strncpy(buffer, field.comment, FIELD_NAME_LENGTH);
-			break;
-	};
-
-	ImageDrawTextSpec(
-		image,
-		renderData.font,
-		field.name,
-		(Vector2){rectangle.x + rectangle.width/2, rectangle.y + rectangle.height - renderData.nameOffset},
-		0,
-		renderData.fontSize,
-		renderData.fontSpacing,
-		renderData.colorPalette.dark);
-	
-
-	ImageDrawTextSpec(
-		image,
-		renderData.font,
-		buffer,
-		(Vector2){rectangle.x + rectangle.width/2, rectangle.y + rectangle.height - renderData.commentOffset},
-		0,
-		renderData.fontSize,
-		renderData.fontSpacing,
-		renderData.colorPalette.dark);
+	ImageDrawRectangleRec(image, rectangle, renderData.colorPalette.light);
 }
 
 Vector2 CalculateFieldCenter(Board board, uint16_t fieldNumber)

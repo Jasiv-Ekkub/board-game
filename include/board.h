@@ -7,7 +7,7 @@
 
 #define FIELD_NAME_LENGTH 32
 
-typedef enum FieldType { PROPERTY, CHANCE } FieldType;
+typedef enum FieldType { PROPERTY, ACTION } FieldType;
 
 typedef struct Field
 {
@@ -21,14 +21,17 @@ typedef struct Field
 			uint8_t ownerId;
 			Color color;
 		};
-		char comment[FIELD_NAME_LENGTH];
+		struct {
+			char comment[FIELD_NAME_LENGTH];
+			uint16_t imageId;
+		};
 	};
 } Field;
 
 typedef struct Player
 {
 	char name[32];
-	int16_t position;
+	uint16_t position;
 	Color color;
 } Player;
 

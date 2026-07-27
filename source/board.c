@@ -97,85 +97,85 @@ void UnloadBoard(Board board)
 
 Texture2D LoadBoardTexture(Board* board, BoardRenderData renderData)
 {
-	uint16_t edgeLength = board->fieldCount/4;
+	uint16_t quarter = board->fieldCount/4;
 	const BoardGraphics graphics = board->graphics;
 
 	uint64_t cornerOffset = graphics.cornerSize + graphics.borderWidth * 2;
 	uint64_t edgeOffset = graphics.fieldWidth + graphics.borderWidth;
 
-	uint64_t sideOffset = cornerOffset + edgeOffset * edgeLength - graphics.borderWidth;
+	uint64_t sideOffset = cornerOffset + edgeOffset * quarter - graphics.borderWidth;
 
 	uint64_t pixelSize = sideOffset + cornerOffset;
 	board->graphics.pixelSize = pixelSize;
 	
 	Image image = GenImageColor(pixelSize, pixelSize, renderData.colorPalette.dark);
 
-	//Start
-	DrawBoardCorner(&image, graphics, renderData, START_IMAGE, "Start", (Rectangle){
+	//Down
+	DrawBoardCorner(&image, graphics, renderData, (Rectangle){
 		graphics.borderWidth,
 		graphics.borderWidth + sideOffset,
 		graphics.cornerSize,
 		graphics.cornerSize,
-		});
-	//Prison
-	DrawBoardCorner(&image, graphics, renderData, PRISON_IMAGE, "Prison", (Rectangle){
+		}, board->fields[0]);
+	//Left
+	DrawBoardCorner(&image, graphics, renderData, (Rectangle){
 		graphics.borderWidth,
 		graphics.borderWidth,
 		graphics.cornerSize,
 		graphics.cornerSize,
-		});
-	//Free parking
-	DrawBoardCorner(&image, graphics, renderData, PARKING_IMAGE, "Free parking", (Rectangle){
+		}, board->fields[0]);
+	//Up
+	DrawBoardCorner(&image, graphics, renderData, (Rectangle){
 		graphics.borderWidth + sideOffset,
 		graphics.borderWidth,
 		graphics.cornerSize,
 		graphics.cornerSize,
-		});
-	//Policeman
-	DrawBoardCorner(&image, graphics, renderData, POLICEMAN_IMAGE, "Policeman", (Rectangle){
+		}, board->fields[0]);
+	//Right
+	DrawBoardCorner(&image, graphics, renderData, (Rectangle){
 		graphics.borderWidth + sideOffset,
 		graphics.borderWidth + sideOffset,
 		graphics.cornerSize,
 		graphics.cornerSize,
-		});
+		}, board->fields[0]);
 
-	for(uint16_t i=0; i<edgeLength; ++i)
+	for(uint16_t i=0; i<quarter; ++i)
 	{
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
 			cornerOffset + i * edgeOffset,
 			graphics.borderWidth,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[edgeLength + i]);
+			}, board->fields[0]);
 		
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
 			cornerOffset + i * edgeOffset,
 			graphics.borderWidth + sideOffset,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[4*edgeLength - i - 1]);
+			}, board->fields[0]);
 	}
 	ImageRotateCCW(&image);
-	for(uint16_t i=0; i<edgeLength; ++i)
+	for(uint16_t i=0; i<quarter; ++i)
 	{
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
 			cornerOffset + i * edgeOffset,
 			graphics.borderWidth,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[2*edgeLength + i]);
+			}, board->fields[0]);
 		
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
 			cornerOffset + i * edgeOffset,
 			graphics.borderWidth + sideOffset,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[edgeLength - i - 1]);
+			}, board->fields[0]);
 	}
 	ImageRotateCW(&image);
 
 	ImageDrawRectangleRec(&image, (Rectangle){cornerOffset, cornerOffset, sideOffset-cornerOffset, sideOffset-cornerOffset}, renderData.colorPalette.light);
-	ImageDrawTextSpec(&image, renderData.font, "SASALELE", (Vector2){pixelSize/2, pixelSize/2}, 45, 120, 1, renderData.colorPalette.dark);
+	ImageDrawTextSpec(&image, renderData.font, "Board game", (Vector2){pixelSize/2, pixelSize/2}, 45, 120, 1, renderData.colorPalette.dark);
 
 	Texture2D texture = LoadTextureFromImage(image);
 	UnloadImage(image);

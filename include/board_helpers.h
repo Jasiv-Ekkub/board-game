@@ -35,8 +35,9 @@ BoardGraphics LoadGraphics();
 BoardRenderData LoadRenderData();
 void UnloadRenderData(BoardRenderData renderData);
 
-void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData renderData, uint8_t cornerImageId, const char* name, Rectangle rectangle);
+void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData renderData, Rectangle rectangle, Field field);
 void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderData, Rectangle rectangle, Field field);
+
 void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, float rotation, float fontSize, float spacing, Color tint);
 
 Vector2 CalculateFieldCenter(Board board, uint16_t fieldNumber);
