@@ -70,7 +70,8 @@ void UpdateBoard(Board* board, GameContext gameContext)
 		if(cond)
 		{
 			board->players[i].position += 1+i;
-			board->players[i].position %= board->fieldCount + 4;
+			board->players[i].position %= board->fieldCount;
+			cond = 0;
 		}
 		Player player = board->players[i];
 		Vector2 offset = CalculateFieldCenter(*board, player.position);
@@ -103,7 +104,7 @@ Texture2D LoadBoardTexture(Board* board, BoardRenderData renderData)
 	uint64_t cornerOffset = graphics.cornerSize + graphics.borderWidth * 2;
 	uint64_t edgeOffset = graphics.fieldWidth + graphics.borderWidth;
 
-	uint64_t sideOffset = cornerOffset + edgeOffset * quarter - graphics.borderWidth;
+	uint64_t sideOffset = cornerOffset + edgeOffset * (quarter-1) - graphics.borderWidth;
 
 	uint64_t pixelSize = sideOffset + cornerOffset;
 	board->graphics.pixelSize = pixelSize;
@@ -123,54 +124,54 @@ Texture2D LoadBoardTexture(Board* board, BoardRenderData renderData)
 		graphics.borderWidth,
 		graphics.cornerSize,
 		graphics.cornerSize,
-		}, board->fields[0]);
+		}, board->fields[quarter]);
 	//Up
 	DrawBoardCorner(&image, graphics, renderData, (Rectangle){
 		graphics.borderWidth + sideOffset,
 		graphics.borderWidth,
 		graphics.cornerSize,
 		graphics.cornerSize,
-		}, board->fields[0]);
+		}, board->fields[quarter * 2]);
 	//Right
 	DrawBoardCorner(&image, graphics, renderData, (Rectangle){
 		graphics.borderWidth + sideOffset,
 		graphics.borderWidth + sideOffset,
 		graphics.cornerSize,
 		graphics.cornerSize,
-		}, board->fields[0]);
+		}, board->fields[quarter * 3]);
 
-	for(uint16_t i=0; i<quarter; ++i)
+	for(uint16_t i=1; i<quarter; ++i)
 	{
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
-			cornerOffset + i * edgeOffset,
+			cornerOffset + (i-1) * edgeOffset,
 			graphics.borderWidth,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[0]);
+			}, board->fields[quarter + i]);
 		
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
-			cornerOffset + i * edgeOffset,
+			cornerOffset + (i-1) * edgeOffset,
 			graphics.borderWidth + sideOffset,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[0]);
+			}, board->fields[4*quarter - i]);
 	}
 	ImageRotateCCW(&image);
-	for(uint16_t i=0; i<quarter; ++i)
+	for(uint16_t i=1; i<quarter; ++i)
 	{
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
-			cornerOffset + i * edgeOffset,
+			cornerOffset + (i-1) * edgeOffset,
 			graphics.borderWidth,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[0]);
+			}, board->fields[2*quarter + i]);
 		
 		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
-			cornerOffset + i * edgeOffset,
+			cornerOffset + (i-1) * edgeOffset,
 			graphics.borderWidth + sideOffset,
 			graphics.fieldWidth,
 			graphics.cornerSize,
-			}, board->fields[0]);
+			}, board->fields[quarter - i]);
 	}
 	ImageRotateCW(&image);
 

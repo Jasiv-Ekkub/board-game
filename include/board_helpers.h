@@ -2,11 +2,7 @@
 #define BOARD_HELPERS_H
 
 #include <board.h>
-
-#define START_IMAGE 0
-#define PRISON_IMAGE 1
-#define PARKING_IMAGE 2
-#define POLICEMAN_IMAGE 3
+#include <image_defines.h>
 
 typedef struct BoardRenderData
 {
@@ -14,18 +10,21 @@ typedef struct BoardRenderData
 	float fontSize;
 	float fontSpacing;
 
-	int nameOffset;
-	int commentOffset;
+	uint64_t nameOffsetEdge;
+	uint64_t commentOffsetEdge;
+	uint64_t imageSizeEdge;
 
+	uint64_t nameOffsetCorner;
+	uint64_t commentOffsetCorner;
+	uint64_t imageSizeCorner;
+	
 	struct
 	{
 		Color light;
 		Color dark;
 	} colorPalette;
 
-	int cornerImageScale;
-
-	Image cornerImages[4];
+	Image images[IMAGE_COUNT];
 } BoardRenderData;
 
 void LoadFieldsDefault(Board* board);

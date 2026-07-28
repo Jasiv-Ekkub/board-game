@@ -4,8 +4,9 @@ int main()
 {
 	InitWindow(1440, 810, "Board game");
 	GameContext gameContext = LoadGameContext();
-	int tmp = 24;
+	int tmp = 16;
 	Board board = LoadBoard("default", tmp);
+	DebugPrintAllFields(board);
 
 	while(!WindowShouldClose())
 	{
