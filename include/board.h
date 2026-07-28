@@ -56,9 +56,10 @@ typedef struct Board
 	Texture2D boardTexture;
 	Model boardModel;
 
-	Shader pawnShader;
+	Shader lightShader;
 	Model pawnModel;
 
+	Vector3 position;
 	BoardGraphics graphics;
 } Board;
 

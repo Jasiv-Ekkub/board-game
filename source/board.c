@@ -42,9 +42,9 @@ Board LoadBoard(const char* filename, int size)
 	board.boardModel = LoadModelFromMesh(GenMeshPlane(2, 2, 3, 4));
 	board.boardModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = board.boardTexture;
 
-	board.pawnShader = LoadShader("resource/shaders/directional_light.vs", "resource/shaders/directional_light.fs");
+	board.lightShader = LoadShader("resource/shaders/directional_light.vs", "resource/shaders/directional_light.fs");
 	board.pawnModel = LoadModel("resource/models/pawn.glb");
-	board.pawnModel.materials[0].shader = board.pawnShader;
+	board.pawnModel.materials[0].shader = board.lightShader;
 
 	printf("GAMEINFO: Loaded board\n");
 	return board;
@@ -52,8 +52,12 @@ Board LoadBoard(const char* filename, int size)
 
 void UpdateBoard(Board* board, GameContext gameContext)
 {
-	Vector3 position = {0};
-	DrawModel(board->boardModel, position, 1, WHITE);
+	DrawModel(board->boardModel, board->position, 1, WHITE);
+
+	for(int i=0; i<board->playerCount; ++i)
+	{
+		DrawModel(board->pawnModel, CalculatePlayerPosition(*board, i), 0.05f, board->players[i].color);
+	}
 }
 
 void UnloadBoard(Board board)
@@ -62,7 +66,7 @@ void UnloadBoard(Board board)
 	UnloadModel(board.boardModel);
 
 	UnloadModel(board.pawnModel);
-	UnloadShader(board.pawnShader);
+	UnloadShader(board.lightShader);
 	printf("GAMEINFO: Unloaded board\n");
 }
 

@@ -52,7 +52,7 @@ BoardGraphics LoadGraphics()
 		.dividerOffset = 80,
 		.fieldWidth = 250,
 		.cornerSize = 400,
-		.pawnOffset = 1,
+		.pawnOffset = 50,
 	};
 }
 
@@ -258,7 +258,7 @@ void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderD
 		);
 }
 
-Vector2 CalculateFieldCenter(Board board, int fieldNumber, Vector2 offset)
+Vector2 CalculateFieldCenter(Board board, int fieldNumber)
 {
 	BoardGraphics graphics = board.graphics;
 	int quarter = board.fieldCount/4;
@@ -333,10 +333,22 @@ Vector2 CalculateFieldCenter(Board board, int fieldNumber, Vector2 offset)
 		}
 	}
 
-	Vector2 finalPosition = {
-		(float)(position.x + offset.x)/ graphics.pixelSize * 2 - 1,
-		(float)(position.y + offset.y)/ graphics.pixelSize * 2 - 1,
-	};
+	return position;
+}
 
-	return finalPosition;
+Vector3 CalculatePlayerPosition(Board board, int playerId)
+{
+	Player player = board.players[playerId];
+	float pawnOffset = board.graphics.pawnOffset;
+
+	Vector2 pixelPosition = CalculateFieldCenter(board, player.position);
+	
+	pixelPosition.x += (playerId&1 ? pawnOffset : -pawnOffset);
+	pixelPosition.y += (playerId&2 ? pawnOffset : -pawnOffset);
+
+	return (Vector3){
+		board.position.x + (pixelPosition.x / board.graphics.pixelSize * 2 - 1),
+		board.position.y,
+		board.position.z + (pixelPosition.y / board.graphics.pixelSize * 2 - 1),
+	};
 }
