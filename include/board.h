@@ -3,7 +3,6 @@
 
 #include <game_context.h>
 #include <raylib.h>
-#include <stdint.h>
 
 #define FIELD_NAME_LENGTH 32
 
@@ -16,14 +15,14 @@ typedef struct Field
 	union
 	{
 		struct {
-			int16_t value;
-			uint8_t buildingLevel;
-			uint8_t ownerId;
+			int value;
+			int buildingLevel;
+			int ownerId;
 			Color color;
 		};
 		struct {
 			char comment[FIELD_NAME_LENGTH];
-			uint16_t imageId;
+			int imageId;
 		};
 	};
 } Field;
@@ -31,26 +30,27 @@ typedef struct Field
 typedef struct Player
 {
 	char name[32];
-	uint16_t position;
+	int position;
 	Color color;
 } Player;
 
 typedef struct BoardGraphics
 {
-	uint64_t borderWidth;
-	uint64_t dividerOffset;
-	uint64_t fieldWidth;
-	uint64_t cornerSize;
+	float borderWidth;
+	float dividerOffset;
+	float fieldWidth;
+	float cornerSize;
+	float pawnOffset;
 
-	uint64_t pixelSize;
+	float pixelSize;
 } BoardGraphics;
 
 typedef struct Board
 {
-	uint16_t fieldCount;
+	int fieldCount;
 	Field fields[256];
 
-	uint8_t playerCount;
+	int playerCount;
 	Player players[4];
 
 	Texture2D boardTexture;
@@ -60,13 +60,11 @@ typedef struct Board
 	Model pawnModel;
 
 	BoardGraphics graphics;
-
-	float FOOBAR;
 } Board;
 
 void DebugPrintAllFields(Board board);
 
-Board LoadBoard(const char* filename, uint16_t size);
+Board LoadBoard(const char* filename, int size);
 void UpdateBoard(Board* board, GameContext gameContext);
 void UnloadBoard(Board board);
 

@@ -10,4 +10,5 @@ run: program
 	./program
 
 program: $(SRC_FILES)
-	gcc -o $@ $^ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -I $(INC_PATH)
+	clear
+	gcc -o $@ $^ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -I $(INC_PATH) -Wall -Werror=conversion

@@ -17,8 +17,8 @@ GameContext LoadGameContext()
 
 	gameContext.deltaTime = 0;
 
-	gameContext.screenBounds.width = GetRenderWidth();
-	gameContext.screenBounds.height = GetRenderHeight();
+	gameContext.screenWidth = GetRenderWidth();
+	gameContext.screenHeight = GetRenderHeight();
 
 	return gameContext;
 }
@@ -29,8 +29,8 @@ void UpdateGameContext(GameContext* gameContext)
 
 	if(IsWindowResized())
 	{
-		gameContext->screenBounds.width = GetRenderWidth();
-		gameContext->screenBounds.height = GetRenderHeight();
+		gameContext->screenWidth = GetRenderWidth();
+		gameContext->screenHeight = GetRenderHeight();
 	}
 }
 

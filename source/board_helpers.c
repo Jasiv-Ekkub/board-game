@@ -6,12 +6,12 @@ Color colors[6] = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE};
 
 void LoadFieldsDefault(Board* board)
 {
-	const uint16_t fieldCount = board->fieldCount;
-	const uint16_t quarter = fieldCount / 4;
+	const int fieldCount = board->fieldCount;
+	const int quarter = fieldCount / 4;
 	
-	for(uint16_t i=0; i<fieldCount; ++i)
+	for(int i=0; i<fieldCount; ++i)
 	{
-		uint16_t qi = i%quarter;
+		int qi = i%quarter;
 		if(i == 0)
 		{
 			board->fields[i] = (Field){
@@ -52,6 +52,7 @@ BoardGraphics LoadGraphics()
 		.dividerOffset = 80,
 		.fieldWidth = 250,
 		.cornerSize = 400,
+		.pawnOffset = 1,
 	};
 }
 
@@ -70,16 +71,16 @@ BoardRenderData LoadRenderData()
 
 		.nameOffsetCorner = 80,
 		.commentOffsetCorner = 50,
-		.imageSizeCorner = 150,
+		.imageSizeCorner = 250,
 
 		.colorPalette = {WHITE, BLACK},
 		
 		.images = {
-			GenImageChecked(4, 4, 1, 1, RED, BLUE),
-			GenImageChecked(4, 4, 1, 1, GREEN, BLUE),
-			GenImageChecked(4, 4, 1, 1, RED, GREEN),
-			GenImageChecked(4, 4, 1, 1, RED, PINK),
-			GenImageChecked(4, 4, 1, 1, YELLOW, PINK),
+			GenImageChecked(64, 64, 16, 16, RED, BLUE),
+			GenImageChecked(64, 64, 16, 16, GREEN, BLUE),
+			GenImageChecked(64, 64, 16, 16, RED, GREEN),
+			GenImageChecked(64, 64, 16, 16, RED, PINK),
+			GenImageChecked(64, 64, 16, 16, YELLOW, PINK),
 		}
 	};
 	
@@ -94,15 +95,19 @@ void UnloadRenderData(BoardRenderData renderData)
 	for(int i=IMAGE_COUNT; i--;) UnloadImage(renderData.images[i]);
 }
 
-void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, float rotation, float fontSize, float spacing, Color tint)
+void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, int rotation, float fontSize, float spacing, Color tint)
 {
 	Image textImage = ImageTextEx(font, text, fontSize, spacing, tint);
 	
 	ImageRotate(&textImage, rotation);
 
 	ImageDrawImagePro(image, textImage,
-		(Rectangle){0, 0, textImage.width, textImage.height},
-		(Rectangle){position.x - textImage.width/2, position.y - textImage.height/2, textImage.width, textImage.height},
+		(Rectangle){0, 0, (float)textImage.width, (float)textImage.height},
+		(Rectangle){
+			position.x - (float)textImage.width/2,
+			position.y - (float)textImage.height/2,
+			(float)(textImage.width),
+			(float)(textImage.height)},
 		(Vector2){0}, 0,
 		WHITE);
 	
@@ -127,7 +132,7 @@ void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData rende
 				graphics.dividerOffset,
 				rectangle.height - graphics.dividerOffset,
 			}, field.color);
-			uint64_t offset = graphics.dividerOffset + graphics.borderWidth;
+			float offset = graphics.dividerOffset + graphics.borderWidth;
 			ImageDrawRectangleRec(image, (Rectangle){
 				rectangle.x,
 				rectangle.y + offset,
@@ -139,18 +144,20 @@ void DrawBoardCorner(Image* image, BoardGraphics graphics, BoardRenderData rende
 		case ACTION:
 			ImageDrawRectangleRec(image, rectangle, renderData.colorPalette.light);
 
-			Image icon = renderData.images[field.imageId];
+			Image icon = ImageCopy(renderData.images[field.imageId]);
+			ImageRotate(&icon, 45);
 			ImageDrawImagePro(image, icon,
-				(Rectangle){0, 0, icon.width, icon.height},
+				(Rectangle){0, 0, (float)icon.width, (float)icon.height},
 				(Rectangle){
-					rectangle.x + (rectangle.width - renderData.imageSizeEdge)/2,
-					rectangle.y + (rectangle.height - renderData.imageSizeEdge)/2,
-					renderData.imageSizeEdge,
-					renderData.imageSizeEdge,
+					rectangle.x + (rectangle.width - renderData.imageSizeCorner)/2,
+					rectangle.y + (rectangle.height - renderData.imageSizeCorner)/2,
+					renderData.imageSizeCorner,
+					renderData.imageSizeCorner,
 				},
-				(Vector2){0}, 0,
+				(Vector2){0,0}, 45,
 				WHITE
 			);
+			UnloadImage(icon);
 			
 			strncpy(commentBuffer, field.comment, FIELD_NAME_LENGTH);
 			break;
@@ -195,7 +202,7 @@ void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderD
 				rectangle.width,
 				graphics.dividerOffset,
 			}, field.color);
-			uint64_t offset = graphics.dividerOffset + graphics.borderWidth;
+			float offset = graphics.dividerOffset + graphics.borderWidth;
 			ImageDrawRectangleRec(image, (Rectangle){
 				rectangle.x,
 				rectangle.y + offset,
@@ -209,7 +216,7 @@ void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderD
 
 			Image icon = renderData.images[field.imageId];
 			ImageDrawImagePro(image, icon,
-				(Rectangle){0, 0, icon.width, icon.height},
+				(Rectangle){0, 0, (float)icon.width, (float)icon.height},
 				(Rectangle){
 					rectangle.x + (rectangle.width - renderData.imageSizeEdge)/2,
 					rectangle.y + (rectangle.height - renderData.imageSizeEdge)/2,
@@ -251,16 +258,16 @@ void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderD
 		);
 }
 
-Vector2 CalculateFieldCenter(Board board, uint16_t fieldNumber)
+Vector2 CalculateFieldCenter(Board board, int fieldNumber, Vector2 offset)
 {
 	BoardGraphics graphics = board.graphics;
-	uint16_t quarter = board.fieldCount/4;
-	uint64_t cornerOffset = graphics.borderWidth + graphics.cornerSize/2;
+	int quarter = board.fieldCount/4;
+	float cornerOffset = graphics.borderWidth + graphics.cornerSize/2;
 	
 	Vector2 position = {0};
 
-	uint16_t sideId = fieldNumber/quarter;
-	uint16_t sideFieldId = fieldNumber%quarter;
+	int sideId = fieldNumber/quarter;
+	int sideFieldId = fieldNumber%quarter;
 	if(sideFieldId == 0)
 	{
 		switch(sideId)
@@ -293,10 +300,10 @@ Vector2 CalculateFieldCenter(Board board, uint16_t fieldNumber)
 	}
 	else
 	{
-		uint64_t edgeOffsetBase = cornerOffset*2 + graphics.fieldWidth/2;
-		uint64_t edgeOffset = graphics.fieldWidth + graphics.borderWidth;
+		float edgeOffsetBase = cornerOffset*2 + graphics.fieldWidth/2;
+		float edgeOffset = graphics.fieldWidth + graphics.borderWidth;
 
-		uint64_t edgeOffsetFinal =  edgeOffsetBase + edgeOffset*(sideFieldId - 1);
+		float edgeOffsetFinal =  edgeOffsetBase + edgeOffset*(float)(sideFieldId - 1);
 		switch(sideId)
 		{
 			case 0:
@@ -327,8 +334,8 @@ Vector2 CalculateFieldCenter(Board board, uint16_t fieldNumber)
 	}
 
 	Vector2 finalPosition = {
-		(float)position.x / graphics.pixelSize * 2 - 1,
-		(float)position.y / graphics.pixelSize * 2 - 1,
+		(float)(position.x + offset.x)/ graphics.pixelSize * 2 - 1,
+		(float)(position.y + offset.y)/ graphics.pixelSize * 2 - 1,
 	};
 
 	return finalPosition;
