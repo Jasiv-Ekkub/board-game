@@ -1,10 +1,12 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <model_defines.h>
 #include <game_context.h>
 #include <raylib.h>
 
 #define FIELD_NAME_LENGTH 32
+#define MAX_BUILDING_LEVEL 3
 
 typedef enum FieldType { PROPERTY, ACTION } FieldType;
 
@@ -40,7 +42,10 @@ typedef struct BoardGraphics
 	float dividerOffset;
 	float fieldWidth;
 	float cornerSize;
+
 	float pawnOffset;
+	float modelScale16;
+	float modelScale64;
 
 	float pixelSize;
 } BoardGraphics;
@@ -57,7 +62,8 @@ typedef struct Board
 	Model boardModel;
 
 	Shader lightShader;
-	Model pawnModel;
+	Model models[MODEL_COUNT];
+	int buildingModelIds[MAX_BUILDING_LEVEL];
 
 	Vector3 position;
 	BoardGraphics graphics;

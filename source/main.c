@@ -4,13 +4,20 @@ int main()
 {
 	InitWindow(1440, 810, "Board game");
 	GameContext gameContext = LoadGameContext();
-	Board board = LoadBoard("default", 20);
+	int TMP = 16;
+	Board board = LoadBoard("default", TMP);
 	DebugPrintAllFields(board);
 
 	while(!WindowShouldClose())
 	{
 		UpdateGameContext(&gameContext);
 		if(IsKeyPressed(KEY_F4)) ToggleFullscreen();
+		else if(IsKeyPressed(KEY_F5))
+		{
+			UnloadBoard(board);
+			TMP += 4;
+			board = LoadBoard("default", TMP);
+		}
 		BeginDrawing();
 			ClearBackground((Color){85, 85, 85, 255});
 			DrawFPS(10, 10);

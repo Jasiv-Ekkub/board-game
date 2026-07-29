@@ -17,7 +17,7 @@ void DebugPrintAllFields(Board board)
 #warning LoadBoard: filename does nothing
 Board LoadBoard(const char* filename, int size)
 {
-	if(size > 256) size = 256;
+	if(size > 64) size = 64;
 	else if(size < 16) size = 16;
 	else size &= 0xFFFC;
 
@@ -41,10 +41,9 @@ Board LoadBoard(const char* filename, int size)
 
 	board.boardModel = LoadModelFromMesh(GenMeshPlane(2, 2, 3, 4));
 	board.boardModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = board.boardTexture;
-
 	board.lightShader = LoadShader("resource/shaders/directional_light.vs", "resource/shaders/directional_light.fs");
-	board.pawnModel = LoadModel("resource/models/pawn.glb");
-	board.pawnModel.materials[0].shader = board.lightShader;
+
+	LoadModels(&board);
 
 	printf("GAMEINFO: Loaded board\n");
 	return board;
@@ -54,9 +53,21 @@ void UpdateBoard(Board* board, GameContext gameContext)
 {
 	DrawModel(board->boardModel, board->position, 1, WHITE);
 
+	float modelScale = (board->graphics.modelScale64 - board->graphics.modelScale16)
+		* (float)(board->fieldCount - 16) / 48 + board->graphics.modelScale16;
+
+	for(int i=0; i<board->fieldCount; ++i)
+	{
+		Field field = board->fields[i];
+		if(field.type == PROPERTY)
+		{
+			DrawModel(board->models[HOUSE_MODEL], CalculateHousePosition(*board, i), modelScale, RED);
+		}
+	}
+
 	for(int i=0; i<board->playerCount; ++i)
 	{
-		DrawModel(board->pawnModel, CalculatePlayerPosition(*board, i), 0.05f, board->players[i].color);
+		DrawModel(board->models[PAWN_MODEL], CalculatePlayerPosition(*board, i), modelScale, board->players[i].color);
 	}
 }
 
@@ -65,8 +76,10 @@ void UnloadBoard(Board board)
 	UnloadTexture(board.boardTexture);
 	UnloadModel(board.boardModel);
 
-	UnloadModel(board.pawnModel);
+	UnloadModels(board);
+
 	UnloadShader(board.lightShader);
+
 	printf("GAMEINFO: Unloaded board\n");
 }
 

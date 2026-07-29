@@ -28,6 +28,8 @@ typedef struct BoardRenderData
 } BoardRenderData;
 
 void LoadFieldsDefault(Board* board);
+void LoadModels(Board* board);
+void UnloadModels(Board board);
 
 BoardGraphics LoadGraphics();
 
@@ -40,5 +42,6 @@ void DrawBoardEdge(Image* image, BoardGraphics graphics, BoardRenderData renderD
 void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, int rotation, float fontSize, float spacing, Color tint);
 
 Vector3 CalculatePlayerPosition(Board board, int playerId);
+Vector3 CalculateHousePosition(Board board, int fieldId);
 
 #endif //BOARD_HELPERS_H

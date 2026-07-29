@@ -35,7 +35,7 @@ void LoadFieldsDefault(Board* board)
 			board->fields[i] = (Field){
 				.value = 0,
 				.type = PROPERTY,
-				.buildingLevel = 0,
+				.buildingLevel = 1,
 				.ownerId = 0,
 				.color = colors[i%6],
 			};
@@ -44,15 +44,41 @@ void LoadFieldsDefault(Board* board)
 	}
 }
 
+void LoadModels(Board* board)
+{
+	board->models[PAWN_MODEL] = LoadModel("resource/models/pawn.glb");
+	board->models[HOUSE_MODEL] = LoadModel("resource/models/house.glb");
+
+	board->buildingModelIds[0] = HOUSE_MODEL;
+	board->buildingModelIds[1] = HOUSE_MODEL;
+	board->buildingModelIds[2] = HOUSE_MODEL;
+
+	for(int i=0; i<MODEL_COUNT; ++i)
+	{
+		board->models[i].materials[0].shader = board->lightShader;
+	}
+}
+
+void UnloadModels(Board board)
+{
+	for(int i=0; i<MODEL_COUNT; ++i)
+	{
+		UnloadModel(board.models[i]);
+	}
+}
+
 BoardGraphics LoadGraphics()
 {
 	printf("GAMEINFO: Load graphics data\n");
 	return (BoardGraphics){
 		.borderWidth = 6,
-		.dividerOffset = 80,
+		.dividerOffset = 100,
 		.fieldWidth = 250,
-		.cornerSize = 400,
+		.cornerSize = 425,
+
 		.pawnOffset = 50,
+		.modelScale16 = 0.05f,
+		.modelScale64 = 0.015f,
 	};
 }
 
@@ -345,6 +371,39 @@ Vector3 CalculatePlayerPosition(Board board, int playerId)
 	
 	pixelPosition.x += (playerId&1 ? pawnOffset : -pawnOffset);
 	pixelPosition.y += (playerId&2 ? pawnOffset : -pawnOffset);
+
+	return (Vector3){
+		board.position.x + (pixelPosition.x / board.graphics.pixelSize * 2 - 1),
+		board.position.y,
+		board.position.z + (pixelPosition.y / board.graphics.pixelSize * 2 - 1),
+	};
+}
+
+Vector3 CalculateHousePosition(Board board, int fieldId)
+{
+	int half = board.fieldCount/2;
+	int quarter = half/2;
+
+	BoardGraphics graphics = board.graphics;
+
+	Vector2 pixelPosition = CalculateFieldCenter(board, fieldId);
+
+	if(fieldId%quarter == 0)
+	{
+		pixelPosition.x += (graphics.cornerSize - graphics.dividerOffset)/2;
+		pixelPosition.y -= (graphics.cornerSize - graphics.dividerOffset)/2;
+	}
+	else
+	{
+		if(fieldId%half > quarter)
+		{
+			pixelPosition.y -= (graphics.cornerSize - graphics.dividerOffset)/2;
+		}
+		else
+		{
+			pixelPosition.x += (graphics.cornerSize - graphics.dividerOffset)/2;
+		}
+	}
 
 	return (Vector3){
 		board.position.x + (pixelPosition.x / board.graphics.pixelSize * 2 - 1),

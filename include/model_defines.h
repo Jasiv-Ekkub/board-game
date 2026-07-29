@@ -1,0 +1,9 @@
+#ifndef MODEL_DEFINES_H
+#define MODEL_DEFINES_H
+
+#define MODEL_COUNT 2
+
+#define PAWN_MODEL 0
+#define HOUSE_MODEL 1
+
+#endif //MODEL_DEFINES_H
