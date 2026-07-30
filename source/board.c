@@ -1,86 +1,41 @@
 #include <board.h>
-#include <board_helpers.h>
-#include <string.h>
-#include <stdio.h>
 
-Texture2D LoadBoardTexture(Board* board, BoardRenderData renderData);
-
-void DebugPrintAllFields(Board board)
-{
-	for(int i=0; i<board.fieldCount; ++i)
-	{
-		Field* field = board.fields + i;
-		printf("name:%s, value:%i, buildingLevel:%i, ownerId:%i, color:%i\n", field->name, field->value, field->buildingLevel, field->ownerId, field->color);
-	}
-}
-
-#warning LoadBoard: filename does nothing
 Board LoadBoard(const char* filename, int size)
 {
-	if(size > 64) size = 64;
-	else if(size < 16) size = 16;
+	if(size > MAX_FIELD_AMOUNT)
+		size = MAX_FIELD_AMOUNT;
+
+	else if(size < MIN_FIELD_AMOUNT)
+		size = MIN_FIELD_AMOUNT;
+
 	else size &= 0xFFFC;
 
+
 	Board board = {
+		.assets = LoadBoardAssets();
+		.layout = GetBoardLayout();
+
 		.fieldCount = size,
 		.playerCount = 4,
 		.players = {
-			{"Player A", 0, RED},
-			{"Player B", 0, GREEN},
-			{"Player C", 0, BLUE},
-			{"Player D", 0, YELLOW},
+			GetPlayer("Player A", 1000),
+			GetPlayer("Player B", 1000),
+			GetPlayer("Player C", 1000),
+			GetPlayer("Player D", 1000),
 		},
 	};
 
-	LoadFieldsDefault(&board);
-	board.graphics = LoadGraphics();
-
-	BoardRenderData renderData = LoadRenderData();
-	board.boardTexture = LoadBoardTexture(&board, renderData);
-	UnloadRenderData(renderData);
-
-	board.boardModel = LoadModelFromMesh(GenMeshPlane(2, 2, 3, 4));
-	board.boardModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = board.boardTexture;
-	board.lightShader = LoadShader("resource/shaders/directional_light.vs", "resource/shaders/directional_light.fs");
-
-	LoadModels(&board);
-
-	printf("GAMEINFO: Loaded board\n");
+	LoadFields(&board);
 	return board;
 }
 
 void UpdateBoard(Board* board, GameContext gameContext)
 {
-	DrawModel(board->boardModel, board->position, 1, WHITE);
-
-	float modelScale = (board->graphics.modelScale64 - board->graphics.modelScale16)
-		* (float)(board->fieldCount - 16) / 48 + board->graphics.modelScale16;
-
-	for(int i=0; i<board->fieldCount; ++i)
-	{
-		Field field = board->fields[i];
-		if(field.type == PROPERTY)
-		{
-			DrawModel(board->models[HOUSE_MODEL], CalculateHousePosition(*board, i), modelScale, RED);
-		}
-	}
-
-	for(int i=0; i<board->playerCount; ++i)
-	{
-		DrawModel(board->models[PAWN_MODEL], CalculatePlayerPosition(*board, i), modelScale, board->players[i].color);
-	}
 }
 
 void UnloadBoard(Board board)
 {
-	UnloadTexture(board.boardTexture);
-	UnloadModel(board.boardModel);
-
-	UnloadModels(board);
-
-	UnloadShader(board.lightShader);
-
-	printf("GAMEINFO: Unloaded board\n");
+	UnloadBoardAssets(board.assets);
 }
 
 Texture2D LoadBoardTexture(Board* board, BoardRenderData renderData)
