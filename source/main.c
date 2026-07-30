@@ -5,8 +5,7 @@ int main()
 	InitWindow(1440, 810, "Board game");
 	GameContext gameContext = LoadGameContext();
 	int TMP = 16;
-	Board board = LoadBoard("default", TMP);
-	DebugPrintAllFields(board);
+	Board board = LoadBoard(TMP);
 
 	while(!WindowShouldClose())
 	{
@@ -16,7 +15,7 @@ int main()
 		{
 			UnloadBoard(board);
 			TMP += 4;
-			board = LoadBoard("default", TMP);
+			board = LoadBoard(TMP);
 		}
 		BeginDrawing();
 			ClearBackground((Color){85, 85, 85, 255});
