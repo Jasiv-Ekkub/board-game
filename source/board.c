@@ -37,10 +37,23 @@ void SetBoardSize(Board* board, int size)
 	}
 }
 
+void DrawPlayers(Board board)
+{
+	float modelScale = GetModelScale(board);
+	for(int i=0; i<board.playerCount; ++i)
+	{
+		DrawModel(
+			board.assets.models[PAWN_MODEL],
+			CalculatePlayerPosition(board, i),
+			modelScale,
+			board.players[i].color);
+	}
+}
+
 void UpdateBoard(Board* board, GameContext gameContext)
 {
 	DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
-	DrawModel(board->assets.models[PAWN_MODEL], board->position, 0.05, RED);
+	DrawPlayers(*board);
 	DrawModel(board->assets.models[HOUSE_MODEL], board->position, 0.05, BLUE);
 }
 

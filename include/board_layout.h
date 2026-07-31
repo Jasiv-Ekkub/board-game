@@ -1,6 +1,10 @@
 #ifndef BOARD_LAYOUT_H
 #define BOARD_LAYOUT_H
 
+#include <raylib.h>
+
+typedef struct Board Board;
+
 typedef struct BoardLayout
 {
 	float fieldWidth;
@@ -27,5 +31,7 @@ typedef struct BoardLayout
 } BoardLayout;
 
 BoardLayout GetBoardLayout();
+Vector3 CalculatePlayerPosition(Board board, int playerId);
+float GetModelScale(Board board);
 
 #endif //BOARD_LAYOUT_H
