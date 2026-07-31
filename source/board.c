@@ -1,21 +1,12 @@
 #include <board.h>
+#include <board_setup.h>
 
-Board LoadBoard(int size)
+Board LoadBoard()
 {
-	if(size > MAX_FIELD_AMOUNT)
-		size = MAX_FIELD_AMOUNT;
-
-	else if(size < MIN_FIELD_AMOUNT)
-		size = MIN_FIELD_AMOUNT;
-
-	else size &= 0xFFFC;
-
-
 	Board board = {
 		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
 
-		.fieldCount = size,
 		.playerCount = 4,
 		.players = {
 			GetPlayer("Player A", RED),
@@ -25,8 +16,24 @@ Board LoadBoard(int size)
 		},
 	};
 
-	//LoadFields(&board);
 	return board;
+}
+
+void SetBoardSize(Board* board, int size)
+{
+	if(size > MAX_FIELD_AMOUNT)
+		size = MAX_FIELD_AMOUNT;
+	else if(size < MIN_FIELD_AMOUNT)
+		size = MIN_FIELD_AMOUNT;
+	else size &= 0xFFFC;
+
+	board->fieldCount = size;
+	LoadFields(board);
+
+	for(int i=0; i<board->fieldCount; ++i)
+	{
+		PrintField(board->fields[i]);
+	}
 }
 
 void UpdateBoard(Board* board, GameContext gameContext)
@@ -40,7 +47,3 @@ void UnloadBoard(Board board)
 {
 	UnloadBoardAssets(board.assets);
 }
-
-/*
-
-*/

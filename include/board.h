@@ -28,7 +28,8 @@ typedef struct Board
 
 } Board;
 
-Board LoadBoard(int size);
+Board LoadBoard();
+void SetBoardSize(Board* board, int size);
 void UpdateBoard(Board* board, GameContext gameContext);
 void UnloadBoard(Board board);
 
