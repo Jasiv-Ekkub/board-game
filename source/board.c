@@ -29,6 +29,7 @@ void SetBoardSize(Board* board, int size)
 
 	board->fieldCount = size;
 	LoadFields(board);
+	GenerateBoardTexture(board);
 
 	for(int i=0; i<board->fieldCount; ++i)
 	{
