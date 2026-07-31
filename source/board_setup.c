@@ -2,7 +2,7 @@
 
 void LoadFields(Board* board)
 {
-	int quarter = board->fieldCount/4;
+	int quarter = board->fieldCount/3;
 	for(int i=0; i<board->fieldCount; ++i)
 	{
 		int qi = i%quarter;

@@ -14,6 +14,8 @@ BoardAssets LoadBoardAssets()
 		},
 	};
 	
+	assets.font = LoadFontEx("resource/font/Cabal.ttf", 48, 0, 0);
+
 	assets.images[START_IMAGE] = LoadImageDefault();
 	assets.images[PRISON_IMAGE] = LoadImageDefault();
 	assets.images[PARKING_IMAGE] = LoadImageDefault();
@@ -38,6 +40,7 @@ BoardAssets LoadBoardAssets()
 
 void UnloadBoardAssets(BoardAssets assets)
 {
+	UnloadFont(assets.font);
 	UnloadShader(assets.shader);
 	for(int i=0; i<BOARD_MODEL_AMOUNT; ++i)
 	{
@@ -97,6 +100,40 @@ void GenerateBoardTexture(Board* board)
 		layout.fieldHeight,
 		}, quarter * 3);
 
+	for(int i=1; i<quarter; ++i)
+	{
+		DrawBoardEdge(&image, *board, (Rectangle){
+			cornerOffset + (float)(i-1) * edgeOffset,
+			layout.borderWidth,
+			layout.fieldWidth,
+			layout.fieldHeight,
+			}, quarter + i);
+		
+		DrawBoardEdge(&image, *board, (Rectangle){
+			cornerOffset + (float)(i-1) * edgeOffset,
+			layout.borderWidth + sideOffset,
+			layout.fieldWidth,
+			layout.fieldHeight,
+			}, 4*quarter - i);
+	}
+	ImageRotateCCW(&image);
+	for(int i=1; i<quarter; ++i)
+	{
+		DrawBoardEdge(&image, *board, (Rectangle){
+			cornerOffset + (float)(i-1) * edgeOffset,
+			layout.borderWidth,
+			layout.fieldWidth,
+			layout.fieldHeight,
+			}, 2*quarter + i);
+		
+		DrawBoardEdge(&image, *board, (Rectangle){
+			cornerOffset + (float)(i-1) * edgeOffset,
+			layout.borderWidth + sideOffset,
+			layout.fieldWidth,
+			layout.fieldHeight,
+			}, quarter - i);
+	}
+	ImageRotateCW(&image);
 
 	UnloadTexture(board->assets.textures[BOARD_TEXTURE]);
 	board->assets.textures[BOARD_TEXTURE] = LoadTextureFromImage(image);

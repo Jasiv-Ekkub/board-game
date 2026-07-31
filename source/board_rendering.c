@@ -15,12 +15,35 @@ Texture2D LoadTextureDefault()
 	return texture;
 }
 
+
+void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, int rotation, float fontSize, float spacing, Color tint)
+{
+	Image textImage = ImageTextEx(font, text, fontSize, spacing, tint);
+
+	ImageRotate(&textImage, rotation);
+
+	ImageDrawImagePro(image, textImage,
+		(Rectangle){0, 0, (float)textImage.width, (float)textImage.height},
+		(Rectangle){
+			position.x - (float)textImage.width/2,
+			position.y - (float)textImage.height/2,
+			(float)(textImage.width),
+			(float)(textImage.height)},
+		(Vector2){0}, 0,
+		WHITE);
+
+	UnloadImage(textImage);
+}
+
+
+
 void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 {
 	Field field = board.fields[id];
 	BoardLayout layout = board.layout;
 
 	char commentBuffer[FIELD_TEXT_LENGTH];
+	int commentOffset;
 	switch(field.type)
 	{
 		case PROPERTY:
@@ -44,6 +67,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 				rectangle.height - offset,
 			}, board.assets.colors.light);
 			snprintf(commentBuffer, FIELD_TEXT_LENGTH, "$%i", field.value);
+			commentOffset = layout.commentOffsetCorner;
 			break;
 		case ACTION:
 			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
@@ -63,9 +87,106 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 			);
 			UnloadImage(icon);
 			strncpy(commentBuffer, field.comment, FIELD_TEXT_LENGTH);
+			commentOffset = -layout.nameOffsetCorner;
 			break;
 	}
+	ImageDrawTextSpec(
+		image,
+		board.assets.font,
+		field.name,
+		(Vector2){
+			rectangle.x + rectangle.width/2 - layout.nameOffsetCorner,
+			rectangle.y + rectangle.height/2 + layout.nameOffsetCorner,
+		},
+		45,
+		layout.fontSize,
+		layout.fontSpacing,
+		board.assets.colors.dark
+	);
+	ImageDrawTextSpec(
+		image,
+		board.assets.font,
+		commentBuffer,
+		(Vector2){
+			rectangle.x + rectangle.width/2 - commentOffset,
+			rectangle.y + rectangle.height/2 + commentOffset,
+		},
+		45,
+		layout.fontSize,
+		layout.fontSpacing,
+		board.assets.colors.dark
+	);
+}
 
+void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
+{
+	Field field = board.fields[id];
+	BoardLayout layout = board.layout;
+
+	char commentBuffer[FIELD_TEXT_LENGTH];
+	switch(field.type)
+	{
+		case PROPERTY:
+			ImageDrawRectangleRec(image, (Rectangle){
+				rectangle.x,
+				rectangle.y,
+				rectangle.width,
+				layout.dividerOffset,
+			}, field.color);
+			float offset = layout.dividerOffset + layout.borderWidth;
+			ImageDrawRectangleRec(image, (Rectangle){
+				rectangle.x,
+				rectangle.y + offset,
+				rectangle.width,
+				rectangle.height - offset,
+			}, board.assets.colors.light);
+			snprintf(commentBuffer, FIELD_TEXT_LENGTH, "$%i", field.value);
+			break;
+		case ACTION:
+			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
+
+			Image icon = board.assets.images[field.imageId];
+			ImageDrawImagePro(image, icon,
+				(Rectangle){0, 0, (float)icon.width, (float)icon.height},
+				(Rectangle){
+					rectangle.x + (rectangle.width - layout.imageSizeEdge)/2,
+					rectangle.y + (rectangle.height - layout.imageSizeEdge)/2,
+					layout.imageSizeEdge,
+					layout.imageSizeEdge,
+				},
+				(Vector2){0}, 0,
+				WHITE
+			);
+			
+			strncpy(commentBuffer, field.comment, FIELD_TEXT_LENGTH);
+			break;
+	}
+	ImageDrawTextSpec(
+		image,
+		board.assets.font,
+		field.name,
+		(Vector2){
+			rectangle.x + rectangle.width/2,
+			rectangle.y + rectangle.height/2 + layout.nameOffsetEdge,
+		},
+		0,
+		layout.fontSize,
+		layout.fontSpacing,
+		board.assets.colors.dark
+	);
+	ImageDrawTextSpec(
+		image,
+		board.assets.font,
+		commentBuffer,
+		(Vector2){
+			rectangle.x + rectangle.width/2,
+			rectangle.y + rectangle.height/2 + layout.commentOffsetEdge,
+		},
+		0,
+		layout.fontSize,
+		layout.fontSpacing,
+		board.assets.colors.dark
+	);
 }
 /*
 LoadBoardTexture(Board* board)
@@ -88,35 +209,35 @@ LoadBoardTexture(Board* board)
 
 	for(int i=1; i<quarter; ++i)
 	{
-		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
+		DrawBoardEdge(&image, layout, renderData, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
-			graphics.borderWidth,
-			graphics.fieldWidth,
-			graphics.cornerSize,
+			layout.borderWidth,
+			layout.fieldWidth,
+			layout.fieldHeight,
 			}, board->fields[quarter + i]);
 		
-		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
+		DrawBoardEdge(&image, layout, renderData, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
-			graphics.borderWidth + sideOffset,
-			graphics.fieldWidth,
-			graphics.cornerSize,
+			layout.borderWidth + sideOffset,
+			layout.fieldWidth,
+			layout.fieldHeight,
 			}, board->fields[4*quarter - i]);
 	}
 	ImageRotateCCW(&image);
 	for(int i=1; i<quarter; ++i)
 	{
-		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
+		DrawBoardEdge(&image, layout, renderData, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
-			graphics.borderWidth,
-			graphics.fieldWidth,
-			graphics.cornerSize,
+			layout.borderWidth,
+			layout.fieldWidth,
+			layout.fieldHeight,
 			}, board->fields[2*quarter + i]);
 		
-		DrawBoardEdge(&image, graphics, renderData, (Rectangle){
+		DrawBoardEdge(&image, layout, renderData, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
-			graphics.borderWidth + sideOffset,
-			graphics.fieldWidth,
-			graphics.cornerSize,
+			layout.borderWidth + sideOffset,
+			layout.fieldWidth,
+			layout.fieldHeight,
 			}, board->fields[quarter - i]);
 	}
 	ImageRotateCW(&image);

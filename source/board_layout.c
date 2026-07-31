@@ -3,24 +3,24 @@
 BoardLayout GetBoardLayout()
 {
 	return (BoardLayout){
-	.fieldWidth = 100,
-	.fieldHeight = 220,
+	.fieldWidth = 300,
+	.fieldHeight = 450,
 	
 	.borderWidth = 8,
-	.dividerOffset = 40,
+	.dividerOffset = 100,
 	.pawnOffset = 30,
 
 	.modelScale = 0.05f,
 
-	.fontSize = 24,
-	.fontSpacing = 1,
+	.fontSize = 48,
+	.fontSpacing = 0,
 
-	.nameOffsetEdge = 60,
-	.commentOffsetEdge = 30,
-	.imageSizeEdge = 80,
+	.nameOffsetEdge = 140,
+	.commentOffsetEdge = 200,
+	.imageSizeEdge = 200,
 
-	.nameOffsetCorner = 60,
-	.commentOffsetCorner = 30,
-	.imageSizeCorner = 180,
+	.nameOffsetCorner = 105,
+	.commentOffsetCorner = 150,
+	.imageSizeCorner = 320,
 	};
 }
