@@ -3,7 +3,7 @@
 
 BoardLayout GetBoardLayout()
 {
-	return (BoardLayout){
+	BoardLayout layout = {
 	.fieldWidth = 300,
 	.fieldHeight = 450,
 	
@@ -11,7 +11,7 @@ BoardLayout GetBoardLayout()
 	.dividerOffset = 100,
 	.pawnOffset = 40,
 
-	.modelScale = 1,
+	.modelScaleMultiplier = 0.9f,
 
 	.fontSize = 48,
 	.fontSpacing = 0,
@@ -24,6 +24,8 @@ BoardLayout GetBoardLayout()
 	.commentOffsetCorner = 150,
 	.imageSizeCorner = 320,
 	};
+
+	return layout;
 }
 
 Vector2 CalculateFieldCenter(Board board, int fieldNumber)
@@ -121,8 +123,35 @@ Vector3 CalculatePlayerPosition(Board board, int playerId)
 	};
 }
 
-float GetModelScale(Board board)
+Vector3 CalculateHousePosition(Board board, int fieldId)
 {
+	int half = board.fieldCount/2;
+	int quarter = half/2;
+
 	BoardLayout layout = board.layout;
-	return layout.modelScale * layout.dividerOffset / layout.boardSize;
+
+	Vector2 pixelPosition = CalculateFieldCenter(board, fieldId);
+
+	if(fieldId%quarter == 0)
+	{
+		pixelPosition.x += (layout.fieldHeight - layout.dividerOffset)/2;
+		pixelPosition.y -= (layout.fieldHeight - layout.dividerOffset)/2;
+	}
+	else
+	{
+		if(fieldId%half > quarter)
+		{
+			pixelPosition.y -= (layout.fieldHeight - layout.dividerOffset)/2;
+		}
+		else
+		{
+			pixelPosition.x += (layout.fieldHeight - layout.dividerOffset)/2;
+		}
+	}
+
+	return (Vector3){
+		board.position.x + (pixelPosition.x / board.layout.boardSize * 2 - 1),
+		board.position.y,
+		board.position.z + (pixelPosition.y / board.layout.boardSize * 2 - 1),
+	};
 }

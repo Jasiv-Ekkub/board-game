@@ -39,14 +39,31 @@ void SetBoardSize(Board* board, int size)
 
 void DrawPlayers(Board board)
 {
-	float modelScale = GetModelScale(board);
 	for(int i=0; i<board.playerCount; ++i)
 	{
 		DrawModel(
 			board.assets.models[PAWN_MODEL],
 			CalculatePlayerPosition(board, i),
-			modelScale,
+			board.layout.modelScale,
 			board.players[i].color);
+	}
+}
+
+void DrawBuildings(Board board)
+{
+	for(int i=0; i<board.fieldCount; ++i)
+	{
+		Field field = board.fields[i];
+		if(field.type != PROPERTY || field.buildingLevel == 0 || field.ownerId == -1) continue;
+		
+		BoardModelId modelId = board.assets.buildingLevelModelId[field.buildingLevel - 1];
+		Color ownerColor = board.players[field.ownerId].color;
+
+		DrawModel(
+			board.assets.models[modelId],
+			CalculateHousePosition(board, i),
+			board.layout.modelScale,
+			ownerColor);
 	}
 }
 
@@ -54,7 +71,7 @@ void UpdateBoard(Board* board, GameContext gameContext)
 {
 	DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
 	DrawPlayers(*board);
-	DrawModel(board->assets.models[HOUSE_MODEL], board->position, 0.05, BLUE);
+	DrawBuildings(*board);
 }
 
 void UnloadBoard(Board board)

@@ -2,6 +2,7 @@
 #define BOARD_ASSETS_H
 
 #include <raylib.h>
+
 typedef struct Board Board;
 
 typedef enum BoardModelId
@@ -48,6 +49,7 @@ typedef struct BoardAssets
 	Model models[BOARD_MODEL_AMOUNT];
 	Texture textures[BOARD_TEXTURE_AMOUNT];
 	Image images[BOARD_IMAGE_AMOUNT];
+	BoardModelId buildingLevelModelId[3];
 } BoardAssets;
 
 

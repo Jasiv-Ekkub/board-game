@@ -14,6 +14,7 @@ typedef struct BoardLayout
 	float dividerOffset;
 	float pawnOffset;
 
+	float modelScaleMultiplier;
 	float modelScale;
 
 	float boardSize;
@@ -32,6 +33,7 @@ typedef struct BoardLayout
 
 BoardLayout GetBoardLayout();
 Vector3 CalculatePlayerPosition(Board board, int playerId);
+Vector3 CalculateHousePosition(Board board, int fieldId);
 float GetModelScale(Board board);
 
 #endif //BOARD_LAYOUT_H

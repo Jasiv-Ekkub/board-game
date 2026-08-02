@@ -9,6 +9,9 @@ void LoadFields(Board* board)
 		if(qi)
 		{
 			board->fields[i] = GetPropertyField("Wasteland", 0, GRAY);
+			board->fields[i].ownerId = i%5 - 1;
+			if(!(i&5)) continue;
+			board->fields[i].buildingLevel = i%4;
 		}
 		else
 		{

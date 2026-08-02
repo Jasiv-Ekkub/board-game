@@ -12,6 +12,11 @@ BoardAssets LoadBoardAssets()
 			.light = WHITE,
 			.dark = BLACK,
 		},
+		.buildingLevelModelId = {
+			HOUSE_MODEL,
+			PAWN_MODEL,
+			HOUSE_MODEL,
+		},
 	};
 	
 	assets.font = LoadFontEx("resource/font/Cabal.ttf", 48, 0, 0);
@@ -67,6 +72,7 @@ void GenerateBoardTexture(Board* board)
 	float sideOffset = cornerOffset + edgeOffset * (float)(quarter-1) - layout.borderWidth;
 	float boardSize = sideOffset + cornerOffset;
 	board->layout.boardSize = boardSize;
+	board->layout.modelScale = layout.modelScaleMultiplier * layout.dividerOffset / boardSize;
 	
 	Image image = GenImageColor((int)boardSize, (int)boardSize, board->assets.colors.dark);
 	ImageDrawRectangleRec(&image, (Rectangle){cornerOffset, cornerOffset, sideOffset-cornerOffset, sideOffset-cornerOffset}, board->assets.colors.light);

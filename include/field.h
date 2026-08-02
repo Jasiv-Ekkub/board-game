@@ -5,7 +5,7 @@
 #include <raylib.h>
 
 #define FIELD_TEXT_LENGTH 32
-#define MAX_BUILDING_LEVEL 3
+#define MAX_BUILDING_LEVEL 4
 
 typedef enum FieldType { PROPERTY, ACTION } FieldType;
 
