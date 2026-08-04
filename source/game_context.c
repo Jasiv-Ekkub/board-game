@@ -5,22 +5,20 @@ void UnloadGameContext(GameContext gameContext);
 
 GameContext LoadGameContext()
 {
-	GameContext gameContext = {0};
-	
-	gameContext.camera3D = (Camera3D){
-		.position = (Vector3){-2, 3, 2},
-		.target = (Vector3){0, 0, 0},
-		.up = (Vector3){0, 1, 0},
-		.fovy = 2,
-		.projection = CAMERA_ORTHOGRAPHIC,
+	return (GameContext){
+		.deltaTime = 0,
+		.camera3D = (Camera3D){
+			.position = (Vector3){-2, 3, 2},
+			.target = (Vector3){0, 0, 0},
+			.up = (Vector3){0, 1, 0},
+			.fovy = 2,
+			.projection = CAMERA_ORTHOGRAPHIC,
+		},
+
+		.guiScale = 1,
+		.screenWidth = GetRenderWidth(),
+		.screenHeight = GetRenderHeight(),
 	};
-
-	gameContext.deltaTime = 0;
-
-	gameContext.screenWidth = GetRenderWidth();
-	gameContext.screenHeight = GetRenderHeight();
-
-	return gameContext;
 }
 
 void UpdateGameContext(GameContext* gameContext)

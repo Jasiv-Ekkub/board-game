@@ -7,6 +7,8 @@ typedef struct GameContext {
 	float deltaTime;
 	int screenWidth;
 	int screenHeight;
+	float guiScale;
+
 	Camera3D camera3D;
 } GameContext;
 

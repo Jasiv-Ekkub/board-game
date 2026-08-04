@@ -17,13 +17,13 @@ int main()
 			TMP += 4;
 			SetBoardSize(&board, TMP);
 		}
+		else if(IsKeyPressed(KEY_F6)) gameContext.guiScale += 0.05f;
+		else if(IsKeyPressed(KEY_F7)) gameContext.guiScale -= 0.05f;
 		BeginDrawing();
 			ClearBackground((Color){85, 85, 85, 255});
 			DrawFPS(10, 10);
 
-			BeginMode3D(gameContext.camera3D);
-				UpdateBoard(&board, gameContext);
-			EndMode3D();
+			UpdateBoard(&board, gameContext);
 		EndDrawing();
 	}
 

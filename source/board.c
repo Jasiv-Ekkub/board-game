@@ -16,7 +16,7 @@ Board LoadBoard()
 			GetPlayer("Player D", BLUE),
 		},
 
-		.timer = GetTimer(1, TIMER_SINGLE_PULSE | TIMER_REPEATING),
+		.timer = GetTimer(1, 0),
 	};
 
 	return board;
@@ -72,11 +72,13 @@ void DrawBuildings(Board board)
 
 void UpdateBoard(Board* board, GameContext gameContext)
 {
-	UpdateBoardLogic(board, gameContext);
+	BeginMode3D(gameContext.camera3D);
+		DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
+		DrawPlayers(*board);
+		DrawBuildings(*board);
+	EndMode3D();
 
-	DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
-	DrawPlayers(*board);
-	DrawBuildings(*board);
+	UpdateBoardLogic(board, gameContext);
 }
 
 void UnloadBoard(Board board)

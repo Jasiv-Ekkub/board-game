@@ -1,13 +1,7 @@
 #include <board_logic.h>
-#include <stdio.h>
-
+#include <layout_engine.h>
 
 void UpdateBoardLogic(Board* board, GameContext gameContext)
 {
-	if(UpdateTimer(&board->timer, gameContext))
-	{
-		printf("Update 1 sec\n");
-		board->players[0].position += 1;
-		board->players[0].position %= board->fieldCount;
-	}
+	DrawRectangleRec(GetRectanglePlacement(0, 0, 200, 200, CENTER, CENTER, gameContext), BLACK);
 }
