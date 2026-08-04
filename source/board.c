@@ -1,5 +1,6 @@
 #include <board.h>
 #include <board_setup.h>
+#include <board_logic.h>
 
 Board LoadBoard()
 {
@@ -14,6 +15,8 @@ Board LoadBoard()
 			GetPlayer("Player C", GREEN),
 			GetPlayer("Player D", BLUE),
 		},
+
+		.timer = GetTimer(1, TIMER_SINGLE_PULSE | TIMER_REPEATING),
 	};
 
 	return board;
@@ -69,6 +72,8 @@ void DrawBuildings(Board board)
 
 void UpdateBoard(Board* board, GameContext gameContext)
 {
+	UpdateBoardLogic(board, gameContext);
+
 	DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
 	DrawPlayers(*board);
 	DrawBuildings(*board);

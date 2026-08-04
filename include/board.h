@@ -8,6 +8,7 @@
 #include <board_layout.h>
 #include <field.h>
 #include <player.h>
+#include <timer.h>
 
 #define MAX_FIELD_AMOUNT 64
 #define MIN_FIELD_AMOUNT 24
@@ -26,6 +27,7 @@ typedef struct Board
 
 	Vector3 position;
 
+	Timer timer;
 } Board;
 
 Board LoadBoard();
