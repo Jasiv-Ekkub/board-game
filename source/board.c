@@ -2,24 +2,30 @@
 #include <board_setup.h>
 #include <board_logic.h>
 
+const char* boardPhaseNames[3] = {
+	"Round beginning",
+	"Rolling dice",
+	"Round ending",
+};
+
 Board LoadBoard()
 {
-	Board board = {
+	return (Board){
 		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
+	
+		.phase = START_ROUND,
 
 		.playerCount = 4,
 		.players = {
-			GetPlayer("Player A", RED),
-			GetPlayer("Player B", YELLOW),
-			GetPlayer("Player C", GREEN),
-			GetPlayer("Player D", BLUE),
+			GetHumanPlayer("Human", RED),
+			GetBotPlayer("Bot A", YELLOW),
+			GetBotPlayer("Bot B", GREEN),
+			GetBotPlayer("Bot C", BLUE),
 		},
 
-		.timer = GetTimer(1, 0),
+		.timer = GetTimer(TIMER_SINGLE_PULSE),
 	};
-
-	return board;
 }
 
 void SetBoardSize(Board* board, int size)

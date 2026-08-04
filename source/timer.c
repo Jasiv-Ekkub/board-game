@@ -1,27 +1,33 @@
 #include <timer.h>
 
-Timer GetTimer(float endTime, uint8_t flags)
+Timer GetTimer(uint8_t flags)
 {
 	return (Timer){
 		.currentTime = 0,
-		.endTime = endTime,
+		.endTime = 0,
 		.flags = flags,
 	};
 }
 
-void ResetTimer(Timer* timer)
+bool HasTimerEnded(Timer timer)
 {
-	if(timer->flags & TIMER_INTERRUPTABLE || timer->currentTime == timer->endTime)
+	return timer.currentTime >= timer.endTime;
+}
+
+void SetTimer(Timer* timer, float endTime)
+{
+	if(timer->flags & TIMER_INTERRUPTABLE || HasTimerEnded(*timer))
 	{
 		timer->currentTime = 0;
+		timer->endTime = endTime;
 	}
 }
 
 bool UpdateTimer(Timer* timer, GameContext gameContext)
 {
-	if((timer->currentTime == timer->endTime) && (timer->flags & TIMER_SINGLE_PULSE)) return false;
+	if(HasTimerEnded(*timer) && (timer->flags & TIMER_SINGLE_PULSE)) return false;
 	timer->currentTime += gameContext.deltaTime;
-	if(timer->currentTime >= timer->endTime)
+	if(HasTimerEnded(*timer))
 	{
 		if(timer->flags & TIMER_REPEATING) timer->currentTime = 0;
 		else timer->currentTime = timer->endTime;

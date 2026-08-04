@@ -15,5 +15,6 @@ typedef enum LayoutAnchor {
 } LayoutAnchor;
 
 Rectangle GetRectanglePlacement(float x, float y, float width, float height, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor, GameContext gameContext);
+Vector2 GetVector2Placement(float x, float y, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor, GameContext gameContext);
 
 #endif //LAYOUT_ENGINE_H

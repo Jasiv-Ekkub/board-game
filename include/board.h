@@ -14,10 +14,21 @@
 #define MIN_FIELD_AMOUNT 24
 #define MAX_PLAYER_AMOUNT 4
 
+typedef enum BoardPhase
+{
+	START_ROUND = 0,
+	ROLL_DICE,
+	END_ROUND,
+} BoardPhase;
+
+extern const char* boardPhaseNames[3];
+
 typedef struct Board
 {
 	BoardAssets assets;
 	BoardLayout layout;
+	
+	BoardPhase phase;
 
 	int fieldCount;
 	Field fields[MAX_FIELD_AMOUNT];

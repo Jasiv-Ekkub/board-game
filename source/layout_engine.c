@@ -14,3 +14,11 @@ Rectangle GetRectanglePlacement(float x, float y, float width, float height, Lay
 		height,
 	};
 }
+
+Vector2 GetVector2Placement(float x, float y, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor, GameContext gameContext)
+{
+	return (Vector2){
+		x * gameContext.guiScale + gameContext.screenWidth * (float)horizontalAnchor / 2,
+		y * gameContext.guiScale + gameContext.screenHeight * (float)verticalAnchor / 2,
+	};
+}

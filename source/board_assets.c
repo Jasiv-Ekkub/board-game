@@ -19,7 +19,7 @@ BoardAssets LoadBoardAssets()
 		},
 	};
 	
-	assets.font = LoadFontEx("resource/font/Cabal.ttf", 48, 0, 0);
+	assets.font = LoadFontEx("resource/font/Cabal.ttf", 120, 0, 0);
 
 	assets.images[START_IMAGE] = LoadImageDefault();
 	assets.images[PRISON_IMAGE] = LoadImageDefault();
