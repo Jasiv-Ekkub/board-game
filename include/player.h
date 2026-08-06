@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <raylib.h>
+#include <timer.h>
 
 #define PLAYER_NAME_LENGTH 32
 
@@ -11,6 +12,13 @@ typedef enum PlayerType
 	BOT,
 } PlayerType;
 
+typedef enum PlayerResponse
+{
+	 NONE,
+	 POSITIVE,
+	 NEGATIVE,
+} PlayerResponse;
+
 typedef struct Player
 {
 	char name[PLAYER_NAME_LENGTH];
@@ -18,6 +26,9 @@ typedef struct Player
 
 	int position;
 	Color color;
+
+	//Bot data
+	Timer timer;
 } Player;
 
 Player GetHumanPlayer(const char* name, Color color);

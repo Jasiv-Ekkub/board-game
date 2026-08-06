@@ -3,12 +3,16 @@ INC_PATH := ./include
 
 SRC_FILES := $(wildcard $(SRC_PATH)/*.c)
 
-.PHONY: run
+.PHONY: run check-leaks
 
 run: program
 	clear
 	./program
 
+check-leaks: program
+	clear
+	valgrind --leak-check=full ./program
+
 program: $(SRC_FILES)
 	clear
-	gcc -o $@ $^ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -I $(INC_PATH) -Wall -Werror
+	gcc -o $@ $^ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -I $(INC_PATH) -Wall -Werror -Wno-unused-function

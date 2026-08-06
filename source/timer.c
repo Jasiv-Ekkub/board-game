@@ -23,6 +23,12 @@ void SetTimer(Timer* timer, float endTime)
 	}
 }
 
+void ResetTimer(Timer* timer)
+{
+	timer->currentTime = 0;
+	timer->endTime = 0;
+}
+
 bool UpdateTimer(Timer* timer, GameContext gameContext)
 {
 	if(HasTimerEnded(*timer) && (timer->flags & TIMER_SINGLE_PULSE)) return false;

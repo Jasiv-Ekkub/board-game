@@ -1,6 +1,8 @@
 #include <board_assets.h>
 #include <board_rendering.h>
 
+#include <raygui.h>
+
 BoardAssets LoadBoardAssets()
 {
 	BoardAssets assets = {
@@ -9,8 +11,8 @@ BoardAssets LoadBoardAssets()
 		"resource/shaders/shader.fs"
 		),
 		.colors = {
-			.light = WHITE,
-			.dark = BLACK,
+			.light = GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_NORMAL)),
+			.dark = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
 		},
 		.buildingLevelModelId = {
 			HOUSE_MODEL,
@@ -19,7 +21,7 @@ BoardAssets LoadBoardAssets()
 		},
 	};
 	
-	assets.font = LoadFontEx("resource/font/Cabal.ttf", 120, 0, 0);
+	assets.font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 
 	assets.images[START_IMAGE] = LoadImageDefault();
 	assets.images[PRISON_IMAGE] = LoadImageDefault();

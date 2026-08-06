@@ -8,7 +8,7 @@ void LoadFields(Board* board)
 		int qi = i%quarter;
 		if(qi)
 		{
-			board->fields[i] = GetPropertyField("Wasteland", 0, GRAY);
+			board->fields[i] = GetPropertyField("Wasteland", 0, GetColor(0x303030FF));
 			board->fields[i].ownerId = i%5 - 1;
 			if(!(i&5)) continue;
 			board->fields[i].buildingLevel = i%4;

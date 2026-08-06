@@ -18,6 +18,7 @@ Player GetBotPlayer(const char* name, Color color)
 		.type = BOT,
 		.position = 0,
 		.color = color,
+		.timer = GetTimer(0),
 	};
 	strncpy(player.name, name, PLAYER_NAME_LENGTH);
 	return player;

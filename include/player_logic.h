@@ -5,13 +5,6 @@
 #include <game_context.h>
 #include <player.h>
 
-typedef enum PlayerResponse
-{
-	 NONE,
-	 POSITIVE,
-	 NEGATIVE,
-} PlayerResponse;
-
-PlayerResponse GetPlayerResponse(Player player, BoardPhase phase, GameContext gameContext);
+bool GetPlayerResponse(Board* board, GameContext gameContext);
 
 #endif //PLAYER_LOGIC_H

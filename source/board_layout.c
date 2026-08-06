@@ -13,7 +13,7 @@ BoardLayout GetBoardLayout()
 
 	.modelScaleMultiplier = 0.9f,
 
-	.fontSize = 48,
+	.fontSize = 49,
 	.fontSpacing = 0,
 
 	.nameOffsetEdge = 140,

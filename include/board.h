@@ -21,8 +21,6 @@ typedef enum BoardPhase
 	END_ROUND,
 } BoardPhase;
 
-extern const char* boardPhaseNames[3];
-
 typedef struct Board
 {
 	BoardAssets assets;
@@ -35,6 +33,8 @@ typedef struct Board
 
 	int playerCount;
 	Player players[MAX_PLAYER_AMOUNT];
+	int currentPlayer;
+	PlayerResponse currentPlayerResponse;
 
 	Vector3 position;
 

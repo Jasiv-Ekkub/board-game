@@ -2,12 +2,6 @@
 #include <board_setup.h>
 #include <board_logic.h>
 
-const char* boardPhaseNames[3] = {
-	"Round beginning",
-	"Rolling dice",
-	"Round ending",
-};
-
 Board LoadBoard()
 {
 	return (Board){
@@ -23,6 +17,8 @@ Board LoadBoard()
 			GetBotPlayer("Bot B", GREEN),
 			GetBotPlayer("Bot C", BLUE),
 		},
+		.currentPlayer = 0,
+		.currentPlayerResponse = NONE,
 
 		.timer = GetTimer(TIMER_SINGLE_PULSE),
 	};
