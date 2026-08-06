@@ -13,11 +13,17 @@ Field GetPropertyField(const char* name, int value, Color color)
 	return field;
 }
 
+void DebugAction(Player* player)
+{
+	player->money -= 100;
+}
+
 Field GetActionField(const char* name, const char* comment, BoardImageId imageId)
 {
 	Field field = {
 		.type = ACTION,
 		.imageId = imageId,
+		.action = DebugAction,
 	};
 	strncpy(field.name, name, FIELD_TEXT_LENGTH);
 	strncpy(field.comment, comment, FIELD_TEXT_LENGTH);
@@ -35,4 +41,14 @@ void PrintField(Field field)
 			printf("Action field: '%s' '%s' imageId:%i\n", field.name, field.comment, field.imageId);
 			break;
 	}
+}
+
+int GetFeeValue(Field field)
+{
+	return field.value / 10;
+}
+
+int GetFieldValue(Field field)
+{
+	return field.value;
 }

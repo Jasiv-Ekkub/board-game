@@ -18,6 +18,11 @@ typedef enum BoardPhase
 {
 	START_ROUND = 0,
 	ROLL_DICE,
+	CHECK_FIELD,
+	PAY_FEE,
+	BUY_FIELD,
+	UPGRADE_BUILDING,
+	CHECK_DEBT,
 	END_ROUND,
 } BoardPhase;
 
@@ -35,6 +40,7 @@ typedef struct Board
 	Player players[MAX_PLAYER_AMOUNT];
 	int currentPlayer;
 	PlayerResponse currentPlayerResponse;
+	int currentDiceroll;
 
 	Vector3 position;
 

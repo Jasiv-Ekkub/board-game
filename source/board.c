@@ -2,20 +2,24 @@
 #include <board_setup.h>
 #include <board_logic.h>
 
+#include <stdlib.h>
+#include <time.h>
+
 Board LoadBoard()
 {
+	srand(time(0));
 	return (Board){
 		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
 	
 		.phase = START_ROUND,
 
-		.playerCount = 4,
+		.playerCount = 1,
 		.players = {
-			GetHumanPlayer("Human", RED),
-			GetBotPlayer("Bot A", YELLOW),
-			GetBotPlayer("Bot B", GREEN),
-			GetBotPlayer("Bot C", BLUE),
+			GetHumanPlayer("Human", RED, 10000),
+			GetBotPlayer("Bot A", YELLOW, 10000),
+			GetBotPlayer("Bot B", GREEN, 10000),
+			GetBotPlayer("Bot C", BLUE, 10000),
 		},
 		.currentPlayer = 0,
 		.currentPlayerResponse = NONE,

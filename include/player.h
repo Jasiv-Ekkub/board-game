@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <timer.h>
+#include <stdbool.h>
 
 #define PLAYER_NAME_LENGTH 32
 
@@ -23,6 +24,8 @@ typedef struct Player
 {
 	char name[PLAYER_NAME_LENGTH];
 	PlayerType type;
+	int money;
+	bool isBankrupt;
 
 	int position;
 	Color color;
@@ -31,7 +34,7 @@ typedef struct Player
 	Timer timer;
 } Player;
 
-Player GetHumanPlayer(const char* name, Color color);
-Player GetBotPlayer(const char* name, Color color);
+Player GetHumanPlayer(const char* name, Color color, int money);
+Player GetBotPlayer(const char* name, Color color, int money);
 
 #endif //PLAYER_H
