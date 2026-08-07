@@ -8,6 +8,8 @@ Field GetPropertyField(const char* name, int value, Color color)
 		.type = PROPERTY,
 		.value = value,
 		.color = color,
+		.ownerId = -1,
+		.buildingLevel = 0,
 	};
 	strncpy(field.name, name, FIELD_TEXT_LENGTH);
 	return field;

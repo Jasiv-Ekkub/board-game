@@ -14,17 +14,18 @@ Board LoadBoard()
 	
 		.phase = START_ROUND,
 
-		.playerCount = 1,
+		.playerCount = 4,
 		.players = {
-			GetHumanPlayer("Human", RED, 10000),
-			GetBotPlayer("Bot A", YELLOW, 10000),
-			GetBotPlayer("Bot B", GREEN, 10000),
-			GetBotPlayer("Bot C", BLUE, 10000),
+			GetHumanPlayer("Human", RED, 1000),
+			GetBotPlayer("Bot A", YELLOW, 1000),
+			GetBotPlayer("Bot B", GREEN, 1000),
+			GetBotPlayer("Bot C", BLUE, 1000),
 		},
 		.currentPlayer = 0,
 		.currentPlayerResponse = NONE,
 
 		.timer = GetTimer(TIMER_SINGLE_PULSE),
+		.gameTimer = GetTimer(TIMER_SINGLE_PULSE),
 	};
 }
 
@@ -39,11 +40,9 @@ void SetBoardSize(Board* board, int size)
 	board->fieldCount = size;
 	LoadFields(board);
 	GenerateBoardTexture(board);
+	
+	SetTimer(&board->gameTimer, 1800);
 
-	for(int i=0; i<board->fieldCount; ++i)
-	{
-		PrintField(board->fields[i]);
-	}
 }
 
 void DrawPlayers(Board board)
@@ -63,9 +62,9 @@ void DrawBuildings(Board board)
 	for(int i=0; i<board.fieldCount; ++i)
 	{
 		Field field = board.fields[i];
-		if(field.type != PROPERTY || field.buildingLevel == 0 || field.ownerId == -1) continue;
+		if(field.type != PROPERTY || field.ownerId == -1) continue;
 		
-		BoardModelId modelId = board.assets.buildingLevelModelId[field.buildingLevel - 1];
+		BoardModelId modelId = board.assets.buildingLevelModelId[field.buildingLevel];
 		Color ownerColor = board.players[field.ownerId].color;
 
 		DrawModel(

@@ -1,11 +1,13 @@
 #include <board.h>
+#define RAYGUI_IMPLEMENTATION
+#define RAYGUI_MESSAGEBOX_BUTTON_HEIGHT 60
 #include <raygui.h>
-#include <gui_elements.h>
+#include <style_buisness.h>
 
 int main()
 {
 	InitWindow(1440, 810, "Board game");
-	LoadStyle();
+	GuiLoadStyleBuisness();
 
 	GameContext gameContext = LoadGameContext();
 	Board board = LoadBoard();
@@ -27,8 +29,6 @@ int main()
 		else if(IsKeyPressed(KEY_F7)) gameContext.guiScale -= 0.05f;
 		BeginDrawing();
 			ClearBackground(bgrColor);
-			DrawFPS(10, 10);
-
 			UpdateBoard(&board, gameContext);
 		EndDrawing();
 	}

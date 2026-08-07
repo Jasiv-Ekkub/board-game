@@ -15,13 +15,14 @@ BoardAssets LoadBoardAssets()
 			.dark = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
 		},
 		.buildingLevelModelId = {
+			PAWN_MODEL,
 			HOUSE_MODEL,
 			PAWN_MODEL,
 			HOUSE_MODEL,
 		},
 	};
 	
-	assets.font = GetFontDefault();//LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
+	assets.font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 
 	assets.images[START_IMAGE] = LoadImageDefault();
 	assets.images[PRISON_IMAGE] = LoadImageDefault();

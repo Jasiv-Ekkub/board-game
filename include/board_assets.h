@@ -49,7 +49,7 @@ typedef struct BoardAssets
 	Model models[BOARD_MODEL_AMOUNT];
 	Texture textures[BOARD_TEXTURE_AMOUNT];
 	Image images[BOARD_IMAGE_AMOUNT];
-	BoardModelId buildingLevelModelId[3];
+	BoardModelId buildingLevelModelId[4];
 } BoardAssets;
 
 

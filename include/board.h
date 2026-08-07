@@ -45,6 +45,7 @@ typedef struct Board
 	Vector3 position;
 
 	Timer timer;
+	Timer gameTimer;
 } Board;
 
 Board LoadBoard();
