@@ -21,7 +21,7 @@ BoardAssets LoadBoardAssets()
 		},
 	};
 	
-	assets.font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
+	assets.font = GetFontDefault();//LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 
 	assets.images[START_IMAGE] = LoadImageDefault();
 	assets.images[PRISON_IMAGE] = LoadImageDefault();

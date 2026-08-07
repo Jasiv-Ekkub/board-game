@@ -13,8 +13,8 @@ BoardLayout GetBoardLayout()
 
 	.modelScaleMultiplier = 0.9f,
 
-	.fontSize = 49,
-	.fontSpacing = 0,
+	.fontSize = 48,
+	.fontSpacing = 1,
 
 	.nameOffsetEdge = 140,
 	.commentOffsetEdge = 200,

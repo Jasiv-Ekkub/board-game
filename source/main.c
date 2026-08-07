@@ -1,12 +1,11 @@
 #include <board.h>
-#define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
-#include <style_buissness.h>
+#include <gui_elements.h>
 
 int main()
 {
 	InitWindow(1440, 810, "Board game");
-	GuiLoadStyleBuisness();
+	LoadStyle();
 
 	GameContext gameContext = LoadGameContext();
 	Board board = LoadBoard();

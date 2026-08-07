@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <gui_elements.h>
+
 const char* boardPhaseNames[3] = {
 	"Round beginning",
 	"Rolling dice",
@@ -18,28 +20,23 @@ void HandlePayFee(Board* board, GameContext gameContext);
 void HandleCheckDebt(Board* board, GameContext gameContext);
 void HandleEndRound(Board* board, GameContext gameContext);
 
+
+
 void UpdateBoardLogic(Board* board, GameContext gameContext)
 {
-	/*
-	DrawRectangleRec(GetRectanglePlacement( 10, -10, 200, 200, LEFT, BOTTOM, gameContext), BLACK);
-	DrawRectangleRec(GetRectanglePlacement(  0, -10, 200, 200, CENTER, BOTTOM, gameContext), BLACK);
-	DrawRectangleRec(GetRectanglePlacement(-10, -10, 200, 200, RIGHT, BOTTOM, gameContext), BLACK);
-	
-	DrawRectangleRec(GetRectanglePlacement( 10,   0, 200, 200, LEFT, CENTER, gameContext), BLACK);
-	DrawRectangleRec(GetRectanglePlacement(  0,   0, 200, 200, CENTER, CENTER, gameContext), BLACK);
-	DrawRectangleRec(GetRectanglePlacement(-10,   0, 200, 200, RIGHT, CENTER, gameContext), BLACK);
-	
-	DrawRectangleRec(GetRectanglePlacement( 10,  10, 200, 200, LEFT, TOP, gameContext), BLACK);
-	DrawRectangleRec(GetRectanglePlacement(  0,  10, 200, 200, CENTER, TOP, gameContext), BLACK);
-	DrawRectangleRec(GetRectanglePlacement(-10,  10, 200, 200, RIGHT, TOP, gameContext), BLACK);
-	*/
+	GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 100, LEFT, TOP, gameContext), board->players[0]);
+	GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 100, RIGHT, TOP, gameContext), board->players[1]);
+	GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM, gameContext), board->players[2]);
+	GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 100, RIGHT, BOTTOM, gameContext), board->players[3]);
 
+	/*
 	DrawText(boardPhaseNames[board->phase], 10, 40, 20, LIME);
 	char buffer[48];
 	snprintf(buffer, 48, "Current player: %i", board->currentPlayer);
 	DrawText(buffer, 10, 70, 20, LIME);
 	snprintf(buffer, 48, "Board timer: %f", board->timer.currentTime);
 	DrawText(buffer, 10, 100, 20, LIME);
+	*/
 
 	switch(board->phase)
 	{
@@ -66,6 +63,7 @@ void UpdateBoardLogic(Board* board, GameContext gameContext)
 		case END_ROUND:
 			HandleEndRound(board, gameContext);
 			break;
+		
 		default:
 			board->phase = END_ROUND;
 			break;
@@ -130,6 +128,9 @@ void HandleCheckField(Board* board, GameContext gameContext)
 
 void HandlePayFee(Board* board, GameContext gameContext)
 {
+	board->phase = END_ROUND;
+	return;
+
 	Player* player = &board->players[board->currentPlayer];
 	Field* field = &board->fields[player->position];
 	Player* fieldOwner = &board->players[field->ownerId];
