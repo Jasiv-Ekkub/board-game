@@ -5,6 +5,17 @@
 #include <stdlib.h>
 #include <time.h>
 
+const char* boardPhaseNames[] = {
+	[START_ROUND] = "Round beginning",
+	[ROLL_DICE] = "Rolling dice",
+	[CHECK_FIELD] = "Checking field",
+	[PAY_FEE] = "Paying fee",
+	[BUY_FIELD] = "Buying field",
+	[UPGRADE_BUILDING] = "Upgrading building",
+	[CHECK_DEBT] = "Paying debt",
+	[END_ROUND] = "Round ending",
+};
+
 Board LoadBoard()
 {
 	srand(time(0));
@@ -14,7 +25,7 @@ Board LoadBoard()
 	
 		.phase = START_ROUND,
 
-		.playerCount = 4,
+		.playerCount = 1,
 		.players = {
 			GetHumanPlayer("Human", RED, 1000),
 			GetBotPlayer("Bot A", YELLOW, 1000),

@@ -69,6 +69,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 			snprintf(commentBuffer, FIELD_TEXT_LENGTH, "$%i", field.value);
 			commentOffset = layout.commentOffsetCorner;
 			break;
+		case SUPERACTION:
 		case ACTION:
 			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
 
@@ -142,6 +143,7 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 			}, board.assets.colors.light);
 			snprintf(commentBuffer, FIELD_TEXT_LENGTH, "$%i", field.value);
 			break;
+		case SUPERACTION:
 		case ACTION:
 			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
 

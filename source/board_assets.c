@@ -15,10 +15,10 @@ BoardAssets LoadBoardAssets()
 			.dark = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
 		},
 		.buildingLevelModelId = {
-			PAWN_MODEL,
+			SITE_MODEL,
 			HOUSE_MODEL,
-			PAWN_MODEL,
-			HOUSE_MODEL,
+			VILLA_MODEL,
+			APARTAMENT_MODEL,
 		},
 	};
 	
@@ -34,7 +34,10 @@ BoardAssets LoadBoardAssets()
 	assets.models[BOARD_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = assets.textures[BOARD_TEXTURE];
 
 	assets.models[PAWN_MODEL] = LoadModel("resource/models/pawn.glb");
-	assets.models[HOUSE_MODEL] = LoadModel("resource/models/house.glb");
+	assets.models[SITE_MODEL] = LoadModel("resource/models/placeholder_box.glb");
+	assets.models[HOUSE_MODEL] = LoadModel("resource/models/placeholder_cone.glb");
+	assets.models[VILLA_MODEL] = LoadModel("resource/models/placeholder_sphere.glb");
+	assets.models[APARTAMENT_MODEL] = LoadModel("resource/models/placeholder_cylinder.glb");
 	
 	for(int i=0; i<BOARD_MODEL_AMOUNT; ++i)
 	{

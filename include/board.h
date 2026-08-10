@@ -26,6 +26,8 @@ typedef enum BoardPhase
 	END_ROUND,
 } BoardPhase;
 
+extern const char* boardPhaseNames[];
+
 typedef struct Board
 {
 	BoardAssets assets;

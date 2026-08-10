@@ -9,7 +9,10 @@ typedef enum BoardModelId
 {
 	BOARD_MODEL=0,
 	PAWN_MODEL,
+	SITE_MODEL,
 	HOUSE_MODEL,
+	VILLA_MODEL,
+	APARTAMENT_MODEL,
 	//===
 	BOARD_MODEL_AMOUNT,
 } BoardModelId;

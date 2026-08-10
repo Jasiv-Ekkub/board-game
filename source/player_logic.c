@@ -23,19 +23,22 @@ bool GetPlayerResponse(Board* board, GameContext gameContext)
 	}
 }
 
+#define TEXT_BUFFER_SIZE 128
+
 bool GetHumanPlayerResponse(Board* board, GameContext gameContext)
 {
 	Player player = board->players[board->currentPlayer];
 	Field field = board->fields[player.position];
+	char buffer[TEXT_BUFFER_SIZE];
+	int response;
 	switch(board->phase)
 	{
 		case ROLL_DICE:
 			return GuiButton(GetRectanglePlacement(0, 0, 500, 100, CENTER, CENTER, gameContext), "Roll dice");
 	
 		case BUY_FIELD:
-			char buffer[64];
-			snprintf(buffer, 64, "Do you want to buy %s for $%i", field.name, field.value);
-			int response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 200, CENTER, CENTER, gameContext), 0, buffer, "Yes;No");
+			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to buy %s for $%i", field.name, field.value);
+			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 200, CENTER, CENTER, gameContext), 0, buffer, "Yes;No");
 			switch(response)
 			{
 				case 0:
@@ -50,6 +53,25 @@ bool GetHumanPlayerResponse(Board* board, GameContext gameContext)
 					break;
 			}
 			return false;
+	
+		case UPGRADE_BUILDING:
+			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to upgrade %s\nin %s to %s", buildingLevelNames[field.buildingLevel], field.name, buildingLevelNames[field.buildingLevel+1]);
+			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 250, CENTER, CENTER, gameContext), 0, buffer, "Yes;No");
+			switch(response)
+			{
+				case 0:
+					return true;
+				case 1:
+					board->currentPlayerResponse = POSITIVE;
+					return true;
+				case 2:
+					board->currentPlayerResponse = NEGATIVE;
+					return true;
+				default:
+					break;
+			}
+			return false;
+
 		default:
 			return false;
 	}

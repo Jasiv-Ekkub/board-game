@@ -9,22 +9,12 @@
 
 #define BUFFER_SIZE 16
 
-const char* boardPhaseNames[] = {
-	"Round beginning",
-	"Rolling dice",
-	"Checking field",
-	"Paying fee",
-	"Buying field",
-	"Upgrading building",
-	"Paying debt",
-	"Round ending",
-};
-
 void HandleStartRound(Board* board, GameContext gameContext);
 void HandleRollDice(Board* board, GameContext gameContext);
 void HandleCheckField(Board* board, GameContext gameContext);
 void HandlePayFee(Board* board, GameContext gameContext);
 void HandleBuyField(Board* board, GameContext gameContext);
+void HandleUpgradeBuilding(Board* board, GameContext gameContext);
 void HandleCheckDebt(Board* board, GameContext gameContext);
 void HandleEndRound(Board* board, GameContext gameContext);
 
@@ -58,6 +48,10 @@ void UpdateBoardLogic(Board* board, GameContext gameContext)
 
 		case BUY_FIELD:
 			HandleBuyField(board, gameContext);
+			break;
+
+		case UPGRADE_BUILDING:
+			HandleUpgradeBuilding(board, gameContext);
 			break;
 
 		case PAY_FEE:
@@ -101,10 +95,20 @@ void HandleRollDice(Board* board, GameContext gameContext)
 		board->currentDiceroll = currentDiceroll;
 
 		Player* player = &board->players[board->currentPlayer];
+		for(int i=1; i<=currentDiceroll; ++i)
+		{
+			int position = (player->position + i) % board->fieldCount;
+			Field field = board->fields[position];
+			if(field.type == SUPERACTION)
+			{
+				field.action(player);
+			}
+		}
 		player->position += currentDiceroll;
 		player->position %= board->fieldCount;
-
-		board->phase = CHECK_FIELD;
+		
+		if(player->money < 0) board->phase = CHECK_DEBT;
+		else board->phase = CHECK_FIELD;
 	}
 }
 
@@ -112,6 +116,7 @@ void HandleCheckField(Board* board, GameContext gameContext)
 {
 	Player* player = &board->players[board->currentPlayer];
 	Field* field = &board->fields[player->position];
+	PrintField(*field);
 	switch(field->type)
 	{
 		case PROPERTY:
@@ -125,8 +130,11 @@ void HandleCheckField(Board* board, GameContext gameContext)
 			}
 			else if(field->ownerId == board->currentPlayer)
 			{
-				board->phase = UPGRADE_BUILDING;	
-				return;
+				if(field->buildingLevel < MAX_BUILDING_LEVEL - 1)
+				{
+					board->phase = UPGRADE_BUILDING;	
+					return;
+				}
 			}
 			else
 			{
@@ -186,6 +194,16 @@ void HandleBuyField(Board* board, GameContext gameContext)
 			field->ownerId = board->currentPlayer;
 
 		}
+		board->phase = END_ROUND;
+	}
+}
+
+void HandleUpgradeBuilding(Board* board, GameContext gameContext)
+{
+	SetTimer(&board->timer, 30);
+	if(UpdateTimer(&board->timer, gameContext) || GetPlayerResponse(board, gameContext))
+	{
+		ResetTimer(&board->timer);
 		board->phase = END_ROUND;
 	}
 }

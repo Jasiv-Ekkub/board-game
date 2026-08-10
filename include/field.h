@@ -9,7 +9,11 @@
 #define MAX_BUILDING_LEVEL 4
 
 
-typedef enum FieldType { PROPERTY, ACTION } FieldType;
+typedef enum FieldType { PROPERTY, ACTION, SUPERACTION} FieldType;
+
+extern const char* buildingLevelNames[MAX_BUILDING_LEVEL];
+
+typedef void(*FieldAction)(Player*);
 
 typedef struct Field
 {
@@ -26,13 +30,14 @@ typedef struct Field
 		struct {
 			char comment[FIELD_TEXT_LENGTH];
 			BoardImageId imageId;
-			void (*action)(Player*);
+			FieldAction action;
 		};
 	};
 } Field;
 
 Field GetPropertyField(const char* name, int value, Color color);
-Field GetActionField(const char* name, const char* comment, BoardImageId imageId);
+Field GetActionField(const char* name, const char* comment, FieldAction action, BoardImageId imageId);
+Field GetSuperactionField(const char* name, const char* comment, FieldAction action, BoardImageId imageId);
 
 void PrintField(Field field);
 
