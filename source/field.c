@@ -64,10 +64,15 @@ void PrintField(Field field)
 
 int GetFeeValue(Field field)
 {
-	return field.value / 10;
+	return field.value * (1 + 2*field.buildingLevel) / 5;
 }
 
 int GetFieldValue(Field field)
 {
-	return field.value;
+	return field.value * (2 + field.buildingLevel) / 2;
+}
+
+int GetUpgradeValue(Field field)
+{
+	return field.value * (field.buildingLevel + 1) / 4;
 }

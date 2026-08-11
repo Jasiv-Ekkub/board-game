@@ -27,7 +27,7 @@ Board LoadBoard()
 
 		.playerCount = 1,
 		.players = {
-			GetHumanPlayer("Human", RED, 1000),
+			GetHumanPlayer("Human", RED, 10),
 			GetBotPlayer("Bot A", YELLOW, 1000),
 			GetBotPlayer("Bot B", GREEN, 1000),
 			GetBotPlayer("Bot C", BLUE, 1000),

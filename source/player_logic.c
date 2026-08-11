@@ -41,40 +41,40 @@ bool GetHumanPlayerResponse(Board* board, GameContext gameContext)
 			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 200, CENTER, CENTER, gameContext), 0, buffer, "Yes;No");
 			switch(response)
 			{
-				case 0:
-					return true;
 				case 1:
 					board->currentPlayerResponse = POSITIVE;
 					return true;
+				case 0:
 				case 2:
 					board->currentPlayerResponse = NEGATIVE;
 					return true;
 				default:
 					break;
 			}
-			return false;
+			break;
 	
 		case UPGRADE_BUILDING:
-			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to upgrade %s\nin %s to %s", buildingLevelNames[field.buildingLevel], field.name, buildingLevelNames[field.buildingLevel+1]);
+			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to upgrade %s\nin %s to %s for $%i", buildingLevelNames[field.buildingLevel], field.name, buildingLevelNames[field.buildingLevel+1], GetUpgradeValue(field));
 			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 250, CENTER, CENTER, gameContext), 0, buffer, "Yes;No");
 			switch(response)
 			{
-				case 0:
-					return true;
 				case 1:
 					board->currentPlayerResponse = POSITIVE;
 					return true;
+				case 0:
 				case 2:
 					board->currentPlayerResponse = NEGATIVE;
 					return true;
 				default:
 					break;
 			}
-			return false;
+			break;
 
 		default:
-			return false;
+			break;
 	}
+	board->currentPlayerResponse = NONE;
+	return false;
 }
 
 bool GetBotPlayerResponse(Board* board, GameContext gameContext)
@@ -89,7 +89,8 @@ bool GetBotPlayerResponse(Board* board, GameContext gameContext)
 			board->currentPlayerResponse = POSITIVE;
 			return UpdateTimer(timer, gameContext);
 		default:
-			return false;
+			break;
 	}
+	board->currentPlayerResponse = NONE;
 	return false;
 }

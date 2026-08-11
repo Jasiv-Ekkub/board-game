@@ -43,5 +43,6 @@ void PrintField(Field field);
 
 int GetFeeValue(Field field);
 int GetFieldValue(Field field);
+int GetUpgradeValue(Field field);
 
 #endif //FIELD_H

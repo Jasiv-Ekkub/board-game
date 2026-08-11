@@ -73,7 +73,6 @@ void UpdateBoardLogic(Board* board, GameContext gameContext)
 
 void HandleStartRound(Board* board, GameContext gameContext)
 {
-	board->currentPlayerResponse = NONE;
 	Player* player = &board->players[board->currentPlayer];
 	if(player->money < 0)
 	{
@@ -130,7 +129,7 @@ void HandleCheckField(Board* board, GameContext gameContext)
 			}
 			else if(field->ownerId == board->currentPlayer)
 			{
-				if(field->buildingLevel < MAX_BUILDING_LEVEL - 1)
+				if(field->buildingLevel < MAX_BUILDING_LEVEL - 1 && GetUpgradeValue(*field) <= player->money)
 				{
 					board->phase = UPGRADE_BUILDING;	
 					return;
@@ -200,10 +199,18 @@ void HandleBuyField(Board* board, GameContext gameContext)
 
 void HandleUpgradeBuilding(Board* board, GameContext gameContext)
 {
-	SetTimer(&board->timer, 30);
+	SetTimer(&board->timer, 5);
 	if(UpdateTimer(&board->timer, gameContext) || GetPlayerResponse(board, gameContext))
 	{
 		ResetTimer(&board->timer);
+		if(board->currentPlayerResponse == POSITIVE)
+		{
+			Player* player = &board->players[board->currentPlayer];
+			Field* field = &board->fields[player->position];
+			
+			field->buildingLevel++;
+			player->money -= GetUpgradeValue(*field);
+		}
 		board->phase = END_ROUND;
 	}
 }
