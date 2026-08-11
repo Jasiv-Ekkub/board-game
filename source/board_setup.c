@@ -44,5 +44,10 @@ void LoadFields(Board* board)
 
 void LoadPlayers(Board* board, int startMoney)
 {
-
+		board->playerCount = 2,
+		board->players[0] = GetHumanPlayer("Human", RED, startMoney);
+		board->players[1] = GetBotPlayer("Bot A", YELLOW, startMoney);
+		board->players[2] = GetBotPlayer("Bot B", GREEN, startMoney);
+		board->players[3] = GetBotPlayer("Bot C", BLUE, startMoney);
+		board->currentPlayer = 0;
 }

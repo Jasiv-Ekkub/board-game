@@ -3,6 +3,7 @@
 #include <board_logic.h>
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 const char* boardPhaseNames[] = {
@@ -23,24 +24,14 @@ Board LoadBoard()
 		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
 	
-		.phase = START_ROUND,
 
-		.playerCount = 1,
-		.players = {
-			GetHumanPlayer("Human", RED, 10),
-			GetBotPlayer("Bot A", YELLOW, 1000),
-			GetBotPlayer("Bot B", GREEN, 1000),
-			GetBotPlayer("Bot C", BLUE, 1000),
-		},
-		.currentPlayer = 0,
-		.currentPlayerResponse = NONE,
 
 		.timer = GetTimer(TIMER_SINGLE_PULSE),
 		.gameTimer = GetTimer(TIMER_SINGLE_PULSE),
 	};
 }
 
-void SetBoardSize(Board* board, int size)
+void SetupBoard(Board* board, int size)
 {
 	if(size > MAX_FIELD_AMOUNT)
 		size = MAX_FIELD_AMOUNT;
@@ -50,9 +41,12 @@ void SetBoardSize(Board* board, int size)
 
 	board->fieldCount = size;
 	LoadFields(board);
+	LoadPlayers(board, 10);
 	GenerateBoardTexture(board);
 	
 	SetTimer(&board->gameTimer, 1800);
+	board->phase = START_ROUND;
+	//SetTimer(&board->gameTimer, 3);
 
 }
 
@@ -94,10 +88,49 @@ void UpdateBoard(Board* board, GameContext gameContext)
 		DrawBuildings(*board);
 	EndMode3D();
 
-	UpdateBoardLogic(board, gameContext);
+	if(!HasGameEnded(*board)) UpdateBoardLogic(board, gameContext);
 }
 
 void UnloadBoard(Board board)
 {
 	UnloadBoardAssets(board.assets);
+}
+
+bool HasGameEnded(Board board)
+{
+	int activePlayers = 0;
+	for(int i=0; i<board.playerCount; ++i)
+	{
+		if(board.players[i].money >= 0)
+		{
+			activePlayers++;
+		}
+	}
+	return activePlayers < 2 || HasTimerEnded(board.gameTimer);
+}
+
+Player GetWinner(Board board)
+{
+	int wealth[MAX_PLAYER_AMOUNT] = {
+		board.players[0].money,
+		board.players[1].money,
+		board.players[2].money,
+		board.players[3].money,
+	};
+	for(int i=0; i<board.fieldCount; ++i)
+	{
+		Field *field = &board.fields[i];
+		if(field->type == PROPERTY && field->ownerId != -1)
+		{
+			wealth[field->ownerId] += GetFieldValue(*field);
+		}
+	}
+
+	int winnerId = 0;
+	for(int i=1; i<board.playerCount; ++i)
+	{
+		if(wealth[winnerId] < wealth[i]) winnerId = i; 
+	}
+	board.players[winnerId].money = wealth[winnerId];
+	return board.players[winnerId];
 }

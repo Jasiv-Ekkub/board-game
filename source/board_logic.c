@@ -208,8 +208,8 @@ void HandleUpgradeBuilding(Board* board, GameContext gameContext)
 			Player* player = &board->players[board->currentPlayer];
 			Field* field = &board->fields[player->position];
 			
-			field->buildingLevel++;
 			player->money -= GetUpgradeValue(*field);
+			field->buildingLevel++;
 		}
 		board->phase = END_ROUND;
 	}

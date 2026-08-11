@@ -16,6 +16,7 @@ typedef struct Timer {
 } Timer;
 
 Timer GetTimer(uint8_t flags);
+bool HasTimerEnded(Timer timer);
 void SetTimer(Timer* timer, float endTime);
 void ResetTimer(Timer* timer);
 bool UpdateTimer(Timer* timer, GameContext gameContext);

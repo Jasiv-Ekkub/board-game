@@ -2,7 +2,22 @@
 #define RAYGUI_IMPLEMENTATION
 #define RAYGUI_MESSAGEBOX_BUTTON_HEIGHT 60
 #include <raygui.h>
+#include <layout_engine.h>
+#include <gui_elements.h>
 #include <style_buisness.h>
+#define BUFFER_SIZE 32
+
+enum {
+	MAIN_MENU = 0,
+	BOARD,
+	SUMMARY
+} scene;
+
+void HandleMainMenu(Board* board, GameContext gameContext);
+void HandleBoard(Board* board, GameContext gameContext);
+void HandleSummary(Board* board, GameContext gameContext);
+
+Timer timer;
 
 int main()
 {
@@ -11,8 +26,9 @@ int main()
 
 	GameContext gameContext = LoadGameContext();
 	Board board = LoadBoard();
-	int TMP = 24;
-	SetBoardSize(&board, TMP);
+	
+	timer = GetTimer(TIMER_SINGLE_PULSE | TIMER_REPEATING);
+	SetTimer(&timer, 5);
 
 	Color bgrColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 
@@ -20,16 +36,25 @@ int main()
 	{
 		UpdateGameContext(&gameContext);
 		if(IsKeyPressed(KEY_F4)) ToggleFullscreen();
-		else if(IsKeyPressed(KEY_F5))
-		{
-			TMP += 4;
-			SetBoardSize(&board, TMP);
-		}
 		else if(IsKeyPressed(KEY_F6)) gameContext.guiScale += 0.05f;
 		else if(IsKeyPressed(KEY_F7)) gameContext.guiScale -= 0.05f;
 		BeginDrawing();
 			ClearBackground(bgrColor);
-			UpdateBoard(&board, gameContext);
+			switch(scene)
+			{
+				case MAIN_MENU:
+					HandleMainMenu(&board, gameContext);
+					break;
+
+				case BOARD:
+					HandleBoard(&board, gameContext);
+					break;
+
+				case SUMMARY:
+					HandleSummary(&board, gameContext);
+					break;
+			}
+
 		EndDrawing();
 	}
 
@@ -37,4 +62,46 @@ int main()
 	UnloadGameContext(gameContext);
 	CloseWindow();
 	return 0;
+}
+
+void HandleMainMenu(Board* board, GameContext gameContext)
+{
+	if(GuiButton(GetRectanglePlacement(0,0,500,100,CENTER,CENTER,gameContext), "Play"))
+	{
+		SetupBoard(board, 36);
+		scene = BOARD;
+	}
+}
+
+void HandleBoard(Board* board, GameContext gameContext)
+{
+	UpdateBoard(board, gameContext);
+
+	if(HasGameEnded(*board))
+	{
+		char buffer[BUFFER_SIZE];
+		int gameTime = timer.currentTime;
+		snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
+		GuiBoxText(GetRectanglePlacement(0, 20, 225, 75, CENTER, TOP, gameContext), buffer);
+		if(UpdateTimer(&timer, gameContext))
+		{
+			scene = SUMMARY;
+		}
+	}
+}
+
+void HandleSummary(Board* board, GameContext gameContext)
+{
+	char buffer[BUFFER_SIZE];
+	int gameTime = timer.currentTime;
+	snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
+	GuiBoxText(GetRectanglePlacement(0, 20, 225, 75, CENTER, TOP, gameContext), buffer);
+
+	GuiBoxText(GetRectanglePlacement(0, -50, 225, 75, CENTER, CENTER, gameContext), "The winner is:");
+	GuiPlayerInfo(GetRectanglePlacement(0, 50, 300, 100, CENTER, CENTER, gameContext), GetWinner(*board));
+	
+	if(UpdateTimer(&timer, gameContext))
+	{
+		scene = MAIN_MENU;
+	}
 }
