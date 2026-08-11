@@ -68,7 +68,7 @@ void HandleMainMenu(Board* board, GameContext gameContext)
 {
 	if(GuiButton(GetRectanglePlacement(0,0,500,100,CENTER,CENTER,gameContext), "Play"))
 	{
-		SetupBoard(board, 36);
+		SetupBoard(board, 36, 1, 1);
 		scene = BOARD;
 	}
 }

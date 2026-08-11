@@ -23,15 +23,12 @@ Board LoadBoard()
 	return (Board){
 		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
-	
-
-
 		.timer = GetTimer(TIMER_SINGLE_PULSE),
 		.gameTimer = GetTimer(TIMER_SINGLE_PULSE),
 	};
 }
 
-void SetupBoard(Board* board, int size)
+void SetupBoard(Board* board, int size, int humanCount, int botCount)
 {
 	if(size > MAX_FIELD_AMOUNT)
 		size = MAX_FIELD_AMOUNT;
@@ -41,13 +38,11 @@ void SetupBoard(Board* board, int size)
 
 	board->fieldCount = size;
 	LoadFields(board);
-	LoadPlayers(board, 10);
+	LoadPlayers(board, 1000, humanCount, botCount);
 	GenerateBoardTexture(board);
 	
 	SetTimer(&board->gameTimer, 1800);
 	board->phase = START_ROUND;
-	//SetTimer(&board->gameTimer, 3);
-
 }
 
 void DrawPlayers(Board board)

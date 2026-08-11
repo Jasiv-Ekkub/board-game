@@ -42,12 +42,34 @@ void LoadFields(Board* board)
 	}
 }
 
-void LoadPlayers(Board* board, int startMoney)
+void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
 {
-		board->playerCount = 2,
-		board->players[0] = GetHumanPlayer("Human", RED, startMoney);
-		board->players[1] = GetBotPlayer("Bot A", YELLOW, startMoney);
-		board->players[2] = GetBotPlayer("Bot B", GREEN, startMoney);
-		board->players[3] = GetBotPlayer("Bot C", BLUE, startMoney);
-		board->currentPlayer = 0;
+	if(humanCount > 4)
+	{
+		humanCount = 4;
+		botCount = 0;
+	}
+	else if(botCount > 4 - humanCount)
+	{
+		botCount = 4 - humanCount;
+	}
+
+	board->playerCount = humanCount + botCount;
+
+	for(int i=0; i<MAX_PLAYER_AMOUNT; ++i)
+	{
+		if(i < humanCount)
+		{
+			board->players[i] = GetHumanPlayer("Human", RED, startMoney);
+		}
+		else if(i - humanCount < botCount)
+		{
+			board->players[i] = GetBotPlayer("Bot", BLUE, startMoney);
+		}
+		else
+		{
+			board->players[i] = GetBotPlayer("No player", GRAY, 0);
+		}
+	}
+	board->currentPlayer = 0;
 }

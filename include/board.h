@@ -51,7 +51,7 @@ typedef struct Board
 } Board;
 
 Board LoadBoard();
-void SetupBoard(Board* board, int size);
+void SetupBoard(Board* board, int size, int humanCount, int botCount);
 void UpdateBoard(Board* board, GameContext gameContext);
 void UnloadBoard(Board board);
 bool HasGameEnded(Board board);
