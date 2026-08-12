@@ -1,8 +1,9 @@
 #include <board_setup.h>
+#include <stdio.h>
 
 void DebugAction(Player* player)
 {
-	player->money -= 100;
+	player->money -= 10000;
 }
 
 void DebugSuperaction(Player* player)
@@ -42,6 +43,13 @@ void LoadFields(Board* board)
 	}
 }
 
+const Color playerColors[MAX_PLAYER_AMOUNT] = {
+	RED,
+	YELLOW,
+	GREEN,
+	BLUE
+};
+
 void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
 {
 	if(humanCount > 4)
@@ -56,15 +64,18 @@ void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
 
 	board->playerCount = humanCount + botCount;
 
+	char buffer[PLAYER_NAME_LENGTH];
 	for(int i=0; i<MAX_PLAYER_AMOUNT; ++i)
 	{
 		if(i < humanCount)
 		{
-			board->players[i] = GetHumanPlayer("Human", RED, startMoney);
+			snprintf(buffer, PLAYER_NAME_LENGTH, "Player %c", i+'A');
+			board->players[i] = GetHumanPlayer(buffer, playerColors[i], startMoney);
 		}
 		else if(i - humanCount < botCount)
 		{
-			board->players[i] = GetBotPlayer("Bot", BLUE, startMoney);
+			snprintf(buffer, PLAYER_NAME_LENGTH, "Bot %c", i+'A'-humanCount);
+			board->players[i] = GetBotPlayer(buffer, playerColors[i], startMoney);
 		}
 		else
 		{

@@ -93,6 +93,10 @@ void UnloadBoard(Board board)
 
 bool HasGameEnded(Board board)
 {
+	if(HasTimerEnded(board.gameTimer)) return true;
+
+	if(board.phase != START_ROUND) return false;
+
 	int activePlayers = 0;
 	for(int i=0; i<board.playerCount; ++i)
 	{
@@ -101,7 +105,7 @@ bool HasGameEnded(Board board)
 			activePlayers++;
 		}
 	}
-	return activePlayers < 2 || HasTimerEnded(board.gameTimer);
+	return activePlayers < 2;
 }
 
 Player GetWinner(Board board)

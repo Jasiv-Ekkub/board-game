@@ -7,6 +7,9 @@
 #include <style_buisness.h>
 #define BUFFER_SIZE 32
 
+#define MAX(p,q) (p>q ? p : q)
+#define MIN(p,q) (p<q ? p : q)
+
 enum {
 	MAIN_MENU = 0,
 	BOARD,
@@ -64,13 +67,19 @@ int main()
 	return 0;
 }
 
+
+int humanCount = 0;
+int botCount = 0;
+
 void HandleMainMenu(Board* board, GameContext gameContext)
 {
 	if(GuiButton(GetRectanglePlacement(0,0,500,100,CENTER,CENTER,gameContext), "Play"))
 	{
-		SetupBoard(board, 36, 1, 1);
+		SetupBoard(board, 36, humanCount, botCount);
 		scene = BOARD;
 	}
+	GuiSpinner(GetRectanglePlacement(0,100,300,60,CENTER,CENTER,gameContext), "Human players ", &humanCount, 1, 4, false);
+	GuiSpinner(GetRectanglePlacement(0,180,300,60,CENTER,CENTER,gameContext), "Bot players ", &botCount, MAX(0,2-humanCount), 4 - humanCount, false);
 }
 
 void HandleBoard(Board* board, GameContext gameContext)
@@ -82,7 +91,7 @@ void HandleBoard(Board* board, GameContext gameContext)
 		char buffer[BUFFER_SIZE];
 		int gameTime = timer.currentTime;
 		snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
-		GuiBoxText(GetRectanglePlacement(0, 20, 225, 75, CENTER, TOP, gameContext), buffer);
+		GuiBoxText(GetRectanglePlacement(0, 0, 225, 75, CENTER, CENTER, gameContext), buffer);
 		if(UpdateTimer(&timer, gameContext))
 		{
 			scene = SUMMARY;

@@ -31,6 +31,7 @@ bool GetHumanPlayerResponse(Board* board, GameContext gameContext)
 	Field field = board->fields[player.position];
 	char buffer[TEXT_BUFFER_SIZE];
 	int response;
+	GuiPlayerInfo(GetRectanglePlacement(0, 100, 225, 100, CENTER, TOP, gameContext), player);
 	switch(board->phase)
 	{
 		case ROLL_DICE:
