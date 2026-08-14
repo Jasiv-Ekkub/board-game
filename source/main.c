@@ -5,6 +5,7 @@
 #include <layout_engine.h>
 #include <gui_elements.h>
 #include <style_buisness.h>
+#include <stdbool.h>
 #define BUFFER_SIZE 32
 
 #define MAX(p,q) (p>q ? p : q)
@@ -21,10 +22,13 @@ void HandleBoard(Board* board, GameContext gameContext);
 void HandleSummary(Board* board, GameContext gameContext);
 
 Timer timer;
+bool shouldClose = false;
 
 int main()
 {
 	InitWindow(1440, 810, "Board game");
+	SetExitKey(0);
+	SetTargetFPS(60);
 	GuiLoadStyleBuisness();
 
 	GameContext gameContext = LoadGameContext();
@@ -35,12 +39,13 @@ int main()
 
 	Color bgrColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 
-	while(!WindowShouldClose())
+	while(!shouldClose)
 	{
 		UpdateGameContext(&gameContext);
 		if(IsKeyPressed(KEY_F4)) ToggleFullscreen();
 		else if(IsKeyPressed(KEY_F6)) gameContext.guiScale += 0.05f;
 		else if(IsKeyPressed(KEY_F7)) gameContext.guiScale -= 0.05f;
+
 		BeginDrawing();
 			ClearBackground(bgrColor);
 			switch(scene)
@@ -68,18 +73,26 @@ int main()
 }
 
 
+int boardSize = MIN_FIELD_AMOUNT;
 int humanCount = 0;
 int botCount = 0;
 
 void HandleMainMenu(Board* board, GameContext gameContext)
 {
-	if(GuiButton(GetRectanglePlacement(0,0,500,100,CENTER,CENTER,gameContext), "Play"))
+	if(GuiButton(GetRectanglePlacement(-205,0,400,100,CENTER,CENTER,gameContext), "Play"))
 	{
-		SetupBoard(board, 36, humanCount, botCount);
+		SetupBoard(board, boardSize, humanCount, botCount);
 		scene = BOARD;
 	}
-	GuiSpinner(GetRectanglePlacement(0,100,300,60,CENTER,CENTER,gameContext), "Human players ", &humanCount, 1, 4, false);
-	GuiSpinner(GetRectanglePlacement(0,180,300,60,CENTER,CENTER,gameContext), "Bot players ", &botCount, MAX(0,2-humanCount), 4 - humanCount, false);
+	if(GuiButton(GetRectanglePlacement(205,0,400,100,CENTER,CENTER,gameContext), "Exit game"))
+	{
+		shouldClose = true;
+	}
+	GuiSpinner(GetRectanglePlacement(0,100,300,80,CENTER,CENTER,gameContext), "Board size ", &boardSize, MIN_FIELD_AMOUNT, MAX_FIELD_AMOUNT, false);
+	if(boardSize%4 == 1) boardSize += 3;
+	else if(boardSize%4 == 3) boardSize -= 3;
+	GuiSpinner(GetRectanglePlacement(0,190,300,80,CENTER,CENTER,gameContext), "Human players ", &humanCount, 1, 4, false);
+	GuiSpinner(GetRectanglePlacement(0,280,300,80,CENTER,CENTER,gameContext), "Bot players ", &botCount, MAX(0,2-humanCount), 4 - humanCount, false);
 }
 
 void HandleBoard(Board* board, GameContext gameContext)
@@ -97,6 +110,11 @@ void HandleBoard(Board* board, GameContext gameContext)
 			scene = SUMMARY;
 		}
 	}
+	else if(GuiButton(GetRectanglePlacement(10,0,100,60,LEFT,CENTER,gameContext), "Finish"))
+	{
+		scene = SUMMARY;
+	}
+
 }
 
 void HandleSummary(Board* board, GameContext gameContext)

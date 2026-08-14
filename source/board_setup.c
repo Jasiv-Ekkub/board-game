@@ -37,8 +37,8 @@ void LoadFields(Board* board)
 		else
 		{
 			board->fields[i] = GetPropertyField("Wasteland", 100, GetColor(0x303030FF));
-			board->fields[i].ownerId = 0;
-			board->fields[i].buildingLevel = i % MAX_BUILDING_LEVEL;
+			//board->fields[i].ownerId = 0;
+			//board->fields[i].buildingLevel = i % MAX_BUILDING_LEVEL;
 		}
 	}
 }

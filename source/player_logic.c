@@ -31,51 +31,41 @@ bool GetHumanPlayerResponse(Board* board, GameContext gameContext)
 	Field field = board->fields[player.position];
 	char buffer[TEXT_BUFFER_SIZE];
 	int response;
-	GuiPlayerInfo(GetRectanglePlacement(0, 100, 225, 100, CENTER, TOP, gameContext), player);
+	GuiPlayerInfo(GetRectanglePlacement(0, 150, 225, 100, CENTER, TOP, gameContext), player);
 	switch(board->phase)
 	{
 		case ROLL_DICE:
-			return GuiButton(GetRectanglePlacement(0, 0, 500, 100, CENTER, CENTER, gameContext), "Roll dice");
+			response = GuiButton(GetRectanglePlacement(0, 0, 500, 100, CENTER, CENTER, gameContext), "Roll dice") - 1;
+			break;
 	
 		case BUY_FIELD:
 			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to buy %s for $%i", field.name, field.value);
 			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 200, CENTER, CENTER, gameContext), 0, buffer, "Yes;No");
-			switch(response)
-			{
-				case 1:
-					board->currentPlayerResponse = POSITIVE;
-					return true;
-				case 0:
-				case 2:
-					board->currentPlayerResponse = NEGATIVE;
-					return true;
-				default:
-					break;
-			}
 			break;
 	
 		case UPGRADE_BUILDING:
 			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to upgrade %s\nin %s to %s for $%i", buildingLevelNames[field.buildingLevel], field.name, buildingLevelNames[field.buildingLevel+1], GetUpgradeValue(field));
 			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 250, CENTER, CENTER, gameContext), 0, buffer, "Yes;No");
-			switch(response)
-			{
-				case 1:
-					board->currentPlayerResponse = POSITIVE;
-					return true;
-				case 0:
-				case 2:
-					board->currentPlayerResponse = NEGATIVE;
-					return true;
-				default:
-					break;
-			}
 			break;
 
 		default:
+			response = 0;
 			break;
 	}
-	board->currentPlayerResponse = NONE;
-	return false;
+	switch(response)
+	{
+		case 1:
+			board->currentPlayerResponse = POSITIVE;
+			return true;
+		case 0:
+		case 2:
+			board->currentPlayerResponse = NEGATIVE;
+			return true;
+
+		default:
+			board->currentPlayerResponse = NONE;
+			return false;
+	}
 }
 
 bool GetBotPlayerResponse(Board* board, GameContext gameContext)

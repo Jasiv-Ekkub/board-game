@@ -10,7 +10,7 @@
 #include <player.h>
 #include <timer.h>
 
-#define MAX_FIELD_AMOUNT 64
+#define MAX_FIELD_AMOUNT 48
 #define MIN_FIELD_AMOUNT 24
 #define MAX_PLAYER_AMOUNT 4
 
