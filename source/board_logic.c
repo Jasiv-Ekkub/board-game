@@ -100,7 +100,7 @@ void HandleRollDice(Board* board, GameContext gameContext)
 			Field field = board->fields[position];
 			if(field.type == SUPERACTION)
 			{
-				field.action(player);
+				field.action(board);
 			}
 		}
 		player->position += currentDiceroll;
@@ -113,44 +113,47 @@ void HandleRollDice(Board* board, GameContext gameContext)
 
 void HandleCheckField(Board* board, GameContext gameContext)
 {
-	Player* player = &board->players[board->currentPlayer];
-	Field* field = &board->fields[player->position];
-	PrintField(*field);
-	switch(field->type)
+	if(board->popupCount == 0)
 	{
-		case PROPERTY:
-			if(field->ownerId == -1)
-			{
-				if(GetFieldValue(*field) <= player->money)
+		Player* player = &board->players[board->currentPlayer];
+		Field* field = &board->fields[player->position];
+		PrintField(*field);
+		switch(field->type)
+		{
+			case PROPERTY:
+				if(field->ownerId == -1)
 				{
-					board->phase = BUY_FIELD;
+					if(GetFieldValue(*field) <= player->money)
+					{
+						board->phase = BUY_FIELD;
+						return;
+					}
+				}
+				else if(field->ownerId == board->currentPlayer)
+				{
+					if(field->buildingLevel < MAX_BUILDING_LEVEL - 1 && GetUpgradeValue(*field) <= player->money)
+					{
+						board->phase = UPGRADE_BUILDING;	
+						return;
+					}
+				}
+				else
+				{
+					board->phase = PAY_FEE;
 					return;
 				}
-			}
-			else if(field->ownerId == board->currentPlayer)
-			{
-				if(field->buildingLevel < MAX_BUILDING_LEVEL - 1 && GetUpgradeValue(*field) <= player->money)
-				{
-					board->phase = UPGRADE_BUILDING;	
-					return;
-				}
-			}
-			else
-			{
-				board->phase = PAY_FEE;
+				break;
+			
+			case ACTION:
+				field->action(board);
+				board->phase = CHECK_DEBT;
 				return;
-			}
-			break;
-		
-		case ACTION:
-			field->action(player);
-			board->phase = CHECK_DEBT;
-			return;
 
-		default:
-			break;
+			default:
+				break;
+		}
+		board->phase = END_ROUND;
 	}
-	board->phase = END_ROUND;
 }
 
 void HandlePayFee(Board* board, GameContext gameContext)
@@ -199,7 +202,7 @@ void HandleBuyField(Board* board, GameContext gameContext)
 
 void HandleUpgradeBuilding(Board* board, GameContext gameContext)
 {
-	SetTimer(&board->timer, 5);
+	SetTimer(&board->timer, 30);
 	if(UpdateTimer(&board->timer, gameContext) || GetPlayerResponse(board, gameContext))
 	{
 		ResetTimer(&board->timer);
@@ -233,16 +236,11 @@ void HandleCheckDebt(Board* board, GameContext gameContext)
 
 void HandleEndRound(Board* board, GameContext gameContext)
 {
-	board->currentPlayer++;
-	board->currentPlayer %= board->playerCount;
-
-	board->phase = START_ROUND;
-
-	return;
-
-	printf("\nBoard status\n");
-	for(int i=0; i<board->fieldCount; ++i)
+	if(board->popupCount == 0)
 	{
-		PrintField(board->fields[i]);
+		board->currentPlayer++;
+		board->currentPlayer %= board->playerCount;
+
+		board->phase = START_ROUND;
 	}
 }

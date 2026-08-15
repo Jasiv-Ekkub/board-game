@@ -2,9 +2,10 @@
 #include <board_setup.h>
 #include <board_logic.h>
 
-#include <stdlib.h>
+#include <layout_engine.h>
+#include <gui_elements.h>
+
 #include <stdio.h>
-#include <time.h>
 
 const char* boardPhaseNames[] = {
 	[START_ROUND] = "Round beginning",
@@ -19,12 +20,12 @@ const char* boardPhaseNames[] = {
 
 Board LoadBoard()
 {
-	srand(time(0));
 	return (Board){
 		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
 		.timer = GetTimer(TIMER_SINGLE_PULSE),
 		.gameTimer = GetTimer(TIMER_SINGLE_PULSE),
+		.popupTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_REPEATING | TIMER_INTERRUPTABLE),
 	};
 }
 
@@ -42,6 +43,7 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 	GenerateBoardTexture(board);
 	
 	SetTimer(&board->gameTimer, 1800);
+	SetTimer(&board->popupTimer, 3);
 	board->phase = START_ROUND;
 }
 
@@ -84,6 +86,15 @@ void UpdateBoard(Board* board, GameContext gameContext)
 	EndMode3D();
 
 	if(!HasGameEnded(*board)) UpdateBoardLogic(board, gameContext);
+
+	if(board->popupCount > 0)
+	{
+		GuiBoxText(GetRectanglePlacement(0,0,600,150,CENTER,CENTER,gameContext), board->popups[board->popupCount-1]);
+		if(UpdateTimer(&board->popupTimer, gameContext))
+		{
+			board->popupCount--;
+		}
+	}
 }
 
 void UnloadBoard(Board board)
@@ -132,4 +143,12 @@ Player GetWinner(Board board)
 	}
 	board.players[winnerId].money = wealth[winnerId];
 	return board.players[winnerId];
+}
+
+void AddPopup(Board* board, const char* popup)
+{
+	if(board->popupCount < MAX_POPUP_AMOUNT)
+	{
+		board->popups[board->popupCount++] = popup;
+	}
 }

@@ -6,6 +6,8 @@
 #include <gui_elements.h>
 #include <style_buisness.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
 #define BUFFER_SIZE 32
 
 #define MAX(p,q) (p>q ? p : q)
@@ -27,6 +29,7 @@ bool shouldClose = false;
 int main()
 {
 	InitWindow(1440, 810, "Board game");
+	srand(time(0));
 	SetExitKey(0);
 	SetTargetFPS(60);
 	GuiLoadStyleBuisness();

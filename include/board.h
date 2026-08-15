@@ -13,6 +13,7 @@
 #define MAX_FIELD_AMOUNT 48
 #define MIN_FIELD_AMOUNT 24
 #define MAX_PLAYER_AMOUNT 4
+#define MAX_POPUP_AMOUNT 16
 
 typedef enum BoardPhase
 {
@@ -44,10 +45,14 @@ typedef struct Board
 	PlayerResponse currentPlayerResponse;
 	int currentDiceroll;
 
+	int popupCount;
+	const char* popups[MAX_POPUP_AMOUNT];
+
 	Vector3 position;
 
 	Timer timer;
 	Timer gameTimer;
+	Timer popupTimer;
 } Board;
 
 Board LoadBoard();
@@ -56,5 +61,6 @@ void UpdateBoard(Board* board, GameContext gameContext);
 void UnloadBoard(Board board);
 bool HasGameEnded(Board board);
 Player GetWinner(Board board);
+void AddPopup(Board* board, const char* popup);
 
 #endif //BOARD_H

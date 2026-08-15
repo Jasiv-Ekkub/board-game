@@ -1,19 +1,24 @@
 #include <board_setup.h>
 #include <stdio.h>
 
-void DebugAction(Player* player)
+void DebugAction(Board* board)
 {
-	player->money -= 10000;
+	AddPopup(board, "Now its your chance to be a big shot");
 }
 
-void DebugSuperaction(Player* player)
+void DebugSuperaction(Board* board)
 {
+	Player* player = &board->players[board->currentPlayer];
+	//Field* field = &board->fields[player->position];
+
 	player->money += 1000;
 }
 
-void DebugSuperaction2(Player* player)
+void DebugSuperaction2(Board* board)
 {
-	
+	//Player* player = &board->players[board->currentPlayer];
+	//Field* field = &board->fields[player->position];
+
 }
 
 void LoadFields(Board* board)
