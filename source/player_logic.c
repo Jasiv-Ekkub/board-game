@@ -77,6 +77,7 @@ bool GetBotPlayerResponse(Board* board, GameContext gameContext)
 		case ROLL_DICE:
 			return UpdateTimer(timer, gameContext);
 		case BUY_FIELD:
+		case UPGRADE_BUILDING:
 			board->currentPlayerResponse = POSITIVE;
 			return UpdateTimer(timer, gameContext);
 		default:

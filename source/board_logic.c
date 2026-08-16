@@ -29,39 +29,32 @@ void UpdateBoardLogic(Board* board, GameContext gameContext)
 	
 	int gameTime = board->gameTimer.currentTime;
 	snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
-	GuiBoxText(GetRectanglePlacement(-240, 10, 240, 60, CENTER, TOP, gameContext), buffer);
-	GuiBoxText(GetRectanglePlacement(240, 10, 240, 60, CENTER, TOP, gameContext), boardPhaseNames[board->phase]);
+	GuiBoxText(GetRectanglePlacement(-240, 10, 260, 60, CENTER, TOP, gameContext), buffer);
+	GuiBoxText(GetRectanglePlacement(240, 10, 260, 60, CENTER, TOP, gameContext), boardPhaseNames[board->phase]);
 
 	switch(board->phase)
 	{
 		case START_ROUND:
 			HandleStartRound(board, gameContext);
 			break;
-
 		case ROLL_DICE:
 			HandleRollDice(board, gameContext);
 			break;
-
 		case CHECK_FIELD:
 			HandleCheckField(board, gameContext);
 			break;
-
 		case BUY_FIELD:
 			HandleBuyField(board, gameContext);
 			break;
-
 		case UPGRADE_BUILDING:
 			HandleUpgradeBuilding(board, gameContext);
 			break;
-
 		case PAY_FEE:
 			HandlePayFee(board, gameContext);
 			break;
-		
 		case CHECK_DEBT:
 			HandleCheckDebt(board, gameContext);
 			break;
-
 		case END_ROUND:
 			HandleEndRound(board, gameContext);
 			break;
