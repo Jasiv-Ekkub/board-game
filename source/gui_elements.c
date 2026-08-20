@@ -43,6 +43,13 @@ void GuiPlayerInfo(Rectangle bounds, Player player)
 	DrawTextCentered(player.name, (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height/3}, player.color);
 
 	char buffer[32];
-	snprintf(buffer, 32, "$%i", player.money);
+	if(player.money < 0)
+	{
+		snprintf(buffer, 32, "Bankrupt");
+	}
+	else
+	{
+		snprintf(buffer, 32, "$%i", player.money);
+	}
 	DrawTextCentered(buffer, (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height/3 * 2}, player.color);
 }

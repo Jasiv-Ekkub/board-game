@@ -17,6 +17,7 @@ void HandleBuyField(Board* board);
 void HandleUpgradeBuilding(Board* board);
 void HandleCheckDebt(Board* board);
 void HandleEndRound(Board* board);
+void HandleEndGame(Board* board);
 
 void UpdateBoardLogic(Board* board)
 {
@@ -57,6 +58,9 @@ void UpdateBoardLogic(Board* board)
 			break;
 		case END_ROUND:
 			HandleEndRound(board);
+			break;
+		case END_GAME:
+			HandleEndGame(board);
 			break;
 		default:
 			board->phase = END_ROUND;
@@ -234,6 +238,26 @@ void HandleEndRound(Board* board)
 		board->currentPlayer++;
 		board->currentPlayer %= board->playerCount;
 
+		int nonBankrupts = 0;
+		for(int i=0; i<board->playerCount; ++i)
+		{
+			if(board->players[i].money >= 0)
+				nonBankrupts++;
+		}
+
+		if(HasTimerEnded(board->gameTimer) || nonBankrupts < 2)
+		{
+			AddPopupBoard(board, "GAME OVER");
+			ResetTimer(&board->gameTimer);
+			board->phase = END_GAME;
+			return;
+		}
+
 		board->phase = START_ROUND;
 	}
+}
+
+void HandleEndGame(Board* board)
+{
+	if(board->popupCount == 0) board->hasGameEnded = true;
 }

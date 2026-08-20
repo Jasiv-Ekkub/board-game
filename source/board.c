@@ -17,6 +17,7 @@ const char* boardPhaseNames[] = {
 	[UPGRADE_BUILDING] = "Upgrading building",
 	[CHECK_DEBT] = "Paying debt",
 	[END_ROUND] = "Round ending",
+	[END_GAME] = "Game over",
 };
 
 Board LoadBoard()
@@ -43,7 +44,8 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 	LoadPlayers(board, 1000, humanCount, botCount);
 	GenerateBoardTexture(board);
 	
-	SetTimer(&board->gameTimer, 1800);
+	//SetTimer(&board->gameTimer, 1800);
+	SetTimer(&board->gameTimer, 10);
 	SetTimer(&board->popupTimer, 3);
 	board->phase = START_ROUND;
 }
@@ -80,13 +82,15 @@ void DrawBuildings(Board board)
 
 void UpdateBoard(Board* board)
 {
+	if(HasGameEndedBoard(*board)) return;
+
 	BeginMode3D(GetCamera3D());
 		DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
 		DrawPlayers(*board);
 		DrawBuildings(*board);
 	EndMode3D();
 
-	if(!HasGameEnded(*board)) UpdateBoardLogic(board);
+	UpdateBoardLogic(board);
 
 	if(board->popupCount > 0)
 	{
@@ -103,50 +107,9 @@ void UnloadBoard(Board board)
 	UnloadBoardAssets(board.assets);
 }
 
-bool HasGameEnded(Board board)
-{
-	if(HasTimerEnded(board.gameTimer)) return true;
+bool HasGameEndedBoard(Board board) { return board.hasGameEnded; }
 
-	if(board.phase != START_ROUND) return false;
-
-	int activePlayers = 0;
-	for(int i=0; i<board.playerCount; ++i)
-	{
-		if(board.players[i].money >= 0)
-		{
-			activePlayers++;
-		}
-	}
-	return activePlayers < 2;
-}
-
-Player GetWinner(Board board)
-{
-	int wealth[MAX_PLAYER_AMOUNT] = {
-		board.players[0].money,
-		board.players[1].money,
-		board.players[2].money,
-		board.players[3].money,
-	};
-	for(int i=0; i<board.fieldCount; ++i)
-	{
-		Field *field = &board.fields[i];
-		if(field->type == PROPERTY && field->ownerId != -1)
-		{
-			wealth[field->ownerId] += GetFieldValue(*field);
-		}
-	}
-
-	int winnerId = 0;
-	for(int i=1; i<board.playerCount; ++i)
-	{
-		if(wealth[winnerId] < wealth[i]) winnerId = i; 
-	}
-	board.players[winnerId].money = wealth[winnerId];
-	return board.players[winnerId];
-}
-
-void AddPopup(Board* board, const char* popup)
+void AddPopupBoard(Board* board, const char* popup)
 {
 	if(board->popupCount < MAX_POPUP_AMOUNT)
 	{

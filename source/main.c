@@ -34,9 +34,9 @@ int main()
 		BeginDrawing();
 			ClearBackground(bgrColor);
 			UpdateBoard(&board);
-
-
 		EndDrawing();
+
+		shouldClose |= HasGameEndedBoard(board);
 	}
 
 	UnloadBoard(board);	

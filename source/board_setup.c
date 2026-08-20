@@ -3,7 +3,7 @@
 
 void DebugAction(Board* board)
 {
-	AddPopup(board, "Now its your chance to be a big shot");
+	AddPopupBoard(board, "Now its your chance to be a big shot");
 }
 
 void DebugSuperaction(Board* board)
@@ -16,9 +16,10 @@ void DebugSuperaction(Board* board)
 
 void DebugSuperaction2(Board* board)
 {
-	//Player* player = &board->players[board->currentPlayer];
+	Player* player = &board->players[board->currentPlayer];
 	//Field* field = &board->fields[player->position];
 
+	player->money -= 10000;
 }
 
 void LoadFields(Board* board)

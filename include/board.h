@@ -24,6 +24,7 @@ typedef enum BoardPhase
 	UPGRADE_BUILDING,
 	CHECK_DEBT,
 	END_ROUND,
+	END_GAME,
 } BoardPhase;
 
 extern const char* boardPhaseNames[];
@@ -49,6 +50,8 @@ typedef struct Board
 
 	Vector3 position;
 
+	bool hasGameEnded;
+
 	Timer timer;
 	Timer gameTimer;
 	Timer popupTimer;
@@ -58,8 +61,7 @@ Board LoadBoard();
 void SetupBoard(Board* board, int size, int humanCount, int botCount);
 void UpdateBoard(Board* board);
 void UnloadBoard(Board board);
-bool HasGameEnded(Board board);
-Player GetWinner(Board board);
-void AddPopup(Board* board, const char* popup);
+bool HasGameEndedBoard(Board board);
+void AddPopupBoard(Board* board, const char* popup);
 
 #endif //BOARD_H
