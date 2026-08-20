@@ -1,7 +1,6 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include <game_context.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -19,6 +18,6 @@ Timer GetTimer(uint8_t flags);
 bool HasTimerEnded(Timer timer);
 void SetTimer(Timer* timer, float endTime);
 void ResetTimer(Timer* timer);
-bool UpdateTimer(Timer* timer, GameContext gameContext);
+bool UpdateTimer(Timer* timer);
 
 #endif //TIMER_H

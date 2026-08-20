@@ -1,24 +1,21 @@
 #include <layout_engine.h>
+#include <game_context.h>
 
-Rectangle GetRectanglePlacement(float x, float y, float width, float height, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor, GameContext gameContext)
+Rectangle GetRectanglePlacement(float x, float y, float width, float height, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor)
 {
-	x *= gameContext.guiScale;
-	y *= gameContext.guiScale;
-	width *= gameContext.guiScale;
-	height *= gameContext.guiScale;
+	float guiScale = GetGuiScale();
+
+	x *= guiScale;
+	y *= guiScale;
+	width *= guiScale;
+	height *= guiScale;
+
+	Rectangle screenBounds = GetScreenBounds();
 
 	return (Rectangle){
-		x + (gameContext.screenWidth - width) * (float)horizontalAnchor / 2,
-		y + (gameContext.screenHeight - height) * (float)verticalAnchor / 2,
+		x + (screenBounds.width - width) * (float)horizontalAnchor / 2,
+		y + (screenBounds.height - height) * (float)verticalAnchor / 2,
 		width,
 		height,
-	};
-}
-
-Vector2 GetVector2Placement(float x, float y, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor, GameContext gameContext)
-{
-	return (Vector2){
-		x * gameContext.guiScale + gameContext.screenWidth * (float)horizontalAnchor / 2,
-		y * gameContext.guiScale + gameContext.screenHeight * (float)verticalAnchor / 2,
 	};
 }

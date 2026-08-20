@@ -2,7 +2,6 @@
 #define LAYOUT_ENGINE_H
 
 #include <raylib.h>
-#include <game_context.h>
 
 typedef enum LayoutAnchor {
 	TOP = 0,
@@ -14,7 +13,6 @@ typedef enum LayoutAnchor {
 	RIGHT = 2,
 } LayoutAnchor;
 
-Rectangle GetRectanglePlacement(float x, float y, float width, float height, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor, GameContext gameContext);
-Vector2 GetVector2Placement(float x, float y, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor, GameContext gameContext);
+Rectangle GetRectanglePlacement(float x, float y, float width, float height, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor);
 
 #endif //LAYOUT_ENGINE_H

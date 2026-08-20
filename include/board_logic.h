@@ -3,6 +3,6 @@
 
 #include <board.h>
 
-void UpdateBoardLogic(Board* board, GameContext gameContext);
+void UpdateBoardLogic(Board* board);
 
 #endif //BOARD_LOGIC_H

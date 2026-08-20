@@ -9,54 +9,54 @@
 
 #define BUFFER_SIZE 16
 
-void HandleStartRound(Board* board, GameContext gameContext);
-void HandleRollDice(Board* board, GameContext gameContext);
-void HandleCheckField(Board* board, GameContext gameContext);
-void HandlePayFee(Board* board, GameContext gameContext);
-void HandleBuyField(Board* board, GameContext gameContext);
-void HandleUpgradeBuilding(Board* board, GameContext gameContext);
-void HandleCheckDebt(Board* board, GameContext gameContext);
-void HandleEndRound(Board* board, GameContext gameContext);
+void HandleStartRound(Board* board);
+void HandleRollDice(Board* board);
+void HandleCheckField(Board* board);
+void HandlePayFee(Board* board);
+void HandleBuyField(Board* board);
+void HandleUpgradeBuilding(Board* board);
+void HandleCheckDebt(Board* board);
+void HandleEndRound(Board* board);
 
-void UpdateBoardLogic(Board* board, GameContext gameContext)
+void UpdateBoardLogic(Board* board)
 {
-	UpdateTimer(&board->gameTimer, gameContext);
+	UpdateTimer(&board->gameTimer);
 	char buffer[BUFFER_SIZE];
-	GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 100, LEFT, TOP, gameContext), board->players[0]);
-	GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 100, RIGHT, TOP, gameContext), board->players[1]);
-	GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM, gameContext), board->players[2]);
-	GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 100, RIGHT, BOTTOM, gameContext), board->players[3]);
+	GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 100, LEFT, TOP), board->players[0]);
+	GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 100, RIGHT, TOP), board->players[1]);
+	GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM), board->players[2]);
+	GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 100, RIGHT, BOTTOM), board->players[3]);
 	
 	int gameTime = board->gameTimer.currentTime;
 	snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
-	GuiBoxText(GetRectanglePlacement(-240, 10, 260, 60, CENTER, TOP, gameContext), buffer);
-	GuiBoxText(GetRectanglePlacement(240, 10, 260, 60, CENTER, TOP, gameContext), boardPhaseNames[board->phase]);
+	GuiBoxText(GetRectanglePlacement(-240, 10, 260, 60, CENTER, TOP), buffer);
+	GuiBoxText(GetRectanglePlacement(240, 10, 260, 60, CENTER, TOP), boardPhaseNames[board->phase]);
 
 	switch(board->phase)
 	{
 		case START_ROUND:
-			HandleStartRound(board, gameContext);
+			HandleStartRound(board);
 			break;
 		case ROLL_DICE:
-			HandleRollDice(board, gameContext);
+			HandleRollDice(board);
 			break;
 		case CHECK_FIELD:
-			HandleCheckField(board, gameContext);
+			HandleCheckField(board);
 			break;
 		case BUY_FIELD:
-			HandleBuyField(board, gameContext);
+			HandleBuyField(board);
 			break;
 		case UPGRADE_BUILDING:
-			HandleUpgradeBuilding(board, gameContext);
+			HandleUpgradeBuilding(board);
 			break;
 		case PAY_FEE:
-			HandlePayFee(board, gameContext);
+			HandlePayFee(board);
 			break;
 		case CHECK_DEBT:
-			HandleCheckDebt(board, gameContext);
+			HandleCheckDebt(board);
 			break;
 		case END_ROUND:
-			HandleEndRound(board, gameContext);
+			HandleEndRound(board);
 			break;
 		default:
 			board->phase = END_ROUND;
@@ -64,7 +64,7 @@ void UpdateBoardLogic(Board* board, GameContext gameContext)
 	}
 }
 
-void HandleStartRound(Board* board, GameContext gameContext)
+void HandleStartRound(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
 	if(player->money < 0)
@@ -76,10 +76,10 @@ void HandleStartRound(Board* board, GameContext gameContext)
 	board->phase = ROLL_DICE;
 }
 
-void HandleRollDice(Board* board, GameContext gameContext)
+void HandleRollDice(Board* board)
 {
 	SetTimer(&board->timer, 5);
-	if(UpdateTimer(&board->timer, gameContext) || GetPlayerResponse(board, gameContext))
+	if(UpdateTimer(&board->timer) || GetPlayerResponse(board))
 	{
 		ResetTimer(&board->timer);
 
@@ -104,7 +104,7 @@ void HandleRollDice(Board* board, GameContext gameContext)
 	}
 }
 
-void HandleCheckField(Board* board, GameContext gameContext)
+void HandleCheckField(Board* board)
 {
 	if(board->popupCount == 0)
 	{
@@ -149,7 +149,7 @@ void HandleCheckField(Board* board, GameContext gameContext)
 	}
 }
 
-void HandlePayFee(Board* board, GameContext gameContext)
+void HandlePayFee(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
 	Field* field = &board->fields[player->position];
@@ -168,10 +168,10 @@ void HandlePayFee(Board* board, GameContext gameContext)
 	else board->phase = END_ROUND;
 }
 
-void HandleBuyField(Board* board, GameContext gameContext)
+void HandleBuyField(Board* board)
 {
 	SetTimer(&board->timer, 30);
-	if(UpdateTimer(&board->timer, gameContext) || GetPlayerResponse(board, gameContext))
+	if(UpdateTimer(&board->timer) || GetPlayerResponse(board))
 	{
 		ResetTimer(&board->timer);
 		if(board->currentPlayerResponse == POSITIVE)
@@ -193,10 +193,10 @@ void HandleBuyField(Board* board, GameContext gameContext)
 	}
 }
 
-void HandleUpgradeBuilding(Board* board, GameContext gameContext)
+void HandleUpgradeBuilding(Board* board)
 {
 	SetTimer(&board->timer, 30);
-	if(UpdateTimer(&board->timer, gameContext) || GetPlayerResponse(board, gameContext))
+	if(UpdateTimer(&board->timer) || GetPlayerResponse(board))
 	{
 		ResetTimer(&board->timer);
 		if(board->currentPlayerResponse == POSITIVE)
@@ -211,7 +211,7 @@ void HandleUpgradeBuilding(Board* board, GameContext gameContext)
 	}
 }
 
-void HandleCheckDebt(Board* board, GameContext gameContext)
+void HandleCheckDebt(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
 	board->phase = END_ROUND;
@@ -227,7 +227,7 @@ void HandleCheckDebt(Board* board, GameContext gameContext)
 	}
 }
 
-void HandleEndRound(Board* board, GameContext gameContext)
+void HandleEndRound(Board* board)
 {
 	if(board->popupCount == 0)
 	{

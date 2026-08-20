@@ -3,17 +3,12 @@
 
 #include <raylib.h>
 
-typedef struct GameContext {
-	float deltaTime;
-	int screenWidth;
-	int screenHeight;
-	float guiScale;
+void InitializeGameContext();
+void UpdateGameContext();
 
-	Camera3D camera3D;
-} GameContext;
-
-GameContext LoadGameContext();
-void UpdateGameContext(GameContext* gameContext);
-void UnloadGameContext(GameContext gameContext);
+float GetDeltaTime();
+Rectangle GetScreenBounds();
+Camera3D GetCamera3D();
+float GetGuiScale();
 
 #endif //GAME_CONTEXT_H

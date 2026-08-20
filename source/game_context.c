@@ -1,12 +1,21 @@
 #include <game_context.h>
 
-void UpdateGameContext(GameContext* gameContext);
-void UnloadGameContext(GameContext gameContext);
+typedef struct GameContext {
+	float deltaTime;
+	Rectangle screenBounds;
+	float guiScale;
+	Camera3D camera3D;
+} GameContext;
 
-GameContext LoadGameContext()
+GameContext gameContext = {0};
+
+void InitializeGameContext()
 {
-	return (GameContext){
+	gameContext = (GameContext){
 		.deltaTime = 0,
+
+		.guiScale = 1,
+		.screenBounds = {0, 0, GetRenderWidth(), GetRenderHeight()},
 		.camera3D = (Camera3D){
 			.position = (Vector3){-2, 3, 2},
 			.target = (Vector3){0, 0, 0},
@@ -14,26 +23,25 @@ GameContext LoadGameContext()
 			.fovy = 2,
 			.projection = CAMERA_ORTHOGRAPHIC,
 		},
-
-		.guiScale = 1,
-		.screenWidth = GetRenderWidth(),
-		.screenHeight = GetRenderHeight(),
 	};
 }
 
-void UpdateGameContext(GameContext* gameContext)
+void UpdateGameContext()
 {
-	gameContext->deltaTime = GetFrameTime();
+	gameContext.deltaTime = GetFrameTime();
 
 	if(IsWindowResized())
 	{
-		gameContext->screenWidth = GetRenderWidth();
-		gameContext->screenHeight = GetRenderHeight();
+		gameContext.screenBounds.width = GetRenderWidth();
+		gameContext.screenBounds.height = GetRenderHeight();
 	}
 }
 
-//Placeholder for potential changes
-void UnloadGameContext(GameContext gameContext)
-{
+float GetDeltaTime() { return gameContext.deltaTime; }
 
-}
+Rectangle GetScreenBounds() { return gameContext.screenBounds; }
+
+Camera3D GetCamera3D() { return gameContext.camera3D; }
+
+float GetGuiScale() { return gameContext.guiScale; }
+

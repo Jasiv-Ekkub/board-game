@@ -3,7 +3,6 @@
 
 #include <raylib.h>
 
-#include <game_context.h>
 #include <board_assets.h>
 #include <board_layout.h>
 #include <field.h>
@@ -57,7 +56,7 @@ typedef struct Board
 
 Board LoadBoard();
 void SetupBoard(Board* board, int size, int humanCount, int botCount);
-void UpdateBoard(Board* board, GameContext gameContext);
+void UpdateBoard(Board* board);
 void UnloadBoard(Board board);
 bool HasGameEnded(Board board);
 Player GetWinner(Board board);

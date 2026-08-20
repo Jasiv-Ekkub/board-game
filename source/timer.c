@@ -1,4 +1,5 @@
 #include <timer.h>
+#include <game_context.h>
 
 Timer GetTimer(uint8_t flags)
 {
@@ -29,10 +30,10 @@ void ResetTimer(Timer* timer)
 	timer->endTime = 0;
 }
 
-bool UpdateTimer(Timer* timer, GameContext gameContext)
+bool UpdateTimer(Timer* timer)
 {
 	if(HasTimerEnded(*timer) && (timer->flags & TIMER_SINGLE_PULSE)) return false;
-	timer->currentTime -= gameContext.deltaTime;
+	timer->currentTime -= GetDeltaTime();
 	if(HasTimerEnded(*timer))
 	{
 		if(timer->flags & TIMER_REPEATING) timer->currentTime = timer->endTime;

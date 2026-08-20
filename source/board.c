@@ -4,6 +4,7 @@
 
 #include <layout_engine.h>
 #include <gui_elements.h>
+#include <game_context.h>
 
 #include <stdio.h>
 
@@ -77,20 +78,20 @@ void DrawBuildings(Board board)
 	}
 }
 
-void UpdateBoard(Board* board, GameContext gameContext)
+void UpdateBoard(Board* board)
 {
-	BeginMode3D(gameContext.camera3D);
+	BeginMode3D(GetCamera3D());
 		DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
 		DrawPlayers(*board);
 		DrawBuildings(*board);
 	EndMode3D();
 
-	if(!HasGameEnded(*board)) UpdateBoardLogic(board, gameContext);
+	if(!HasGameEnded(*board)) UpdateBoardLogic(board);
 
 	if(board->popupCount > 0)
 	{
-		GuiBoxText(GetRectanglePlacement(0,0,600,150,CENTER,CENTER,gameContext), board->popups[board->popupCount-1]);
-		if(UpdateTimer(&board->popupTimer, gameContext))
+		GuiBoxText(GetRectanglePlacement(0,0,600,150,CENTER,CENTER), board->popups[board->popupCount-1]);
+		if(UpdateTimer(&board->popupTimer))
 		{
 			board->popupCount--;
 		}
