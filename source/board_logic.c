@@ -21,17 +21,20 @@ void HandleEndGame(Board* board);
 
 void UpdateBoardLogic(Board* board)
 {
-	UpdateTimer(&board->gameTimer);
 	char buffer[BUFFER_SIZE];
-	GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 100, LEFT, TOP), board->players[0]);
-	GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 100, RIGHT, TOP), board->players[1]);
-	GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM), board->players[2]);
-	GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 100, RIGHT, BOTTOM), board->players[3]);
-	
+	UpdateTimer(&board->gameTimer);
 	int gameTime = board->gameTimer.currentTime;
 	snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
 	GuiBoxText(GetRectanglePlacement(-240, 10, 260, 60, CENTER, TOP), buffer);
 	GuiBoxText(GetRectanglePlacement(240, 10, 260, 60, CENTER, TOP), boardPhaseNames[board->phase]);
+
+	if(board->phase != END_GAME)
+	{
+		GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 100, LEFT, TOP), board->players[0]);
+		GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 100, RIGHT, TOP), board->players[1]);
+		GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM), board->players[2]);
+		GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 100, RIGHT, BOTTOM), board->players[3]);
+	}
 
 	switch(board->phase)
 	{
@@ -247,7 +250,28 @@ void HandleEndRound(Board* board)
 
 		if(HasTimerEnded(board->gameTimer) || nonBankrupts < 2)
 		{
-			AddPopupBoard(board, "GAME OVER");
+			for(int i=0; i<board->fieldCount; ++i)
+			{
+				Field* field = &board->fields[i];
+				if(field->type == PROPERTY && field->ownerId != -1)
+				{
+					board->players[field->ownerId].money += GetFieldValue(*field);
+					field->ownerId = -1;
+				}
+			}
+			for(int i=0; i<board->playerCount; ++i)
+			{
+				for(int j=i; j<board->playerCount; ++j)
+				{
+					if(board->players[i].money < board->players[j].money)
+					{
+						Player player = board->players[i];
+						board->players[i] = board->players[j];
+						board->players[j] = player;
+					}
+				}
+			}
+
 			ResetTimer(&board->gameTimer);
 			board->phase = END_GAME;
 			return;
@@ -259,5 +283,11 @@ void HandleEndRound(Board* board)
 
 void HandleEndGame(Board* board)
 {
-	if(board->popupCount == 0) board->hasGameEnded = true;
+	GuiGameOver(GetRectanglePlacement(0, 0, 500, 200, CENTER, CENTER), board->players[0]);
+
+	SetTimer(&board->timer, 2);
+	if(UpdateTimer(&board->timer) || GetPlayerResponse(board))
+	{
+		board->hasGameEnded = true;
+	}
 }

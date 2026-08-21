@@ -16,10 +16,10 @@ void DebugSuperaction(Board* board)
 
 void DebugSuperaction2(Board* board)
 {
-	Player* player = &board->players[board->currentPlayer];
+	//Player* player = &board->players[board->currentPlayer];
 	//Field* field = &board->fields[player->position];
 
-	player->money -= 10000;
+	//player->money -= 10000;
 }
 
 void LoadFields(Board* board)

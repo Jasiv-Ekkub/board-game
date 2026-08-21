@@ -45,7 +45,7 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 	GenerateBoardTexture(board);
 	
 	//SetTimer(&board->gameTimer, 1800);
-	SetTimer(&board->gameTimer, 10);
+	SetTimer(&board->gameTimer, 1);
 	SetTimer(&board->popupTimer, 3);
 	board->phase = START_ROUND;
 }
