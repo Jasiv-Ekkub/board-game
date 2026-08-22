@@ -1,30 +1,26 @@
 #include <board.h>
-#define RAYGUI_IMPLEMENTATION
-#define RAYGUI_MESSAGEBOX_BUTTON_HEIGHT 60
-#include <raygui.h>
-#include <style_buisness.h>
+#include <assets.h>
 #include <game_context.h>
+#include <raygui.h>
+#include <layout_engine.h>
+#include <gui_elements.h>
 #include <stdbool.h>
-#include <stdlib.h>
-#include <time.h>
 
+enum { MAIN_MENU, BOARD } phase = MAIN_MENU;
 bool shouldClose = false;
+Board board;
+
+void HandleMainMenu();
+void HandleBoard();
 
 int main()
 {
-	InitWindow(1440, 810, "Board game");
-	srand(time(0));
-	SetExitKey(0);
-	SetTargetFPS(60);
-	GuiLoadStyleBuisness();
-
 	InitializeGameContext();
-	Board board = LoadBoard();
-	
-	Color bgrColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
-	
-	SetupBoard(&board, 36, 1, 2);
+	LoadAssets();
 
+	board = LoadBoard();
+
+	Color bgrColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 	while(!shouldClose)
 	{
 		shouldClose = WindowShouldClose();
@@ -33,13 +29,40 @@ int main()
 
 		BeginDrawing();
 			ClearBackground(bgrColor);
-			UpdateBoard(&board);
+			switch(phase)
+			{
+				case MAIN_MENU:
+					HandleMainMenu();
+					break;
+				case BOARD:
+					HandleBoard();
+					break;
+			}
 		EndDrawing();
 
-		shouldClose |= HasGameEndedBoard(board);
 	}
 
 	UnloadBoard(board);	
-	CloseWindow();
+	
+	UnloadAssets();
+	TerminateGameContext();
 	return 0;
+}
+
+void HandleMainMenu()
+{
+	if(GuiButtonSfx(GetRectanglePlacement(0,0,500,100,CENTER,CENTER), "PLAY"))
+	{
+		SetupBoard(&board, 36, 1, 2);
+		phase = BOARD;
+	}
+}
+
+void HandleBoard()
+{
+	UpdateBoard(&board);
+	if(HasGameEndedBoard(board))
+	{
+		phase = MAIN_MENU;
+	}
 }

@@ -29,29 +29,37 @@ bool GetHumanPlayerResponse(Board* board)
 {
 	Player player = board->players[board->currentPlayer];
 	Field field = board->fields[player.position];
+
+	Rectangle messageBounds = GetRectanglePlacement(0,0, 600, 200, CENTER, CENTER);
 	char buffer[TEXT_BUFFER_SIZE];
-	int response;
-	GuiPlayerInfo(GetRectanglePlacement(0, 150, 225, 100, CENTER, TOP), player);
+	char *options;
+	
 	switch(board->phase)
 	{
 		case ROLL_DICE:
-			response = GuiButton(GetRectanglePlacement(0, 0, 500, 100, CENTER, CENTER), "Roll dice") - 1;
+			snprintf(buffer, TEXT_BUFFER_SIZE, "Roll dice");
+			options = "Okay";
 			break;
 	
 		case BUY_FIELD:
 			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to buy %s for $%i", field.name, field.value);
-			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 200, CENTER, CENTER), 0, buffer, "Yes;No");
+			options = "Yes;No";
 			break;
 	
 		case UPGRADE_BUILDING:
 			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to upgrade %s\nin %s to %s for $%i", buildingLevelNames[field.buildingLevel], field.name, buildingLevelNames[field.buildingLevel+1], GetUpgradeValue(field));
-			response = GuiMessageBox(GetRectanglePlacement(0,0, 800, 250, CENTER, CENTER), 0, buffer, "Yes;No");
+			options = "Yes;No";
 			break;
 
 		default:
-			response = 0;
+			snprintf(buffer, TEXT_BUFFER_SIZE, "Error");
+			options = "Okay";
 			break;
 	}
+
+	GuiPlayerInfo(GetRectanglePlacement(0, 150, 225, 100, CENTER, TOP), player);
+	int response = GuiMessageBoxSfx(messageBounds, buffer, options);
+	
 	switch(response)
 	{
 		case 1:
@@ -61,7 +69,6 @@ bool GetHumanPlayerResponse(Board* board)
 		case 2:
 			board->currentPlayerResponse = NEGATIVE;
 			return true;
-
 		default:
 			board->currentPlayerResponse = NONE;
 			return false;

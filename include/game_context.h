@@ -5,6 +5,7 @@
 
 void InitializeGameContext();
 void UpdateGameContext();
+void TerminateGameContext();
 
 float GetDeltaTime();
 Rectangle GetScreenBounds();

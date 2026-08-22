@@ -26,8 +26,8 @@ Board LoadBoard()
 		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
 		.timer = GetTimer(TIMER_SINGLE_PULSE),
-		.gameTimer = GetTimer(TIMER_SINGLE_PULSE),
-		.popupTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_REPEATING | TIMER_INTERRUPTABLE),
+		.gameTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_INTERRUPTABLE),
+		.popupTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_REPEATING),
 	};
 }
 
@@ -44,10 +44,11 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 	LoadPlayers(board, 1000, humanCount, botCount);
 	GenerateBoardTexture(board);
 	
-	//SetTimer(&board->gameTimer, 1800);
-	SetTimer(&board->gameTimer, 5);
+	SetTimer(&board->gameTimer, 1800);
+	//SetTimer(&board->gameTimer, 5);
 	SetTimer(&board->popupTimer, 3);
 	board->phase = START_ROUND;
+	board->hasGameEnded = false;
 }
 
 void DrawPlayers(Board board)
@@ -82,7 +83,7 @@ void DrawBuildings(Board board)
 
 void UpdateBoard(Board* board)
 {
-	if(HasGameEndedBoard(*board)) return;
+	if(board->hasGameEnded) return;
 
 	BeginMode3D(GetCamera3D());
 		DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);

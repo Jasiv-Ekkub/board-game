@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <raygui.h>
 #include <gui_elements.h>
 
 #define BUFFER_SIZE 16
@@ -21,18 +22,20 @@ void HandleEndGame(Board* board);
 
 void UpdateBoardLogic(Board* board)
 {
-	char buffer[BUFFER_SIZE];
-	if(UpdateTimer(&board->gameTimer))
-	{
-		board->phase = END_ROUND;
-	}
-	int gameTime = board->gameTimer.currentTime;
-	snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
-	GuiBoxText(GetRectanglePlacement(-240, 10, 260, 60, CENTER, TOP), buffer);
-	GuiBoxText(GetRectanglePlacement(240, 10, 260, 60, CENTER, TOP), boardPhaseNames[board->phase]);
 
 	if(board->phase != END_GAME)
 	{
+		if(UpdateTimer(&board->gameTimer) || GuiButtonSfx(GetRectanglePlacement(10, 0, 100, 60, LEFT, CENTER), "Exit"))
+		{
+			ResetTimer(&board->gameTimer);
+			board->phase = END_ROUND;
+		}
+
+		char buffer[BUFFER_SIZE];
+		int gameTime = board->gameTimer.currentTime;
+		snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
+		GuiBoxText(GetRectanglePlacement(-240, 10, 260, 60, CENTER, TOP), buffer);
+		GuiBoxText(GetRectanglePlacement(240, 10, 260, 60, CENTER, TOP), boardPhaseNames[board->phase]);
 		GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 100, LEFT, TOP), board->players[0]);
 		GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 100, RIGHT, TOP), board->players[1]);
 		GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM), board->players[2]);
@@ -289,7 +292,7 @@ void HandleEndGame(Board* board)
 {
 	GuiGameOver(GetRectanglePlacement(0, 0, 500, 200, CENTER, CENTER), board->players[0]);
 
-	SetTimer(&board->timer, 2);
+	SetTimer(&board->timer, 5);
 	if(UpdateTimer(&board->timer))
 	{
 		board->hasGameEnded = true;

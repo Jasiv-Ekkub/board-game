@@ -1,6 +1,7 @@
 #include <gui_elements.h>
 #include <raygui.h>
 #include <stdio.h>
+#include <assets.h>
 
 void GuiDrawBox(Rectangle bounds)
 {
@@ -63,4 +64,18 @@ void GuiGameOver(Rectangle bounds, Player winner)
 	char buffer[64];
 	snprintf(buffer, 64, "%s $%i", winner.name, winner.money);
 	DrawTextCentered(buffer, (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height*3/4}, winner.color);
+}
+
+int GuiMessageBoxSfx(Rectangle bounds, const char* message, const char* options)
+{
+	int response = GuiMessageBox(bounds, 0, message, options);
+	if(response != -1) PlaySound(sounds[UI_CLICK_SOUND]);
+	return response;
+}
+
+int GuiButtonSfx(Rectangle bounds, const char* text)
+{
+	int response = GuiButton(bounds, text);
+	if(response) PlaySound(sounds[UI_CLICK_SOUND]);
+	return response;
 }
