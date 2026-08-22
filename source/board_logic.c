@@ -22,7 +22,10 @@ void HandleEndGame(Board* board);
 void UpdateBoardLogic(Board* board)
 {
 	char buffer[BUFFER_SIZE];
-	UpdateTimer(&board->gameTimer);
+	if(UpdateTimer(&board->gameTimer))
+	{
+		board->phase = END_ROUND;
+	}
 	int gameTime = board->gameTimer.currentTime;
 	snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
 	GuiBoxText(GetRectanglePlacement(-240, 10, 260, 60, CENTER, TOP), buffer);
@@ -272,6 +275,7 @@ void HandleEndRound(Board* board)
 				}
 			}
 
+			ResetTimer(&board->timer);
 			ResetTimer(&board->gameTimer);
 			board->phase = END_GAME;
 			return;
@@ -286,7 +290,7 @@ void HandleEndGame(Board* board)
 	GuiGameOver(GetRectanglePlacement(0, 0, 500, 200, CENTER, CENTER), board->players[0]);
 
 	SetTimer(&board->timer, 2);
-	if(UpdateTimer(&board->timer) || GetPlayerResponse(board))
+	if(UpdateTimer(&board->timer))
 	{
 		board->hasGameEnded = true;
 	}
