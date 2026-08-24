@@ -9,8 +9,20 @@ typedef enum SoundId
 	//===
 	SOUND_COUNT
 } SoundId;
-
 extern Sound sounds[SOUND_COUNT];
+
+typedef enum ModelId
+{
+	BOARD_MODEL=0,
+	PAWN_MODEL,
+	SITE_MODEL,
+	HOUSE_MODEL,
+	VILLA_MODEL,
+	APARTAMENT_MODEL,
+	//===
+	MODEL_COUNT,
+} ModelId;
+extern Model models[MODEL_COUNT];
 
 void LoadAssets();
 void UnloadAssets();

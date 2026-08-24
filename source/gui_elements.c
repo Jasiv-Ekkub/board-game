@@ -79,3 +79,14 @@ int GuiButtonSfx(Rectangle bounds, const char* text)
 	if(response) PlaySound(sounds[UI_CLICK_SOUND]);
 	return response;
 }
+
+int GuiSpinnerSfx(Rectangle bounds, const char *text, int *value, int minValue, int maxValue)
+{
+	int prev = *value;
+	if(GuiSpinner(bounds, text, value, minValue, maxValue, 0) || prev != *value)
+	{
+		PlaySound(sounds[UI_CLICK_SOUND]);
+		return 1;
+	}
+	return 0;
+}
