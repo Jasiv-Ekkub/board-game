@@ -65,13 +65,13 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 				rectangle.y + offset,
 				rectangle.width - offset,
 				rectangle.height - offset,
-			}, board.assets.colors.light);
+			}, board.colors.light);
 			snprintf(commentBuffer, FIELD_TEXT_LENGTH, "$%i", field.value);
 			commentOffset = layout.commentOffsetCorner;
 			break;
 		case SUPERACTION:
 		case ACTION:
-			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
+			ImageDrawRectangleRec(image, rectangle, board.colors.light);
 
 			Image icon = ImageCopy(images[field.imageId]);
 			ImageRotate(&icon, 45);
@@ -93,7 +93,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 	}
 	ImageDrawTextSpec(
 		image,
-		board.assets.font,
+		font,
 		field.name,
 		(Vector2){
 			rectangle.x + rectangle.width/2 - layout.nameOffsetCorner,
@@ -102,11 +102,11 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 		45,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.assets.colors.dark
+		board.colors.dark
 	);
 	ImageDrawTextSpec(
 		image,
-		board.assets.font,
+		font,
 		commentBuffer,
 		(Vector2){
 			rectangle.x + rectangle.width/2 - commentOffset,
@@ -115,7 +115,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 		45,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.assets.colors.dark
+		board.colors.dark
 	);
 }
 
@@ -140,12 +140,12 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 				rectangle.y + offset,
 				rectangle.width,
 				rectangle.height - offset,
-			}, board.assets.colors.light);
+			}, board.colors.light);
 			snprintf(commentBuffer, FIELD_TEXT_LENGTH, "$%i", field.value);
 			break;
 		case SUPERACTION:
 		case ACTION:
-			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
+			ImageDrawRectangleRec(image, rectangle, board.colors.light);
 
 			Image icon = images[field.imageId];
 			ImageDrawImagePro(image, icon,
@@ -165,7 +165,7 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 	}
 	ImageDrawTextSpec(
 		image,
-		board.assets.font,
+		font,
 		field.name,
 		(Vector2){
 			rectangle.x + rectangle.width/2,
@@ -174,11 +174,11 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 		0,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.assets.colors.dark
+		board.colors.dark
 	);
 	ImageDrawTextSpec(
 		image,
-		board.assets.font,
+		font,
 		commentBuffer,
 		(Vector2){
 			rectangle.x + rectangle.width/2,
@@ -187,6 +187,6 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 		0,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.assets.colors.dark
+		board.colors.dark
 	);
 }

@@ -1,16 +1,19 @@
 #include <assets.h>
 #include <board_rendering.h>
+#include <raygui.h>
 
 Shader shader = {0};
 Sound sounds[SOUND_COUNT] = {0};
 Model models[MODEL_COUNT] = {0};
 Image images[IMAGE_COUNT] = {0};
 Texture textures[TEXTURE_COUNT] = {0};
+Font font = {0};
 
 void LoadAssets()
 {
 	sounds[UI_CLICK_SOUND] = LoadSound("resource/sound/ui_blip.wav");
 
+	font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 	shader = LoadShader("resource/shader/shader.vs", "resource/shader/shader.fs");
 
 	textures[BOARD_TEXTURE] = LoadTextureDefault();
@@ -54,4 +57,6 @@ void UnloadAssets()
 	{
 		UnloadTexture(textures[i]);
 	}
+	UnloadShader(shader);
+	UnloadFont(font);
 }

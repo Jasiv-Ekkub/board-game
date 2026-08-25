@@ -3,7 +3,6 @@
 
 #include <raylib.h>
 
-#include <board_assets.h>
 #include <board_layout.h>
 #include <field.h>
 #include <player.h>
@@ -31,7 +30,6 @@ extern const char* boardPhaseNames[];
 
 typedef struct Board
 {
-	BoardAssets assets;
 	BoardLayout layout;
 	
 	BoardPhase phase;
@@ -49,6 +47,11 @@ typedef struct Board
 	const char* popups[MAX_POPUP_COUNT];
 
 	Vector3 position;
+	
+	struct {
+		Color light;
+		Color dark;
+	} colors;
 
 	bool hasGameEnded;
 

@@ -1,7 +1,7 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include <board_assets.h>
+#include <assets.h>
 #include <raylib.h>
 #include <player.h>
 

@@ -45,6 +45,7 @@ typedef enum TextureId
 } TextureId;
 extern Texture textures[TEXTURE_COUNT];
 
+extern Font font;
 void LoadAssets();
 void UnloadAssets();
 

@@ -6,6 +6,7 @@
 #include <gui_elements.h>
 #include <game_context.h>
 #include <assets.h>
+#include <raygui.h>
 
 #include <stdio.h>
 
@@ -21,14 +22,25 @@ const char* boardPhaseNames[] = {
 	[END_GAME] = "Game over",
 };
 
+static const ModelId buildingLevelModelId[4] = {
+	SITE_MODEL,
+	HOUSE_MODEL,
+	VILLA_MODEL,
+	APARTAMENT_MODEL,
+};
+
 Board LoadBoard()
 {
 	return (Board){
-		.assets = LoadBoardAssets(),
 		.layout = GetBoardLayout(),
 		.timer = GetTimer(TIMER_SINGLE_PULSE),
 		.gameTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_INTERRUPTABLE),
 		.popupTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_REPEATING),
+
+		.colors = {
+			.light = GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_NORMAL)),
+			.dark = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
+		}
 	};
 }
 
@@ -46,7 +58,6 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 	GenerateBoardTexture(board);
 	
 	SetTimer(&board->gameTimer, 1800);
-	//SetTimer(&board->gameTimer, 5);
 	SetTimer(&board->popupTimer, 3);
 	board->phase = START_ROUND;
 	board->hasGameEnded = false;
@@ -71,7 +82,7 @@ void DrawBuildings(Board board)
 		Field field = board.fields[i];
 		if(field.type != PROPERTY || field.ownerId == -1) continue;
 		
-		ModelId modelId = board.assets.buildingLevelModelId[field.buildingLevel];
+		ModelId modelId = buildingLevelModelId[field.buildingLevel];
 		Color ownerColor = board.players[field.ownerId].color;
 
 		DrawModel(
@@ -106,7 +117,6 @@ void UpdateBoard(Board* board)
 
 void UnloadBoard(Board board)
 {
-	UnloadBoardAssets(board.assets);
 }
 
 bool HasGameEndedBoard(Board board) { return board.hasGameEnded; }
