@@ -1,8 +1,9 @@
 Things to rework:
 - Assets as global singleton
 - Fix naming conventions
-- Timers
+- Timers (second time)
 - Fix naming conventions 2 field.h boogaloo
+- Order includes and maybe add comments
 
 Then:
 - Add Animator

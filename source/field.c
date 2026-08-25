@@ -22,7 +22,7 @@ Field GetPropertyField(const char* name, int value, Color color)
 	return field;
 }
 
-Field GetActionField(const char* name, const char* comment, FieldAction action, BoardImageId imageId)
+Field GetActionField(const char* name, const char* comment, FieldAction action, ImageId imageId)
 {
 	Field field = {
 		.type = ACTION,
@@ -34,7 +34,7 @@ Field GetActionField(const char* name, const char* comment, FieldAction action, 
 	return field;
 }
 
-Field GetSuperactionField(const char* name, const char* comment, FieldAction action, BoardImageId imageId)
+Field GetSuperactionField(const char* name, const char* comment, FieldAction action, ImageId imageId)
 {
 	Field field = {
 		.type = SUPERACTION,

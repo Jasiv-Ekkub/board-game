@@ -6,10 +6,6 @@
 BoardAssets LoadBoardAssets()
 {
 	BoardAssets assets = {
-		.shader = LoadShader(
-		"resource/shaders/shader.vs",
-		"resource/shaders/shader.fs"
-		),
 		.colors = {
 			.light = GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_NORMAL)),
 			.dark = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
@@ -24,47 +20,14 @@ BoardAssets LoadBoardAssets()
 	
 	assets.font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 
-	assets.images[START_IMAGE] = LoadImageDefault();
-	assets.images[PRISON_IMAGE] = LoadImageDefault();
-	assets.images[PARKING_IMAGE] = LoadImageDefault();
-	assets.images[POLICEMAN_IMAGE] = LoadImageDefault();
 
-	assets.textures[BOARD_TEXTURE] = LoadTextureDefault();
-	assets.models[BOARD_MODEL] = LoadModelFromMesh(GenMeshPlane(2, 2, 4, 4));
-	assets.models[BOARD_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = assets.textures[BOARD_TEXTURE];
 
-	assets.models[PAWN_MODEL] = LoadModel("resource/models/pawn.glb");
-	assets.models[SITE_MODEL] = LoadModel("resource/models/placeholder_box.glb");
-	assets.models[HOUSE_MODEL] = LoadModel("resource/models/placeholder_cone.glb");
-	assets.models[VILLA_MODEL] = LoadModel("resource/models/placeholder_sphere.glb");
-	assets.models[APARTAMENT_MODEL] = LoadModel("resource/models/placeholder_cylinder.glb");
-	
-	for(int i=0; i<BOARD_MODEL_AMOUNT; ++i)
-	{
-		if(IsModelValid(assets.models[i]))
-		{
-			assets.models[i].materials[0].shader = assets.shader;
-		}
-	}
 	return assets;
 }
 
 void UnloadBoardAssets(BoardAssets assets)
 {
 	UnloadFont(assets.font);
-	UnloadShader(assets.shader);
-	for(int i=0; i<BOARD_MODEL_AMOUNT; ++i)
-	{
-		UnloadModel(assets.models[i]);
-	}
-	for(int i=0; i<BOARD_TEXTURE_AMOUNT; ++i)
-	{
-		UnloadTexture(assets.textures[i]);
-	}
-	for(int i=0; i<BOARD_IMAGE_AMOUNT; ++i)
-	{
-		UnloadImage(assets.images[i]);
-	}
 }
 
 void GenerateBoardTexture(Board* board)
@@ -147,8 +110,8 @@ void GenerateBoardTexture(Board* board)
 	}
 	ImageRotateCW(&image);
 
-	UnloadTexture(board->assets.textures[BOARD_TEXTURE]);
-	board->assets.textures[BOARD_TEXTURE] = LoadTextureFromImage(image);
-	board->assets.models[BOARD_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = board->assets.textures[BOARD_TEXTURE];
+	UnloadTexture(textures[BOARD_TEXTURE]);
+	textures[BOARD_TEXTURE] = LoadTextureFromImage(image);
+	models[BOARD_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[BOARD_TEXTURE];
 	UnloadImage(image);
 }

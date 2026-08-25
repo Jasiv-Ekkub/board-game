@@ -5,6 +5,7 @@
 #include <layout_engine.h>
 #include <gui_elements.h>
 #include <game_context.h>
+#include <assets.h>
 
 #include <stdio.h>
 
@@ -33,10 +34,10 @@ Board LoadBoard()
 
 void SetupBoard(Board* board, int size, int humanCount, int botCount)
 {
-	if(size > MAX_FIELD_AMOUNT)
-		size = MAX_FIELD_AMOUNT;
-	else if(size < MIN_FIELD_AMOUNT)
-		size = MIN_FIELD_AMOUNT;
+	if(size > MAX_FIELD_COUNT)
+		size = MAX_FIELD_COUNT;
+	else if(size < MIN_FIELD_COUNT)
+		size = MIN_FIELD_COUNT;
 	else size &= 0xFFFC;
 
 	board->fieldCount = size;
@@ -56,7 +57,7 @@ void DrawPlayers(Board board)
 	for(int i=0; i<board.playerCount; ++i)
 	{
 		DrawModel(
-			board.assets.models[PAWN_MODEL],
+			models[PAWN_MODEL],
 			CalculatePlayerPosition(board, i),
 			board.layout.modelScale,
 			board.players[i].color);
@@ -70,11 +71,11 @@ void DrawBuildings(Board board)
 		Field field = board.fields[i];
 		if(field.type != PROPERTY || field.ownerId == -1) continue;
 		
-		BoardModelId modelId = board.assets.buildingLevelModelId[field.buildingLevel];
+		ModelId modelId = board.assets.buildingLevelModelId[field.buildingLevel];
 		Color ownerColor = board.players[field.ownerId].color;
 
 		DrawModel(
-			board.assets.models[modelId],
+			models[modelId],
 			CalculateHousePosition(board, i),
 			board.layout.modelScale,
 			ownerColor);
@@ -86,7 +87,7 @@ void UpdateBoard(Board* board)
 	if(board->hasGameEnded) return;
 
 	BeginMode3D(GetCamera3D());
-		DrawModel(board->assets.models[BOARD_MODEL], board->position, 1, WHITE);
+		DrawModel(models[BOARD_MODEL], board->position, 1, WHITE);
 		DrawPlayers(*board);
 		DrawBuildings(*board);
 	EndMode3D();
@@ -112,7 +113,7 @@ bool HasGameEndedBoard(Board board) { return board.hasGameEnded; }
 
 void AddPopupBoard(Board* board, const char* popup)
 {
-	if(board->popupCount < MAX_POPUP_AMOUNT)
+	if(board->popupCount < MAX_POPUP_COUNT)
 	{
 		board->popups[board->popupCount++] = popup;
 	}

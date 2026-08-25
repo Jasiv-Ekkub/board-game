@@ -49,7 +49,7 @@ void LoadFields(Board* board)
 	}
 }
 
-const Color playerColors[MAX_PLAYER_AMOUNT] = {
+const Color playerColors[MAX_PLAYER_COUNT] = {
 	RED,
 	YELLOW,
 	GREEN,
@@ -71,7 +71,7 @@ void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
 	board->playerCount = humanCount + botCount;
 
 	char buffer[PLAYER_NAME_LENGTH];
-	for(int i=0; i<MAX_PLAYER_AMOUNT; ++i)
+	for(int i=0; i<MAX_PLAYER_COUNT; ++i)
 	{
 		if(i < humanCount)
 		{

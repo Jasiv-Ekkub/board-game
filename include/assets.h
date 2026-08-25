@@ -24,6 +24,27 @@ typedef enum ModelId
 } ModelId;
 extern Model models[MODEL_COUNT];
 
+typedef enum ImageId
+{
+	START_IMAGE=0,
+	PRISON_IMAGE,
+	PARKING_IMAGE,
+	POLICEMAN_IMAGE,
+	//===
+	IMAGE_COUNT,
+
+} ImageId;
+extern Image images[IMAGE_COUNT];
+
+typedef enum TextureId
+{
+	BOARD_TEXTURE=0,
+	//===
+	TEXTURE_COUNT,
+
+} TextureId;
+extern Texture textures[TEXTURE_COUNT];
+
 void LoadAssets();
 void UnloadAssets();
 

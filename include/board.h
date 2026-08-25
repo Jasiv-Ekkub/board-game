@@ -9,10 +9,10 @@
 #include <player.h>
 #include <timer.h>
 
-#define MAX_FIELD_AMOUNT 48
-#define MIN_FIELD_AMOUNT 24
-#define MAX_PLAYER_AMOUNT 4
-#define MAX_POPUP_AMOUNT 16
+#define MAX_FIELD_COUNT 48
+#define MIN_FIELD_COUNT 24
+#define MAX_PLAYER_COUNT 4
+#define MAX_POPUP_COUNT 16
 
 typedef enum BoardPhase
 {
@@ -37,16 +37,16 @@ typedef struct Board
 	BoardPhase phase;
 
 	int fieldCount;
-	Field fields[MAX_FIELD_AMOUNT];
+	Field fields[MAX_FIELD_COUNT];
 
 	int playerCount;
-	Player players[MAX_PLAYER_AMOUNT];
+	Player players[MAX_PLAYER_COUNT];
 	int currentPlayer;
 	PlayerResponse currentPlayerResponse;
 	int currentDiceroll;
 
 	int popupCount;
-	const char* popups[MAX_POPUP_AMOUNT];
+	const char* popups[MAX_POPUP_COUNT];
 
 	Vector3 position;
 

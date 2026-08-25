@@ -30,15 +30,15 @@ typedef struct Field
 		};
 		struct {
 			char comment[FIELD_TEXT_LENGTH];
-			BoardImageId imageId;
+			ImageId imageId;
 			FieldAction action;
 		};
 	};
 } Field;
 
 Field GetPropertyField(const char* name, int value, Color color);
-Field GetActionField(const char* name, const char* comment, FieldAction action, BoardImageId imageId);
-Field GetSuperactionField(const char* name, const char* comment, FieldAction action, BoardImageId imageId);
+Field GetActionField(const char* name, const char* comment, FieldAction action, ImageId imageId);
+Field GetSuperactionField(const char* name, const char* comment, FieldAction action, ImageId imageId);
 
 void PrintField(Field field);
 

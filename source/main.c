@@ -52,7 +52,7 @@ int main()
 
 void HandleMainMenu()
 {
-	static int boardSize = MIN_FIELD_AMOUNT;
+	static int boardSize = MIN_FIELD_COUNT;
 	static int playerCount = 1;
 	static int botCount = 1;
 
@@ -65,7 +65,7 @@ void HandleMainMenu()
 	{
 		shouldClose = true;
 	}
-	if(GuiSpinnerSfx(GetRectanglePlacement(0,95,500,70,CENTER,CENTER), "Board size ", &boardSize, MIN_FIELD_AMOUNT, MAX_FIELD_AMOUNT))
+	if(GuiSpinnerSfx(GetRectanglePlacement(0,95,500,70,CENTER,CENTER), "Board size ", &boardSize, MIN_FIELD_COUNT, MAX_FIELD_COUNT))
 	{
 		switch(boardSize % 4)
 		{

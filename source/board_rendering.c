@@ -73,7 +73,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 		case ACTION:
 			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
 
-			Image icon = ImageCopy(board.assets.images[field.imageId]);
+			Image icon = ImageCopy(images[field.imageId]);
 			ImageRotate(&icon, 45);
 			ImageDrawImagePro(image, icon,
 				(Rectangle){0, 0, (float)icon.width, (float)icon.height},
@@ -147,7 +147,7 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 		case ACTION:
 			ImageDrawRectangleRec(image, rectangle, board.assets.colors.light);
 
-			Image icon = board.assets.images[field.imageId];
+			Image icon = images[field.imageId];
 			ImageDrawImagePro(image, icon,
 				(Rectangle){0, 0, (float)icon.width, (float)icon.height},
 				(Rectangle){
@@ -190,63 +190,3 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 		board.assets.colors.dark
 	);
 }
-/*
-LoadBoardTexture(Board* board)
-{
-	BoardLayout layout = board->layout;
-	BoardAssets assets = board->assets;
-
-	int quarter = board->fieldCount/4;
-
-	float cornerOffset = layout.fieldHeight + layout.borderWidth * 2;
-	float edgeOffset = layout.fieldWidth + layout.borderWidth;
-
-	float sideOffset = cornerOffset + edgeOffset * (float)(quarter-1) - layout.borderWidth;
-
-	float boardSize = sideOffset + cornerOffset;
-	board->layout.boardSize = boardSize;
-	
-	Image image = GenImageColor((int)boardSize, (int)boardSize, renderData.colorPalette.dark);
-
-
-	for(int i=1; i<quarter; ++i)
-	{
-		DrawBoardEdge(&image, layout, renderData, (Rectangle){
-			cornerOffset + (float)(i-1) * edgeOffset,
-			layout.borderWidth,
-			layout.fieldWidth,
-			layout.fieldHeight,
-			}, board->fields[quarter + i]);
-		
-		DrawBoardEdge(&image, layout, renderData, (Rectangle){
-			cornerOffset + (float)(i-1) * edgeOffset,
-			layout.borderWidth + sideOffset,
-			layout.fieldWidth,
-			layout.fieldHeight,
-			}, board->fields[4*quarter - i]);
-	}
-	ImageRotateCCW(&image);
-	for(int i=1; i<quarter; ++i)
-	{
-		DrawBoardEdge(&image, layout, renderData, (Rectangle){
-			cornerOffset + (float)(i-1) * edgeOffset,
-			layout.borderWidth,
-			layout.fieldWidth,
-			layout.fieldHeight,
-			}, board->fields[2*quarter + i]);
-		
-		DrawBoardEdge(&image, layout, renderData, (Rectangle){
-			cornerOffset + (float)(i-1) * edgeOffset,
-			layout.borderWidth + sideOffset,
-			layout.fieldWidth,
-			layout.fieldHeight,
-			}, board->fields[quarter - i]);
-	}
-	ImageRotateCW(&image);
-	ImageDrawRectangleRec(&image, (Rectangle){cornerOffset, cornerOffset, sideOffset-cornerOffset, sideOffset-cornerOffset}, renderData.colorPalette.light);
-	ImageDrawTextSpec(&image, renderData.font, "Board game", (Vector2){boardSize/2, boardSize/2}, 45, 120, 1, renderData.colorPalette.dark);
-
-	Texture2D texture = LoadTextureFromImage(image);
-	UnloadImage(image);
-}
-*/
