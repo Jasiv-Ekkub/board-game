@@ -10,6 +10,7 @@ float deltaTime;
 Rectangle screenBounds;
 float guiScale;
 Camera3D camera3D;
+Camera3D cameraDice;
 
 void InitializeGameContext()
 {
@@ -29,6 +30,13 @@ void InitializeGameContext()
 		.target = (Vector3){0, 0, 0},
 		.up = (Vector3){0, 1, 0},
 		.fovy = 2,
+		.projection = CAMERA_ORTHOGRAPHIC,
+	};
+	cameraDice = (Camera3D){
+		.position = (Vector3){0, 3, 0.1},
+		.target = (Vector3){0, 0, 0},
+		.up = (Vector3){0, 1, 0},
+		.fovy = 8,
 		.projection = CAMERA_ORTHOGRAPHIC,
 	};
 }
@@ -55,6 +63,8 @@ float GetDeltaTime() { return deltaTime; }
 Rectangle GetScreenBounds() { return screenBounds; }
 
 Camera3D GetCamera3D() { return camera3D; }
+
+Camera3D GetCameraDice() { return cameraDice; }
 
 float GetGuiScale() { return guiScale; }
 

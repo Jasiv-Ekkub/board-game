@@ -17,6 +17,7 @@ typedef enum BoardPhase
 {
 	START_ROUND = 0,
 	ROLL_DICE,
+	MOVE_PLAYER,
 	CHECK_FIELD,
 	PAY_FEE,
 	BUY_FIELD,
@@ -47,6 +48,9 @@ typedef struct Board
 	const char* popups[MAX_POPUP_COUNT];
 
 	Vector3 position;
+
+	float diceAngle;
+	Vector3 diceAxis;
 	
 	struct {
 		Color light;

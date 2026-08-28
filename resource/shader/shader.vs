@@ -10,10 +10,11 @@ out vec2 fragTexCoord;
 out vec4 fragColor;
 
 uniform mat4 mvp;
+uniform mat4 matNormal;
 
 void main()
 {
-	fragNormal = normalize(vertexNormal);
+	fragNormal = normalize(vec3(matNormal*vec4(vertexNormal, 1.0)));
 	fragTexCoord = vertexTexCoord;
 	fragColor = vertexColor;
 	gl_Position = mvp * vec4(vertexPosition, 1);

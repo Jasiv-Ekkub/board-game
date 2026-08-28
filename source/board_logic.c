@@ -12,6 +12,7 @@
 
 void HandleStartRound(Board* board);
 void HandleRollDice(Board* board);
+void HandleMovePlayer(Board* board);
 void HandleCheckField(Board* board);
 void HandlePayFee(Board* board);
 void HandleBuyField(Board* board);
@@ -22,7 +23,7 @@ void HandleEndGame(Board* board);
 
 void UpdateBoardLogic(Board* board)
 {
-
+	board->diceAngle += 90 * GetDeltaTime();
 	if(board->phase != END_GAME)
 	{
 		if(UpdateTimer(&board->gameTimer) || GuiButtonSfx(GetRectanglePlacement(10, 0, 100, 60, LEFT, CENTER), "Exit"))
@@ -49,6 +50,9 @@ void UpdateBoardLogic(Board* board)
 			break;
 		case ROLL_DICE:
 			HandleRollDice(board);
+			break;
+		case MOVE_PLAYER:
+			HandleMovePlayer(board);
 			break;
 		case CHECK_FIELD:
 			HandleCheckField(board);
@@ -77,6 +81,11 @@ void UpdateBoardLogic(Board* board)
 	}
 }
 
+float GetRandomFloat()
+{
+	return ((float)(rand()) / RAND_MAX) * 2 - 1;
+}
+
 void HandleStartRound(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
@@ -85,6 +94,11 @@ void HandleStartRound(Board* board)
 		board->phase = END_ROUND;
 		return;
 	}
+	board->diceAxis = (Vector3){
+		GetRandomFloat(),
+		GetRandomFloat(),
+		GetRandomFloat()
+	};
 	board->currentDiceroll = -1;
 	board->phase = ROLL_DICE;
 }
@@ -98,9 +112,17 @@ void HandleRollDice(Board* board)
 
 		int currentDiceroll = 1 + rand()%6;
 		board->currentDiceroll = currentDiceroll;
+		board->phase = MOVE_PLAYER;
+	}
+}
 
+void HandleMovePlayer(Board* board)
+{
+	SetTimer(&board->timer, 1);
+	if(UpdateTimer(&board->timer))
+	{
 		Player* player = &board->players[board->currentPlayer];
-		for(int i=1; i<=currentDiceroll; ++i)
+		for(int i=1; i<=board->currentDiceroll; ++i)
 		{
 			int position = (player->position + i) % board->fieldCount;
 			Field field = board->fields[position];
@@ -109,9 +131,10 @@ void HandleRollDice(Board* board)
 				field.action(board);
 			}
 		}
-		player->position += currentDiceroll;
+		player->position += board->currentDiceroll;
 		player->position %= board->fieldCount;
 		
+		board->currentDiceroll = 0;
 		if(player->money < 0) board->phase = CHECK_DEBT;
 		else board->phase = CHECK_FIELD;
 	}

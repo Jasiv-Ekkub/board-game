@@ -17,10 +17,10 @@ void LoadAssets()
 	shader = LoadShader("resource/shader/shader.vs", "resource/shader/shader.fs");
 
 	textures[BOARD_TEXTURE] = LoadTextureDefault();
-	textures[DICE_TEXTURE] = LoadTextureDice();
+	textures[DICE_TEXTURE] = LoadTexture("resource/texture/dice.png");
 
 	models[BOARD_MODEL] = LoadModelFromMesh(GenMeshPlane(2, 2, 4, 4));
-	models[DICE_MODEL] = LoadModelFromMesh(GenMeshPlane(2, 2, 4, 4));
+	models[DICE_MODEL] = LoadModel("resource/model/dice.glb");
 	models[PAWN_MODEL] = LoadModel("resource/model/pawn.glb");
 	models[SITE_MODEL] = LoadModel("resource/model/placeholder_box.glb");
 	models[HOUSE_MODEL] = LoadModel("resource/model/placeholder_cone.glb");

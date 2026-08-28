@@ -13,6 +13,7 @@
 const char* boardPhaseNames[] = {
 	[START_ROUND] = "Round beginning",
 	[ROLL_DICE] = "Rolling dice",
+	[MOVE_PLAYER] = "Moving player",
 	[CHECK_FIELD] = "Checking field",
 	[PAY_FEE] = "Paying fee",
 	[BUY_FIELD] = "Buying field",
@@ -40,7 +41,10 @@ Board GetBoard()
 		.colors = {
 			.light = GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_NORMAL)),
 			.dark = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
-		}
+		},
+
+		.diceAngle = 0,
+		.diceAxis = {1, 2, 4},
 	};
 }
 
@@ -93,6 +97,43 @@ void DrawBuildings(Board board)
 	}
 }
 
+static const struct {
+	Vector3 axis;
+	float angle;
+} diceTransforms[6] = {
+	{{0, 0, 0}, 0},
+	{{0, 0, 1}, 90},
+	{{1, 0, 0}, 90},
+	{{1, 0, 0}, -90},
+	{{0, 0, 1}, -90},
+	{{1, 0, 0}, 180},
+};
+
+void DrawDice(Board board)
+{
+	const int roll = board.currentDiceroll;
+	if(roll > 0 && roll < 7)
+	{
+		DrawModelEx(
+			models[DICE_MODEL],
+			(Vector3){0},
+			diceTransforms[roll-1].axis,
+			diceTransforms[roll-1].angle,
+			(Vector3){1,1,1}, WHITE
+		);
+	}
+	else if(roll == -1)
+	{
+		DrawModelEx(
+			models[DICE_MODEL],
+			(Vector3){0},
+			board.diceAxis,
+			board.diceAngle,
+			(Vector3){1,1,1}, WHITE
+		);
+	}
+}
+
 void UpdateBoard(Board* board)
 {
 	if(board->hasGameEnded) return;
@@ -101,6 +142,11 @@ void UpdateBoard(Board* board)
 		DrawModel(models[BOARD_MODEL], board->position, 1, WHITE);
 		DrawPlayers(*board);
 		DrawBuildings(*board);
+	EndMode3D();
+
+
+	BeginMode3D(GetCameraDice());
+		DrawDice(*board);
 	EndMode3D();
 
 	UpdateBoardLogic(board);

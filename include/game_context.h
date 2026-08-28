@@ -10,6 +10,7 @@ void TerminateGameContext();
 float GetDeltaTime();
 Rectangle GetScreenBounds();
 Camera3D GetCamera3D();
+Camera3D GetCameraDice();
 float GetGuiScale();
 
 #endif //GAME_CONTEXT_H
