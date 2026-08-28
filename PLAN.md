@@ -7,6 +7,7 @@ Things to rework:
 
 Then:
 - Add Animator
+- Remove debug info
 
 
 Things to ponder:

@@ -14,6 +14,7 @@ extern Sound sounds[SOUND_COUNT];
 typedef enum ModelId
 {
 	BOARD_MODEL=0,
+	DICE_MODEL,
 	PAWN_MODEL,
 	SITE_MODEL,
 	HOUSE_MODEL,
@@ -39,6 +40,7 @@ extern Image images[IMAGE_COUNT];
 typedef enum TextureId
 {
 	BOARD_TEXTURE=0,
+	DICE_TEXTURE,
 	//===
 	TEXTURE_COUNT,
 

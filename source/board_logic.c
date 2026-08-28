@@ -85,7 +85,7 @@ void HandleStartRound(Board* board)
 		board->phase = END_ROUND;
 		return;
 	}
-
+	board->currentDiceroll = -1;
 	board->phase = ROLL_DICE;
 }
 
@@ -123,7 +123,6 @@ void HandleCheckField(Board* board)
 	{
 		Player* player = &board->players[board->currentPlayer];
 		Field* field = &board->fields[player->position];
-		PrintField(*field);
 		switch(field->type)
 		{
 			case PROPERTY:

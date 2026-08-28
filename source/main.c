@@ -18,7 +18,9 @@ int main()
 	InitializeGameContext();
 	LoadAssets();
 
-	board = LoadBoard();
+	board = GetBoard();
+
+	Vector3 pos = {0, 0, 0};
 
 	Color bgrColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 	while(!shouldClose)
@@ -29,6 +31,9 @@ int main()
 
 		BeginDrawing();
 			ClearBackground(bgrColor);
+			BeginMode3D(GetCamera3D());
+			DrawModel(models[DICE_MODEL], pos, 0.8f, WHITE);					
+			/*
 			switch(phase)
 			{
 				case MAIN_MENU:
@@ -38,12 +43,12 @@ int main()
 					HandleBoard();
 					break;
 			}
+			*/
+			EndMode3D();
 		EndDrawing();
 
 	}
 
-	UnloadBoard(board);	
-	
 	UnloadAssets();
 	TerminateGameContext();
 	return 0;

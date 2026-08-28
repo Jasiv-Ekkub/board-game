@@ -60,10 +60,9 @@ typedef struct Board
 	Timer popupTimer;
 } Board;
 
-Board LoadBoard();
+Board GetBoard();
 void SetupBoard(Board* board, int size, int humanCount, int botCount);
 void UpdateBoard(Board* board);
-void UnloadBoard(Board board);
 bool HasGameEndedBoard(Board board);
 void AddPopupBoard(Board* board, const char* popup);
 

@@ -29,7 +29,7 @@ static const ModelId buildingLevelModelId[4] = {
 	APARTAMENT_MODEL,
 };
 
-Board LoadBoard()
+Board GetBoard()
 {
 	return (Board){
 		.layout = GetBoardLayout(),
@@ -113,10 +113,6 @@ void UpdateBoard(Board* board)
 			board->popupCount--;
 		}
 	}
-}
-
-void UnloadBoard(Board board)
-{
 }
 
 bool HasGameEndedBoard(Board board) { return board.hasGameEnded; }

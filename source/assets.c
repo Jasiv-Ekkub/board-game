@@ -17,8 +17,10 @@ void LoadAssets()
 	shader = LoadShader("resource/shader/shader.vs", "resource/shader/shader.fs");
 
 	textures[BOARD_TEXTURE] = LoadTextureDefault();
+	textures[DICE_TEXTURE] = LoadTextureDice();
 
 	models[BOARD_MODEL] = LoadModelFromMesh(GenMeshPlane(2, 2, 4, 4));
+	models[DICE_MODEL] = LoadModelFromMesh(GenMeshPlane(2, 2, 4, 4));
 	models[PAWN_MODEL] = LoadModel("resource/model/pawn.glb");
 	models[SITE_MODEL] = LoadModel("resource/model/placeholder_box.glb");
 	models[HOUSE_MODEL] = LoadModel("resource/model/placeholder_cone.glb");
@@ -32,6 +34,7 @@ void LoadAssets()
 		}
 	}
 	models[BOARD_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[BOARD_TEXTURE];
+	models[DICE_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[DICE_TEXTURE];
 	
 	images[START_IMAGE] = LoadImageDefault();
 	images[PRISON_IMAGE] = LoadImageDefault();

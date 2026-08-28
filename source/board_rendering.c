@@ -15,6 +15,55 @@ Texture2D LoadTextureDefault()
 	return texture;
 }
 
+Texture2D LoadTextureDice()
+{
+	const int sideRes = 256;
+	const int borderSize = 12;
+	const int dotSize = 20;
+	const int sideResHalf = sideRes/2;
+	Image image = GenImageColor(3*sideRes, 2*sideRes, WHITE);
+
+	ImageDrawRectangle(&image, 0, 0, 3*sideRes, borderSize, RED);
+	ImageDrawRectangle(&image, 0, sideRes - borderSize, 3*sideRes, 2*borderSize, RED);
+	ImageDrawRectangle(&image, 0, 2*sideRes - borderSize, 3*sideRes, borderSize, RED);
+
+	ImageDrawRectangle(&image, 0, 0, borderSize, 2*sideRes, RED);
+	ImageDrawRectangle(&image, sideRes - borderSize, 0, 2*borderSize, 2*sideRes, RED);
+	ImageDrawRectangle(&image, 2*sideRes - borderSize, 0, 2*borderSize, 2*sideRes, RED);
+	ImageDrawRectangle(&image, 3*sideRes - borderSize, 0, borderSize, 2*sideRes, RED);
+
+	//1
+	ImageDrawCircle(&image, sideResHalf, sideResHalf, dotSize, RED);
+	//2
+	ImageDrawCircle(&image, sideRes + sideResHalf/2, sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, 2*sideRes - sideResHalf/2, sideRes - sideResHalf/2, dotSize, RED);
+	//3
+	ImageDrawCircle(&image, sideResHalf + 2*sideRes, sideResHalf, dotSize, RED);
+	ImageDrawCircle(&image, 2*sideRes + sideResHalf/2, sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, 3*sideRes - sideResHalf/2, sideRes - sideResHalf/2, dotSize, RED);
+	//4
+	ImageDrawCircle(&image, sideResHalf/2, 2*sideRes - sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, sideRes - sideResHalf/2, 2*sideRes - sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, sideResHalf/2, sideRes + sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, sideRes - sideResHalf/2, sideRes + sideResHalf/2, dotSize, RED);
+	//5
+	ImageDrawCircle(&image, sideResHalf + sideRes, sideResHalf + sideRes, dotSize, RED);
+	ImageDrawCircle(&image, sideRes + sideResHalf/2, 2*sideRes - sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, 2*sideRes - sideResHalf/2, 2*sideRes - sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, sideRes + sideResHalf/2, sideRes + sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, 2*sideRes - sideResHalf/2, sideRes + sideResHalf/2, dotSize, RED);
+	//6
+	ImageDrawCircle(&image, 2*sideRes + sideResHalf/2, 2*sideRes - sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, 3*sideRes - sideResHalf/2, 2*sideRes - sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, 2*sideRes + sideResHalf/2, sideRes + sideResHalf, dotSize, RED);
+	ImageDrawCircle(&image, 3*sideRes - sideResHalf/2, sideRes + sideResHalf, dotSize, RED);
+	ImageDrawCircle(&image, 2*sideRes + sideResHalf/2, sideRes + sideResHalf/2, dotSize, RED);
+	ImageDrawCircle(&image, 3*sideRes - sideResHalf/2, sideRes + sideResHalf/2, dotSize, RED);
+
+	Texture2D texture = LoadTextureFromImage(image);
+	UnloadImage(image);
+	return texture;
+}
 
 void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 position, int rotation, float fontSize, float spacing, Color tint)
 {
