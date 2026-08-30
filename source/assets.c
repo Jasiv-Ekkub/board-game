@@ -12,6 +12,10 @@ Font font = {0};
 void LoadAssets()
 {
 	sounds[UI_CLICK_SOUND] = LoadSound("resource/sound/ui_blip.wav");
+	sounds[DING_SOUND] = LoadSound("resource/sound/end_round_ding.wav");
+	sounds[DICE_HIT_SOUND] = LoadSound("resource/sound/dice_hit.mp3");
+	sounds[POPUP_SOUND] = LoadSound("resource/sound/popup.wav");
+	sounds[KA_CHING_SOUND] = LoadSound("resource/sound/ka-ching.mp3");
 
 	font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 	shader = LoadShader("resource/shader/shader.vs", "resource/shader/shader.fs");

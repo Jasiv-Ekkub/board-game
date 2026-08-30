@@ -4,6 +4,8 @@
 
 void DebugAction(Board* board)
 {
+	AddPopupBoard(board, "Big big shot");
+	AddPopupBoard(board, "Be a big, be a big");
 	AddPopupBoard(board, "Now its your chance to be a big shot");
 }
 
@@ -13,6 +15,7 @@ void DebugSuperaction(Board* board)
 	//Field* field = &board->fields[player->position];
 
 	player->money += 1000;
+	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
 void DebugSuperaction2(Board* board)

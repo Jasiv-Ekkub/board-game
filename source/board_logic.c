@@ -29,7 +29,11 @@ void UpdateBoardLogic(Board* board)
 		if(UpdateTimer(&board->gameTimer) || GuiButtonSfx(GetRectanglePlacement(10, 0, 100, 60, LEFT, CENTER), "Exit"))
 		{
 			ResetTimer(&board->gameTimer);
+			ResetTimer(&board->timer);
 			board->phase = END_ROUND;
+			board->currentDiceroll = 0;
+			board->popupCount = 0;
+			board->playedPopupSound = 0;
 		}
 
 		char buffer[BUFFER_SIZE];
@@ -113,6 +117,7 @@ void HandleRollDice(Board* board)
 		int currentDiceroll = 1 + rand()%6;
 		board->currentDiceroll = currentDiceroll;
 		board->phase = MOVE_PLAYER;
+		PlaySound(sounds[DICE_HIT_SOUND]);
 	}
 }
 
@@ -201,6 +206,7 @@ void HandlePayFee(Board* board)
 		board->phase = CHECK_DEBT;
 	
 	else board->phase = END_ROUND;
+	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
 void HandleBuyField(Board* board)
@@ -222,7 +228,7 @@ void HandleBuyField(Board* board)
 			}
 			player->money -= cost;
 			field->ownerId = board->currentPlayer;
-
+			PlaySound(sounds[KA_CHING_SOUND]);
 		}
 		board->phase = END_ROUND;
 	}
@@ -241,6 +247,7 @@ void HandleUpgradeBuilding(Board* board)
 			
 			player->money -= GetUpgradeValue(*field);
 			field->buildingLevel++;
+			PlaySound(sounds[KA_CHING_SOUND]);
 		}
 		board->phase = END_ROUND;
 	}
@@ -264,7 +271,8 @@ void HandleCheckDebt(Board* board)
 
 void HandleEndRound(Board* board)
 {
-	if(board->popupCount == 0)
+	SetTimer(&board->timer, 1);
+	if(board->popupCount == 0 && UpdateTimer(&board->timer))
 	{
 		board->currentPlayer++;
 		board->currentPlayer %= board->playerCount;
@@ -299,14 +307,10 @@ void HandleEndRound(Board* board)
 					}
 				}
 			}
-
-			ResetTimer(&board->timer);
-			ResetTimer(&board->gameTimer);
 			board->phase = END_GAME;
-			return;
 		}
-
-		board->phase = START_ROUND;
+		else board->phase = START_ROUND;
+		PlaySound(sounds[DING_SOUND]);
 	}
 }
 
@@ -317,6 +321,7 @@ void HandleEndGame(Board* board)
 	SetTimer(&board->timer, 5);
 	if(UpdateTimer(&board->timer))
 	{
+		PlaySound(sounds[DING_SOUND]);
 		board->hasGameEnded = true;
 	}
 }

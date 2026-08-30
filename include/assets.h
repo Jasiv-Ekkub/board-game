@@ -6,6 +6,10 @@
 typedef enum SoundId
 {
 	UI_CLICK_SOUND=0,
+	DING_SOUND,
+	DICE_HIT_SOUND,
+	POPUP_SOUND,
+	KA_CHING_SOUND,
 	//===
 	SOUND_COUNT
 } SoundId;

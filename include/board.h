@@ -44,6 +44,7 @@ typedef struct Board
 	PlayerResponse currentPlayerResponse;
 	int currentDiceroll;
 
+	bool playedPopupSound;
 	int popupCount;
 	const char* popups[MAX_POPUP_COUNT];
 

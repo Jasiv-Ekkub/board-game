@@ -153,10 +153,16 @@ void UpdateBoard(Board* board)
 
 	if(board->popupCount > 0)
 	{
+		if(!board->playedPopupSound)
+		{
+			PlaySound(sounds[POPUP_SOUND]);
+			board->playedPopupSound = true;
+		}
 		GuiBoxText(GetRectanglePlacement(0,0,600,150,CENTER,CENTER), board->popups[board->popupCount-1]);
 		if(UpdateTimer(&board->popupTimer))
 		{
 			board->popupCount--;
+			board->playedPopupSound = false;
 		}
 	}
 }
