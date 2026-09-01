@@ -5,6 +5,7 @@
 #include <layout_engine.h>
 #include <gui_elements.h>
 #include <stdbool.h>
+#include <animation.h>
 
 enum { MAIN_MENU, BOARD } phase = MAIN_MENU;
 bool shouldClose = false;
@@ -18,9 +19,7 @@ int main()
 	InitializeGameContext();
 	LoadAssets();
 	
-
 	board = GetBoard();
-
 
 	Color bgrColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 	while(!shouldClose)
@@ -28,7 +27,6 @@ int main()
 		shouldClose = WindowShouldClose();
 		UpdateGameContext();
 		if(IsKeyPressed(KEY_F4)) ToggleFullscreen();
-
 		BeginDrawing();
 			ClearBackground(bgrColor);
 			switch(phase)
