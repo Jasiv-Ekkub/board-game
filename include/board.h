@@ -12,6 +12,7 @@
 #define MIN_FIELD_COUNT 24
 #define MAX_PLAYER_COUNT 4
 #define MAX_POPUP_COUNT 16
+#define MAX_POPUP_LENGTH 128
 
 typedef enum BoardPhase
 {
@@ -47,7 +48,7 @@ typedef struct Board
 
 	bool playedPopupSound;
 	int popupCount;
-	const char* popups[MAX_POPUP_COUNT];
+	char popups[MAX_POPUP_COUNT][MAX_POPUP_LENGTH];
 
 	Vector3 position;
 

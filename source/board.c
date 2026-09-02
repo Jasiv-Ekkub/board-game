@@ -9,6 +9,7 @@
 #include <raygui.h>
 
 #include <stdio.h>
+#include <string.h>
 
 const char* boardPhaseNames[] = {
 	[START_ROUND] = "Round beginning",
@@ -178,6 +179,6 @@ void AddPopupBoard(Board* board, const char* popup)
 {
 	if(board->popupCount < MAX_POPUP_COUNT)
 	{
-		board->popups[board->popupCount++] = popup;
+		strncpy(board->popups[board->popupCount++], popup, MAX_POPUP_LENGTH);
 	}
 }

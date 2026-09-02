@@ -9,7 +9,7 @@
 #include <raygui.h>
 #include <gui_elements.h>
 
-#define BUFFER_SIZE 16
+#define BUFFER_SIZE 64
 
 void HandleStartRound(Board* board);
 void HandleRollDice(Board* board);
@@ -47,6 +47,8 @@ void UpdateBoardLogic(Board* board)
 		GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM), board->players[2]);
 		GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 100, RIGHT, BOTTOM), board->players[3]);
 	}
+
+	if(board->popupCount > 0) return;
 
 	switch(board->phase)
 	{
@@ -137,10 +139,17 @@ void HandleMovePlayer(Board* board)
 				field.action(board);
 			}
 		}
+		int oldPosition = player->position;
 		player->position += board->currentDiceroll;
 		player->position %= board->fieldCount;
-	
+
+		int quarter = board->fieldCount/4;
+		int ppd = player->position/quarter;
 		Animation animation = GetAnimation(&board->playerModelPositions[board->currentPlayer]);
+		if(oldPosition/quarter != ppd)
+		{
+			AddKeyframe(&animation, 0.5, CalculatePlayerPosition(*board, board->currentPlayer, ppd * quarter));
+		}
 		AddKeyframe(&animation, 1, CalculatePlayerPosition(*board, board->currentPlayer, player->position));
 		QueueAnimation(animation);
 		
@@ -152,46 +161,43 @@ void HandleMovePlayer(Board* board)
 
 void HandleCheckField(Board* board)
 {
-	if(board->popupCount == 0)
+	Player* player = &board->players[board->currentPlayer];
+	Field* field = &board->fields[player->position];
+	switch(field->type)
 	{
-		Player* player = &board->players[board->currentPlayer];
-		Field* field = &board->fields[player->position];
-		switch(field->type)
-		{
-			case PROPERTY:
-				if(field->ownerId == -1)
+		case PROPERTY:
+			if(field->ownerId == -1)
+			{
+				if(GetFieldValue(*field) <= player->money)
 				{
-					if(GetFieldValue(*field) <= player->money)
-					{
-						board->phase = BUY_FIELD;
-						return;
-					}
-				}
-				else if(field->ownerId == board->currentPlayer)
-				{
-					if(field->buildingLevel < MAX_BUILDING_LEVEL - 1 && GetUpgradeValue(*field) <= player->money)
-					{
-						board->phase = UPGRADE_BUILDING;	
-						return;
-					}
-				}
-				else
-				{
-					board->phase = PAY_FEE;
+					board->phase = BUY_FIELD;
 					return;
 				}
-				break;
-			
-			case ACTION:
-				field->action(board);
-				board->phase = CHECK_DEBT;
+			}
+			else if(field->ownerId == board->currentPlayer)
+			{
+				if(field->buildingLevel < MAX_BUILDING_LEVEL - 1 && GetUpgradeValue(*field) <= player->money)
+				{
+					board->phase = UPGRADE_BUILDING;	
+					return;
+				}
+			}
+			else
+			{
+				board->phase = PAY_FEE;
 				return;
+			}
+			break;
+		
+		case ACTION:
+			field->action(board);
+			board->phase = CHECK_DEBT;
+			return;
 
-			default:
-				break;
-		}
-		board->phase = END_ROUND;
+		default:
+			break;
 	}
+	board->phase = END_ROUND;
 }
 
 void HandlePayFee(Board* board)
@@ -201,6 +207,10 @@ void HandlePayFee(Board* board)
 	Player* owner = &board->players[field->ownerId];
 
 	int fee = GetFeeValue(*field);
+
+	char buffer[MAX_POPUP_LENGTH] = {0};
+	snprintf(buffer, MAX_POPUP_LENGTH, "The amount due is $%i", fee);
+	AddPopupBoard(board, buffer);
 	player->money -= fee;
 	owner->money += fee;
 
@@ -226,6 +236,10 @@ void HandleBuyField(Board* board)
 			Field* field = &board->fields[player->position];
 			
 			int cost = GetFieldValue(*field);
+			char buffer[MAX_POPUP_LENGTH] = {0};
+			snprintf(buffer, MAX_POPUP_LENGTH, "The field was bought for $%i", cost);
+			AddPopupBoard(board, buffer);
+
 			if(field->ownerId != -1)
 			{
 				Player* owner = &board->players[field->ownerId];
@@ -249,8 +263,13 @@ void HandleUpgradeBuilding(Board* board)
 		{
 			Player* player = &board->players[board->currentPlayer];
 			Field* field = &board->fields[player->position];
+
+			int cost = GetUpgradeValue(*field);
+			char buffer[MAX_POPUP_LENGTH] = {0};
+			snprintf(buffer, MAX_POPUP_LENGTH, "The field was developed for $%i", cost);
+			AddPopupBoard(board, buffer);
 			
-			player->money -= GetUpgradeValue(*field);
+			player->money -= cost;
 			field->buildingLevel++;
 			PlaySound(sounds[KA_CHING_SOUND]);
 		}
@@ -277,7 +296,7 @@ void HandleCheckDebt(Board* board)
 void HandleEndRound(Board* board)
 {
 	SetTimer(&board->timer, 1);
-	if(board->popupCount == 0 && UpdateTimer(&board->timer))
+	if(UpdateTimer(&board->timer))
 	{
 		board->currentPlayer++;
 		board->currentPlayer %= board->playerCount;

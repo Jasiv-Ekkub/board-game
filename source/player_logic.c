@@ -42,7 +42,7 @@ bool GetHumanPlayerResponse(Board* board)
 			break;
 	
 		case BUY_FIELD:
-			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to buy %s for $%i", field.name, field.value);
+			snprintf(buffer, TEXT_BUFFER_SIZE, "Do you want to buy %s for $%i", field.name, GetFieldValue(field));
 			options = "Yes;No";
 			break;
 	

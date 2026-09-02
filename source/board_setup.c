@@ -4,9 +4,7 @@
 
 void DebugAction(Board* board)
 {
-	AddPopupBoard(board, "Big big shot");
-	AddPopupBoard(board, "Be a big, be a big");
-	AddPopupBoard(board, "Now its your chance to be a big shot");
+	AddPopupBoard(board, "Sasalele");
 }
 
 void DebugSuperaction(Board* board)
@@ -14,16 +12,9 @@ void DebugSuperaction(Board* board)
 	Player* player = &board->players[board->currentPlayer];
 	//Field* field = &board->fields[player->position];
 
-	player->money += 1000;
+	player->money += 500;
+	AddPopupBoard(board, "Earned $500 for walking through start");
 	PlaySound(sounds[KA_CHING_SOUND]);
-}
-
-void DebugSuperaction2(Board* board)
-{
-	//Player* player = &board->players[board->currentPlayer];
-	//Field* field = &board->fields[player->position];
-
-	//player->money -= 10000;
 }
 
 void LoadFields(Board* board)
@@ -40,15 +31,10 @@ void LoadFields(Board* board)
 		{
 			board->fields[i] = GetActionField("Chance", "Draw a card", DebugAction, START_IMAGE);
 		}
-		else if(qi == 3)
-		{
-			board->fields[i] = GetSuperactionField("Foobar", "Sasalele", DebugSuperaction2, START_IMAGE);
-		}
 		else
 		{
 			board->fields[i] = GetPropertyField("Wasteland", 100, GetColor(0x303030FF));
 			//board->fields[i].ownerId = 0;
-			//board->fields[i].buildingLevel = i % MAX_BUILDING_LEVEL;
 		}
 	}
 }
