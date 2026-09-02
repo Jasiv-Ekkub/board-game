@@ -49,5 +49,5 @@ void Animate(Animation *animation)
 
 bool HasAnimationEnded(Animation animation)
 {
-	return animation.time < 0;
+	return animation.time < 0 || animation.keyframeCount < 2 || !animation.object;
 }

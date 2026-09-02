@@ -1,6 +1,7 @@
 #include <board_logic.h>
 #include <player_logic.h>
 #include <layout_engine.h>
+#include <animator.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -138,6 +139,10 @@ void HandleMovePlayer(Board* board)
 		}
 		player->position += board->currentDiceroll;
 		player->position %= board->fieldCount;
+	
+		Animation animation = GetAnimation(&board->playerModelPositions[board->currentPlayer]);
+		AddKeyframe(&animation, 1, CalculatePlayerPosition(*board, board->currentPlayer, player->position));
+		QueueAnimation(animation);
 		
 		board->currentDiceroll = 0;
 		if(player->money < 0) board->phase = CHECK_DEBT;

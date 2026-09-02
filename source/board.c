@@ -61,6 +61,11 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 	LoadPlayers(board, 1000, humanCount, botCount);
 	GenerateBoardTexture(board);
 	
+	for(int i=0; i<board->playerCount; ++i)
+	{
+		board->playerModelPositions[i] = CalculatePlayerPosition(*board, i, 0);
+	}
+
 	SetTimer(&board->gameTimer, 1800);
 	SetTimer(&board->popupTimer, 3);
 	board->phase = START_ROUND;
@@ -73,7 +78,7 @@ void DrawPlayers(Board board)
 	{
 		DrawModel(
 			models[PAWN_MODEL],
-			CalculatePlayerPosition(board, i),
+			board.playerModelPositions[i],
 			board.layout.modelScale,
 			board.players[i].color);
 	}

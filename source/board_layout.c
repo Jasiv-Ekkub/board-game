@@ -106,12 +106,11 @@ Vector2 CalculateFieldCenter(Board board, int fieldNumber)
 	return position;
 }
 
-Vector3 CalculatePlayerPosition(Board board, int playerId)
+Vector3 CalculatePlayerPosition(Board board, int playerId, int playerPosition)
 {
-	Player player = board.players[playerId];
 	float pawnOffset = board.layout.pawnOffset;
 
-	Vector2 pixelPosition = CalculateFieldCenter(board, player.position);
+	Vector2 pixelPosition = CalculateFieldCenter(board, playerPosition);
 	
 	pixelPosition.x += (playerId&1 ? pawnOffset : -pawnOffset);
 	pixelPosition.y += (playerId&2 ? pawnOffset : -pawnOffset);

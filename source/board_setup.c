@@ -62,16 +62,6 @@ const Color playerColors[MAX_PLAYER_COUNT] = {
 
 void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
 {
-	if(humanCount > 4)
-	{
-		humanCount = 4;
-		botCount = 0;
-	}
-	else if(botCount > 4 - humanCount)
-	{
-		botCount = 4 - humanCount;
-	}
-
 	board->playerCount = humanCount + botCount;
 
 	char buffer[PLAYER_NAME_LENGTH];
