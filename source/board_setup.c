@@ -17,6 +17,41 @@ void DebugSuperaction(Board* board)
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
+static const struct {
+	const char* name;
+	Color color;
+} propertyData[MAX_FIELD_COUNT] = {
+	{ "Cracow", RED },
+	{ "Warsaw", RED },
+	{ "Stettin", RED },
+
+	{ "Frankfurt", ORANGE },
+	{ "Berlin", ORANGE },
+	{ "Munich", ORANGE },
+	
+	{ "Lyon", YELLOW },
+	{ "Paris", YELLOW },
+	{ "Marseille", YELLOW },
+	
+	{ "Liverpool", GREEN },
+	{ "London", GREEN },
+	{ "Glasgow", GREEN },
+	
+	{ "Belfast", BLUE},
+	{ "Dublin", BLUE},
+	{ "Limerick", BLUE},
+
+	{ "Milan", PURPLE },
+	{ "Rome", PURPLE },
+	{ "Florence", PURPLE },
+
+	{ "Brno", GRAY },
+	{ "Prague", GRAY },
+	{ "Ostrava", GRAY },
+};
+
+static int propertyCounter = 0;
+
 void LoadFields(Board* board)
 {
 	int quarter = board->fieldCount/4;
@@ -33,13 +68,14 @@ void LoadFields(Board* board)
 		}
 		else
 		{
-			board->fields[i] = GetPropertyField("Wasteland", 100, GetColor(0x303030FF));
+			board->fields[i] = GetPropertyField(propertyData[propertyCounter].name, 100 * (propertyCounter / 3 + 3), propertyData[propertyCounter].color);
+			propertyCounter++;
 			//board->fields[i].ownerId = 0;
 		}
 	}
 }
 
-const Color playerColors[MAX_PLAYER_COUNT] = {
+static const Color playerColors[MAX_PLAYER_COUNT] = {
 	RED,
 	YELLOW,
 	GREEN,
