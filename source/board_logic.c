@@ -116,9 +116,8 @@ void HandleRollDice(Board* board)
 	if(UpdateTimer(&board->timer) || GetPlayerResponse(board))
 	{
 		ResetTimer(&board->timer);
-
-		int currentDiceroll = 1 + rand()%6;
-		board->currentDiceroll = currentDiceroll;
+		//board->currentDiceroll = 1 + rand()%6;
+		board->currentDiceroll = 6;
 		board->phase = MOVE_PLAYER;
 		PlaySound(sounds[DICE_HIT_SOUND]);
 	}
@@ -282,14 +281,41 @@ void HandleCheckDebt(Board* board)
 	Player* player = &board->players[board->currentPlayer];
 	board->phase = END_ROUND;
 
+	int count = 0;
+	int sum_cost = 0;
+
 	for(int i=0; i<board->fieldCount; ++i)
 	{
 		if(player->money >= 0) break;
-		Field* field = &board->fields[i];
-		if(field->type != PROPERTY || field->ownerId != board->currentPlayer) continue;
 
-		field->ownerId = -1;
-		player->money += field->value;
+		Field* cheapestOwnedField = 0;
+		for(int j=0; j<board->fieldCount; ++j)
+		{
+			Field* field = &board->fields[j];
+			if(field->type != PROPERTY || field->ownerId != board->currentPlayer) continue;
+
+			if(!cheapestOwnedField || GetFieldValue(*cheapestOwnedField) > GetFieldValue(*field))
+				cheapestOwnedField = field;
+		}
+		if(!cheapestOwnedField) break;
+	
+		int price = GetFieldValue(*cheapestOwnedField);
+		player->money += price;
+		cheapestOwnedField->ownerId = -1;
+		cheapestOwnedField->buildingLevel = 0;
+		
+		count++;
+		sum_cost += price;
+		
+	}
+	if(player->money < 0)
+		AddPopupBoard(board, "Player has bankrupted");
+	if(count > 0)
+	{
+		char buffer[MAX_POPUP_LENGTH] = {0};
+		snprintf(buffer, MAX_POPUP_LENGTH, "%i fields were sold for $%i", count, sum_cost);
+		AddPopupBoard(board, buffer);
+		PlaySound(sounds[KA_CHING_SOUND]);
 	}
 }
 
