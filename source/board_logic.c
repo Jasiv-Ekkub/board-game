@@ -116,8 +116,7 @@ void HandleRollDice(Board* board)
 	if(UpdateTimer(&board->timer) || GetPlayerResponse(board))
 	{
 		ResetTimer(&board->timer);
-		//board->currentDiceroll = 1 + rand()%6;
-		board->currentDiceroll = 6;
+		board->currentDiceroll = 1 + rand()%6;
 		board->phase = MOVE_PLAYER;
 		PlaySound(sounds[DICE_HIT_SOUND]);
 	}
