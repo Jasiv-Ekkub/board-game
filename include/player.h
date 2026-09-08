@@ -29,6 +29,7 @@ typedef struct Player
 
 	int position;
 	Color color;
+	Vector3 modelPosition;
 
 	//Bot data
 	Timer timer;

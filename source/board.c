@@ -64,7 +64,7 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 	
 	for(int i=0; i<board->playerCount; ++i)
 	{
-		board->playerModelPositions[i] = CalculatePlayerPosition(*board, i, 0);
+		board->players[i].modelPosition = CalculatePlayerPosition(*board, i, 0);
 	}
 
 	SetTimer(&board->gameTimer, 1800);
@@ -79,7 +79,7 @@ void DrawPlayers(Board board)
 	{
 		DrawModel(
 			models[PAWN_MODEL],
-			board.playerModelPositions[i],
+			board.players[i].modelPosition,
 			board.layout.modelScale,
 			board.players[i].color);
 	}

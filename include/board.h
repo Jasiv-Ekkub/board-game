@@ -41,7 +41,6 @@ typedef struct Board
 
 	int playerCount;
 	Player players[MAX_PLAYER_COUNT];
-	Vector3 playerModelPositions[MAX_PLAYER_COUNT];
 	int currentPlayer;
 	PlayerResponse currentPlayerResponse;
 	int currentDiceroll;

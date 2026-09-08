@@ -143,7 +143,7 @@ void HandleMovePlayer(Board* board)
 
 		int quarter = board->fieldCount/4;
 		int ppd = player->position/quarter;
-		Animation animation = GetAnimation(&board->playerModelPositions[board->currentPlayer]);
+		Animation animation = GetAnimation(&board->players[board->currentPlayer].modelPosition);
 		if(oldPosition/quarter != ppd)
 		{
 			AddKeyframe(&animation, 0.5, CalculatePlayerPosition(*board, board->currentPlayer, ppd * quarter));

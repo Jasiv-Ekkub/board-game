@@ -50,10 +50,11 @@ static const struct {
 	{ "Ostrava", GRAY },
 };
 
-static int propertyCounter = 0;
+
 
 void LoadFields(Board* board)
 {
+	int propertyCounter = 0;
 	int quarter = board->fieldCount/4;
 	for(int i=0; i<board->fieldCount; ++i)
 	{
@@ -69,7 +70,7 @@ void LoadFields(Board* board)
 		else
 		{
 			board->fields[i] = GetPropertyField(propertyData[propertyCounter].name, 100 * (propertyCounter / 3 + 3), propertyData[propertyCounter].color);
-			propertyCounter++;
+			if(propertyCounter < 20) propertyCounter++;
 			//board->fields[i].ownerId = 0;
 		}
 	}
