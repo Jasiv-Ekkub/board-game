@@ -2,6 +2,7 @@
 #include <player_logic.h>
 #include <layout_engine.h>
 #include <animator.h>
+#include <helpers.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,11 +89,6 @@ void UpdateBoardLogic(Board* board)
 	}
 }
 
-float GetRandomFloat()
-{
-	return ((float)(rand()) / RAND_MAX) * 2 - 1;
-}
-
 void HandleStartRound(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
@@ -102,9 +98,9 @@ void HandleStartRound(Board* board)
 		return;
 	}
 	board->diceAxis = (Vector3){
-		GetRandomFloat(),
-		GetRandomFloat(),
-		GetRandomFloat()
+		GetRandomFloat(-1, 1),
+		GetRandomFloat(-1, 1),
+		GetRandomFloat(-1, 1)
 	};
 	board->currentDiceroll = -1;
 	board->phase = ROLL_DICE;
