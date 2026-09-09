@@ -57,7 +57,6 @@ bool GetHumanPlayerResponse(Board* board)
 			break;
 	}
 
-	GuiPlayerInfo(GetRectanglePlacement(0, 150, 225, 100, CENTER, TOP), player);
 	int response = GuiMessageBoxSfx(messageBounds, buffer, options);
 	
 	switch(response)
@@ -78,15 +77,19 @@ bool GetHumanPlayerResponse(Board* board)
 bool GetBotPlayerResponse(Board* board)
 {
 	Timer* timer = &board->players[board->currentPlayer].timer;
-	SetTimer(timer, 1);
+	if(Timer_HasEnded(*timer)) Timer_Set(timer, 1);
+	Timer_Update(timer);
+
 	switch(board->phase)
 	{
 		case ROLL_DICE:
-			return UpdateTimer(timer);
 		case BUY_FIELD:
 		case UPGRADE_BUILDING:
-			board->currentPlayerResponse = POSITIVE;
-			return UpdateTimer(timer);
+			if(Timer_HasEnded(*timer))
+			{
+				board->currentPlayerResponse = POSITIVE;
+				return true;
+			}
 		default:
 			break;
 	}

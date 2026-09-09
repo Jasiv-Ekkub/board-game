@@ -61,7 +61,7 @@ typedef struct Board
 
 	bool hasGameEnded;
 
-	Timer timer;
+	Timer delayTimer;
 	Timer gameTimer;
 	Timer popupTimer;
 } Board;

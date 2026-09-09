@@ -1,45 +1,28 @@
 #include <timer.h>
 #include <game_context.h>
 
-Timer GetTimer(uint8_t flags)
+Timer Timer_Get() { return (Timer){0}; }
+
+bool Timer_HasEnded(Timer timer)
 {
-	return (Timer){
-		.currentTime = 0,
-		.endTime = 0,
-		.flags = flags,
-	};
+	return timer.time <= 0;
 }
 
-bool HasTimerEnded(Timer timer)
+void Timer_Reset(Timer* timer)
 {
-	return timer.currentTime <= 0;
+	timer->time = timer->length;
 }
 
-void SetTimer(Timer* timer, float endTime)
+void Timer_Set(Timer* timer, float length)
 {
-	if(timer->flags & TIMER_INTERRUPTABLE || HasTimerEnded(*timer))
-	{
-		timer->currentTime = endTime;
-		timer->endTime = endTime;
-	}
+	timer->length = length;
+	Timer_Reset(timer);
 }
 
-void ResetTimer(Timer* timer)
+void Timer_Update(Timer* timer)
 {
-	timer->currentTime = 0;
-	timer->endTime = 0;
-}
-
-bool UpdateTimer(Timer* timer)
-{
-	if(HasTimerEnded(*timer) && (timer->flags & TIMER_SINGLE_PULSE)) return false;
-	timer->currentTime -= GetDeltaTime();
-	if(HasTimerEnded(*timer))
-	{
-		if(timer->flags & TIMER_REPEATING) timer->currentTime = timer->endTime;
-		else timer->currentTime = 0;
-
-		return true;
-	}
-	return false;
+	if(!Timer_HasEnded(*timer))
+		timer->time -= GetDeltaTime();
+	else
+		timer->time = 0;
 }

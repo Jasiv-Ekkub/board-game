@@ -35,9 +35,9 @@ Board GetBoard()
 {
 	return (Board){
 		.layout = GetBoardLayout(),
-		.timer = GetTimer(TIMER_SINGLE_PULSE),
-		.gameTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_INTERRUPTABLE),
-		.popupTimer = GetTimer(TIMER_SINGLE_PULSE | TIMER_REPEATING),
+		.delayTimer = Timer_Get(),
+		.gameTimer = Timer_Get(),
+		.popupTimer = Timer_Get(),
 
 		.colors = {
 			.light = GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_NORMAL)),
@@ -67,8 +67,8 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 		board->players[i].modelPosition = CalculatePlayerPosition(*board, i, 0);
 	}
 
-	SetTimer(&board->gameTimer, 1800);
-	SetTimer(&board->popupTimer, 3);
+	Timer_Set(&board->gameTimer, 1800);
+	Timer_Set(&board->popupTimer, 3);
 	board->phase = START_ROUND;
 	board->hasGameEnded = false;
 }
@@ -159,16 +159,17 @@ void UpdateBoard(Board* board)
 
 	if(board->popupCount > 0)
 	{
-		if(!board->playedPopupSound)
+		if(Timer_HasEnded(board->popupTimer))
 		{
 			PlaySound(sounds[POPUP_SOUND]);
-			board->playedPopupSound = true;
+			Timer_Set(&board->popupTimer, 3);
 		}
 		GuiBoxText(GetRectanglePlacement(0,0,600,150,CENTER,CENTER), board->popups[board->popupCount-1]);
-		if(UpdateTimer(&board->popupTimer))
+		Timer_Update(&board->popupTimer);
+
+		if(Timer_HasEnded(board->popupTimer))
 		{
 			board->popupCount--;
-			board->playedPopupSound = false;
 		}
 	}
 }

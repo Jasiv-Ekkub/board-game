@@ -71,7 +71,7 @@ void LoadFields(Board* board)
 		{
 			board->fields[i] = GetPropertyField(propertyData[propertyCounter].name, 100 * (propertyCounter / 3 + 3), propertyData[propertyCounter].color);
 			if(propertyCounter < 20) propertyCounter++;
-			//board->fields[i].ownerId = 0;
+			board->fields[i].ownerId = 0;
 		}
 	}
 }
