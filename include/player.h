@@ -25,6 +25,7 @@ typedef struct Player
 	char name[PLAYER_NAME_LENGTH];
 	PlayerType type;
 	int money;
+	int turnSkips;
 	bool isBankrupt;
 
 	int position;

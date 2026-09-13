@@ -8,6 +8,7 @@ Player GetHumanPlayer(const char* name, Color color, int money)
 		.position = 0,
 		.color = color,
 		.money = money,
+		.turnSkips = 0,
 	};
 	strncpy(player.name, name, PLAYER_NAME_LENGTH);
 	return player;
@@ -19,8 +20,10 @@ Player GetBotPlayer(const char* name, Color color, int money)
 		.type = BOT,
 		.position = 0,
 		.color = color,
-		.timer = Timer_Get(),
 		.money = money,
+		.turnSkips = 0,
+
+		.timer = Timer_Get(),
 	};
 	strncpy(player.name, name, PLAYER_NAME_LENGTH);
 	return player;

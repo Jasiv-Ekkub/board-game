@@ -2,76 +2,127 @@
 #include <board_setup.h>
 #include <stdio.h>
 
-void DebugAction(Board* board)
-{
-	AddPopupBoard(board, "Sasalele");
-}
-
-void DebugSuperaction(Board* board)
+void StartSuperaction(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
-	//Field* field = &board->fields[player->position];
 
 	player->money += 500;
 	AddPopupBoard(board, "Earned $500 for walking through start");
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
+void TaxationAction(Board* board)
+{
+	Player* player = &board->players[board->currentPlayer];
+
+	player->money -= 100;
+	AddPopupBoard(board, "Player paid $100 in tax");
+	PlaySound(sounds[KA_CHING_SOUND]);
+}
+
+void LotteryAction(Board* board)
+{
+	AddPopupBoard(board, "Lottery");
+}
+
+void PoliceAction(Board* board)
+{
+	Player* player = &board->players[board->currentPlayer];
+
+	player->turnSkips += 2;
+	AddPopupBoard(board, "Player got sentenced to two turn skips");
+}
+ 
+void ChanceAction(Board* board)
+{
+	AddPopupBoard(board, "Chance");
+}
+
 static const struct {
-	const char* name;
 	Color color;
-} propertyData[MAX_FIELD_COUNT] = {
-	{ "Cracow", RED },
-	{ "Warsaw", RED },
-	{ "Stettin", RED },
-
-	{ "Frankfurt", ORANGE },
-	{ "Berlin", ORANGE },
-	{ "Munich", ORANGE },
-	
-	{ "Lyon", YELLOW },
-	{ "Paris", YELLOW },
-	{ "Marseille", YELLOW },
-	
-	{ "Liverpool", GREEN },
-	{ "London", GREEN },
-	{ "Glasgow", GREEN },
-	
-	{ "Belfast", BLUE},
-	{ "Dublin", BLUE},
-	{ "Limerick", BLUE},
-
-	{ "Milan", PURPLE },
-	{ "Rome", PURPLE },
-	{ "Florence", PURPLE },
-
-	{ "Brno", GRAY },
-	{ "Prague", GRAY },
-	{ "Ostrava", GRAY },
+	const char* cityNames[8];
+} groupData[8] = {
+	{
+		YELLOW,
+		{ "Frankfurt", "Berlin", "Munchen", "Hamburg", "Stuttgart", "Hanover", "Augsburg", "Dortmund", },
+	},
+	{
+		RED,
+		{ "Szczecin", "Warszawa", "Krakow", "Częstochowa", "Pszczyna", "Torun", "Gdansk", "Katowice", }
+	},
+	{
+		BLACK,
+		{ "Copenhagen", "Stockholm", "Oslo", "Helsinki", "Bilund", "Bergen", "Gothenburg", "Turku", },
+	},
+	{
+		GRAY,
+		{ "Athens", "Ljubljana", "Zagreb", "Sarajevo", "Belgrad", "Kosovo", "Tirane", "Sofia", },
+	},
+	{
+		BLUE,
+		{ "Lyon", "Paris", "Rennes", "Nantes", "Orleans", "Toulouse", "Marseille", "Nice", },
+	},
+	{
+		PURPLE,
+		{ "Dublin", "London", "Glasgow", "Edinburgh", "Manchester", "Belfast", "Liverpool", "Manchester", },
+	},
+	{
+		ORANGE,
+		{ "Madrid", "Lisbon", "Valencia", "Porto", "Seville", "Zaragoza", "Barcelona", "Malaga", },
+	},
+	{
+		GREEN,
+		{ "Venice", "Rome", "Naples", "Florence", "Genoa", "Bologna", "Palermo", "Turin", },
+	},
 };
-
-
 
 void LoadFields(Board* board)
 {
-	int propertyCounter = 0;
+	int innerCounter = 0;
+	int outerCounter = -1;
 	int quarter = board->fieldCount/4;
 	for(int i=0; i<board->fieldCount; ++i)
 	{
 		int qi = i%quarter;
-		if(i == 0)
+		if(qi == 0)
 		{
-			board->fields[i] = GetSuperactionField("Start", "Get salary", DebugSuperaction, START_IMAGE);
+			switch(i/quarter)
+			{
+				case 0:
+					board->fields[i] = GetSuperactionField("Start", "Get salary", StartSuperaction, START_IMAGE);
+					break;
+				
+				case 1:
+					board->fields[i] = GetActionField("Taxation", "Pay tax", TaxationAction, START_IMAGE);
+					break;
+				
+				case 2:
+					board->fields[i] = GetActionField("Lottery", "Chance for win", LotteryAction, START_IMAGE);
+					break;
+
+				default:
+					board->fields[i] = GetActionField("Police", "Get arrested", PoliceAction, START_IMAGE);
+					break;
+			}
+			innerCounter = 0;
+			outerCounter++;
 		}
-		else if(qi == 0)
+		else if(qi == quarter/2)
 		{
-			board->fields[i] = GetActionField("Chance", "Draw a card", DebugAction, START_IMAGE);
+			board->fields[i] = GetActionField("Chance", "Draw a card", ChanceAction, START_IMAGE);
+			innerCounter = 0;
+			outerCounter++;
 		}
 		else
 		{
-			board->fields[i] = GetPropertyField(propertyData[propertyCounter].name, 100 * (propertyCounter / 3 + 3), propertyData[propertyCounter].color);
-			if(propertyCounter < 20) propertyCounter++;
-			board->fields[i].ownerId = 0;
+
+			board->fields[i] = GetPropertyField(
+				groupData[outerCounter].cityNames[innerCounter],
+				100 * (i / 3 + 3),
+				outerCounter,
+				groupData[outerCounter].color
+			);
+			if(innerCounter < 7) innerCounter++;
 		}
 	}
 }

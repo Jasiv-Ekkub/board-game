@@ -9,13 +9,14 @@ const char* buildingLevelNames[MAX_BUILDING_LEVEL] = {
 	"Apartament"
 };
 
-Field GetPropertyField(const char* name, int value, Color color)
+Field GetPropertyField(const char* name, int value, int groupId, Color color)
 {
 	Field field = {
 		.type = PROPERTY,
 		.value = value,
 		.color = color,
 		.ownerId = -1,
+		.groupId = groupId,
 		.buildingLevel = 0,
 	};
 	strncpy(field.name, name, FIELD_TEXT_LENGTH);

@@ -48,10 +48,10 @@ void UpdateBoardLogic(Board* board)
 		GuiBoxText(GetRectanglePlacement(260, 70, 225, 60, CENTER, TOP), buffer);
 		GuiPlayerInfo(GetRectanglePlacement(-260, 10, 225, 120, CENTER, TOP), board->players[board->currentPlayer]);
 
-		GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 100, LEFT, TOP), board->players[0]);
-		GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 100, RIGHT, TOP), board->players[1]);
-		GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 100, LEFT, BOTTOM), board->players[2]);
-		GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 100, RIGHT, BOTTOM), board->players[3]);
+		GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 120, LEFT, TOP), board->players[0]);
+		GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 120, RIGHT, TOP), board->players[1]);
+		GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 120, LEFT, BOTTOM), board->players[2]);
+		GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 120, RIGHT, BOTTOM), board->players[3]);
 	}
 	else
 	{
@@ -101,7 +101,17 @@ void UpdateBoardLogic(Board* board)
 void HandleStartRound(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
-	if(player->money < 0)
+	bool skip = false;
+	if(player->turnSkips > 0)
+	{
+		char buffer[MAX_POPUP_LENGTH] = {0};
+		snprintf(buffer, MAX_POPUP_LENGTH, "Player skips %i round(s)", player->turnSkips--);
+		AddPopupBoard(board, buffer);
+		skip = true;
+	}
+
+	skip |= player->money < 0;
+	if(skip)
 	{
 		board->phase = END_ROUND;
 		return;
@@ -227,7 +237,7 @@ void HandleBuyField(Board* board)
 			
 			int cost = GetFieldValue(*field);
 			char buffer[MAX_POPUP_LENGTH] = {0};
-			snprintf(buffer, MAX_POPUP_LENGTH, "The field was bought for $%i", cost);
+			snprintf(buffer, MAX_POPUP_LENGTH, "%s was bought for $%i", field->name, cost);
 			AddPopupBoard(board, buffer);
 
 			if(field->ownerId != -1)
@@ -254,7 +264,7 @@ void HandleUpgradeBuilding(Board* board)
 
 			int cost = GetUpgradeValue(*field);
 			char buffer[MAX_POPUP_LENGTH] = {0};
-			snprintf(buffer, MAX_POPUP_LENGTH, "The field was developed for $%i", cost);
+			snprintf(buffer, MAX_POPUP_LENGTH, "%s was developed for $%i", field->name, cost);
 			AddPopupBoard(board, buffer);
 			
 			player->money -= cost;
@@ -301,7 +311,7 @@ void HandleCheckDebt(Board* board)
 	if(count > 0)
 	{
 		char buffer[MAX_POPUP_LENGTH] = {0};
-		snprintf(buffer, MAX_POPUP_LENGTH, "%i fields were sold for $%i", count, sum_cost);
+		snprintf(buffer, MAX_POPUP_LENGTH, "%i field(s) sold for $%i to pay debt", count, sum_cost);
 		AddPopupBoard(board, buffer);
 		PlaySound(sounds[KA_CHING_SOUND]);
 	}

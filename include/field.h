@@ -26,6 +26,7 @@ typedef struct Field
 			int value;
 			int buildingLevel;
 			int ownerId;
+			int groupId;
 			Color color;
 		};
 		struct {
@@ -36,7 +37,7 @@ typedef struct Field
 	};
 } Field;
 
-Field GetPropertyField(const char* name, int value, Color color);
+Field GetPropertyField(const char* name, int value, int groupId, Color color);
 Field GetActionField(const char* name, const char* comment, FieldAction action, ImageId imageId);
 Field GetSuperactionField(const char* name, const char* comment, FieldAction action, ImageId imageId);
 
