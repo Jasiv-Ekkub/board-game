@@ -21,7 +21,6 @@ const char* boardPhaseNames[] = {
 	[UPGRADE_BUILDING] = "Upgrading building",
 	[CHECK_DEBT] = "Paying debt",
 	[END_ROUND] = "Round ending",
-	[END_GAME] = "Game over",
 };
 
 static const ModelId buildingLevelModelId[4] = {
@@ -59,7 +58,7 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 
 	board->fieldCount = size;
 	LoadFields(board);
-	LoadPlayers(board, 1000, humanCount, botCount);
+	LoadPlayers(board, 3000, humanCount, botCount);
 	GenerateBoardTexture(board);
 	
 	for(int i=0; i<board->playerCount; ++i)

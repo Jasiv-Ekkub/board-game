@@ -52,7 +52,7 @@ void PrintField(Field field)
 	switch(field.type)
 	{
 		case PROPERTY:
-			printf("Property field: '%s' $%i buildingLevel:%i ownerId:%i\n", field.name, field.value, field.buildingLevel, field.ownerId);
+			printf("Property field: '%s' $%i buildingLevel:%i ownerId:%i groupId:%i\n", field.name, field.value, field.buildingLevel, field.ownerId, field.groupId);
 			break;
 		case SUPERACTION:
 			printf("Superaction field: '%s' '%s' imageId:%i\n", field.name, field.comment, field.imageId);

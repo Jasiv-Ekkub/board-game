@@ -10,6 +10,7 @@ void TerminateGameContext();
 float GetDeltaTime();
 Rectangle GetScreenBounds();
 Camera3D GetCamera3D();
+void SetCamera3DTarget(Vector3 target, float time);
 Camera3D GetCameraDice();
 float GetGuiScale();
 

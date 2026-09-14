@@ -157,6 +157,7 @@ void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
 		}
 	}
 	board->currentPlayer = 0;
+	board->winnerId = -1;
 }
 
 void GenerateBoardTexture(Board* board)

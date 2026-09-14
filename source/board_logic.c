@@ -2,6 +2,7 @@
 #include <player_logic.h>
 #include <layout_engine.h>
 #include <animator.h>
+#include <game_context.h>
 #include <helpers.h>
 
 #include <stdio.h>
@@ -20,24 +21,25 @@ void HandlePayFee(Board* board);
 void HandleBuyField(Board* board);
 void HandleUpgradeBuilding(Board* board);
 void HandleCheckDebt(Board* board);
+void HandleCheckWin(Board* board);
 void HandleEndRound(Board* board);
+void HandleShowWinner(Board* board);
 void HandleEndGame(Board* board);
 
 void UpdateBoardLogic(Board* board)
 {	
 	Timer_Update(&board->gameTimer);
-	Timer_Update(&board->delayTimer);
 	board->diceAngle += 90 * GetDeltaTime();
 	if(board->phase != END_GAME)
 	{
-		if(Timer_HasEnded(board->gameTimer) || GuiButtonSfx(GetRectanglePlacement(10, 0, 100, 60, LEFT, CENTER), "Exit"))
-		{
+		if(GuiButtonSfx(GetRectanglePlacement(10, 0, 100, 60, LEFT, CENTER), "Exit"))
 			Timer_Set(&board->gameTimer, 0);
-			Timer_Set(&board->delayTimer, 0);
-			board->phase = END_ROUND;
+
+		if(Timer_HasEnded(board->gameTimer) && board->phase < CHECK_WIN)
+		{
+			board->phase = CHECK_WIN; 
 			board->currentDiceroll = 0;
 			board->popupCount = 0;
-			board->playedPopupSound = 0;
 		}
 
 		char buffer[BUFFER_SIZE];
@@ -55,10 +57,14 @@ void UpdateBoardLogic(Board* board)
 	}
 	else
 	{
-		GuiGameOver(GetRectanglePlacement(0, 0, 500, 200, CENTER, CENTER), board->players[0]);
+		if(board->winnerId != -1)
+			GuiGameOver(GetRectanglePlacement(0, 0, 500, 200, CENTER, CENTER), board->players[board->winnerId]);
 	}
 
-	if(board->popupCount > 0 || !Timer_HasEnded(board->delayTimer)) return;
+	if(board->popupCount > 0) return; 
+	
+	Timer_Update(&board->delayTimer);
+	if(!Timer_HasEnded(board->delayTimer)) return;
 
 	switch(board->phase)
 	{
@@ -86,14 +92,17 @@ void UpdateBoardLogic(Board* board)
 		case CHECK_DEBT:
 			HandleCheckDebt(board);
 			break;
+		case CHECK_WIN:
+			HandleCheckWin(board);
+			break;
 		case END_ROUND:
 			HandleEndRound(board);
 			break;
+		case SHOW_WINNER:
+			HandleShowWinner(board);
+			break;
 		case END_GAME:
 			HandleEndGame(board);
-			break;
-		default:
-			board->phase = END_ROUND;
 			break;
 	}
 }
@@ -131,6 +140,7 @@ void HandleRollDice(Board* board)
 	if(GetPlayerResponse(board))
 	{
 		board->currentDiceroll = 1 + rand()%6;
+		
 		board->phase = MOVE_PLAYER;
 		PlaySound(sounds[DICE_HIT_SOUND]);
 		Timer_Set(&board->delayTimer, 1);
@@ -160,7 +170,8 @@ void HandleMovePlayer(Board* board)
 	{
 		AddKeyframe(&animation, 0.5, CalculatePlayerPosition(*board, board->currentPlayer, ppd * quarter));
 	}
-	AddKeyframe(&animation, 1, CalculatePlayerPosition(*board, board->currentPlayer, player->position));
+	Vector3 playerModelPosition = CalculatePlayerPosition(*board, board->currentPlayer, player->position);
+	AddKeyframe(&animation, 1, playerModelPosition);
 	QueueAnimation(animation);
 	
 	board->currentDiceroll = 0;
@@ -170,6 +181,7 @@ void HandleMovePlayer(Board* board)
 void HandleCheckField(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
+	
 	Field* field = &board->fields[player->position];
 	switch(field->type)
 	{
@@ -248,8 +260,9 @@ void HandleBuyField(Board* board)
 			player->money -= cost;
 			field->ownerId = board->currentPlayer;
 			PlaySound(sounds[KA_CHING_SOUND]);
+			board->phase = CHECK_FIELD;
 		}
-		board->phase = CHECK_DEBT;
+		else board->phase = CHECK_DEBT;
 	}
 }
 
@@ -270,8 +283,12 @@ void HandleUpgradeBuilding(Board* board)
 			player->money -= cost;
 			field->buildingLevel++;
 			PlaySound(sounds[KA_CHING_SOUND]);
+			board->phase = CHECK_FIELD;
 		}
-		board->phase = CHECK_DEBT;
+		else
+		{
+			board->phase = CHECK_DEBT;
+		}
 	}
 }
 
@@ -282,10 +299,8 @@ void HandleCheckDebt(Board* board)
 	int count = 0;
 	int sum_cost = 0;
 
-	for(int i=0; i<board->fieldCount; ++i)
+	while(player->money < 0)
 	{
-		if(player->money >= 0) break;
-
 		Field* cheapestOwnedField = 0;
 		for(int j=0; j<board->fieldCount; ++j)
 		{
@@ -317,49 +332,114 @@ void HandleCheckDebt(Board* board)
 	}
 	
 	Timer_Set(&board->delayTimer, 1);
-	board->phase = END_ROUND;
+	board->phase = CHECK_WIN;
+}
+
+void SellAllFields(Board* board)
+{
+	for(int i=0; i<board->fieldCount; ++i)
+	{
+		Field* field = &board->fields[i];
+		if(field->type == PROPERTY && field->ownerId != -1)
+		{
+			board->players[field->ownerId].money += GetFieldValue(*field);
+			field->ownerId = -1;
+			field->buildingLevel = 0;
+		}
+	}
+}
+
+void HandleCheckWin(Board* board)
+{
+	//Bankrupts
+	board->phase = SHOW_WINNER;
+	for(int i=0; i<board->playerCount; ++i)
+	{
+		Player player = board->players[i];
+		if(player.money < 0) continue;
+
+		if(board->winnerId == -1)
+		{
+			board->winnerId = i;
+		}
+		else
+		{
+			board->winnerId = -1;
+			break;
+		}
+	}
+	if(board->winnerId != -1)
+	{
+		SellAllFields(board);
+		AddPopupBoard(board, "There is only one active player left");
+		return;
+	}
+
+	//Monopoly
+	int monopolyGroupOwners[8] = { -2, -2, -2, -2, -2, -2, -2, -2 };
+	for(int i=0; i<board->fieldCount; ++i)
+	{
+		Field field = board->fields[i];
+		int groupId = field.groupId;
+		if(field.type == PROPERTY)
+		{
+			if(monopolyGroupOwners[groupId] == -2)
+			{
+				monopolyGroupOwners[groupId] = field.ownerId;
+			}
+			else if(monopolyGroupOwners[groupId] != field.ownerId)
+			{
+				monopolyGroupOwners[groupId] = -1;
+			}
+		}
+	}
+	int playerMonopolyCounters[4] = {0};
+	for(int i=0; i<8; ++i) 
+	{
+		int monopolyGroupOwner = monopolyGroupOwners[i];
+		if(monopolyGroupOwner < 0 || monopolyGroupOwner > 3) continue;
+		if(++playerMonopolyCounters[monopolyGroupOwner] >= 3)
+		{
+			board->winnerId = monopolyGroupOwner;
+			SellAllFields(board);
+			AddPopupBoard(board, "Player has achieved triple monopoly");
+			return;
+		}
+	}
+
+	//Time is up
+	if(Timer_HasEnded(board->gameTimer))
+	{
+		SellAllFields(board);
+
+		board->winnerId = 0;
+		for(int i=1; i<board->playerCount; ++i)
+		{
+			if(board->players[board->winnerId].money < board->players[i].money)
+				board->winnerId = i;
+		}
+		AddPopupBoard(board, "Time is up, the wealthiest wins");
+		return;
+	}
+
+	//Continue
+	if(board->winnerId == -1)
+		board->phase = END_ROUND;
 }
 
 void HandleEndRound(Board* board)
 {
 	board->currentPlayer++;
 	board->currentPlayer %= board->playerCount;
-
-	int nonBankrupts = 0;
-	for(int i=0; i<board->playerCount; ++i)
-	{
-		if(board->players[i].money >= 0)
-			nonBankrupts++;
-	}
-
-	if(Timer_HasEnded(board->gameTimer) || nonBankrupts < 2)
-	{
-		for(int i=0; i<board->fieldCount; ++i)
-		{
-			Field* field = &board->fields[i];
-			if(field->type == PROPERTY && field->ownerId != -1)
-			{
-				board->players[field->ownerId].money += GetFieldValue(*field);
-				field->ownerId = -1;
-			}
-		}
-		for(int i=0; i<board->playerCount; ++i)
-		{
-			for(int j=i; j<board->playerCount; ++j)
-			{
-				if(board->players[i].money < board->players[j].money)
-				{
-					Player player = board->players[i];
-					board->players[i] = board->players[j];
-					board->players[j] = player;
-				}
-			}
-		}
-		board->phase = END_GAME;
-		Timer_Set(&board->delayTimer, 3);
-	}
-	else board->phase = START_ROUND;
+	board->phase = START_ROUND;
+	Timer_Set(&board->delayTimer, 0.5);
 	PlaySound(sounds[DING_SOUND]);
+}
+
+void HandleShowWinner(Board* board)
+{
+	board->phase = END_GAME;
+	Timer_Set(&board->delayTimer, 2);
 }
 
 void HandleEndGame(Board* board)

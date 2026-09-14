@@ -5,6 +5,7 @@
 #include <game_context.h>
 #include <stdlib.h>
 #include <time.h>
+#include <animator.h>
 
 float deltaTime;
 Rectangle screenBounds;
@@ -59,6 +60,13 @@ void TerminateGameContext()
 }
 
 float GetDeltaTime() { return deltaTime; }
+
+void SetCamera3DTarget(Vector3 target, float time)
+{
+	Animation animation = GetAnimation(&camera3D.target);
+	AddKeyframe(&animation, time, target);
+	QueueAnimation(animation);
+}
 
 Rectangle GetScreenBounds() { return screenBounds; }
 

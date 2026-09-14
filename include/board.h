@@ -24,7 +24,10 @@ typedef enum BoardPhase
 	BUY_FIELD,
 	UPGRADE_BUILDING,
 	CHECK_DEBT,
+	CHECK_WIN,
 	END_ROUND,
+
+	SHOW_WINNER,
 	END_GAME,
 } BoardPhase;
 
@@ -42,10 +45,10 @@ typedef struct Board
 	int playerCount;
 	Player players[MAX_PLAYER_COUNT];
 	int currentPlayer;
+	int winnerId;
 	PlayerResponse currentPlayerResponse;
 	int currentDiceroll;
 
-	bool playedPopupSound;
 	int popupCount;
 	char popups[MAX_POPUP_COUNT][MAX_POPUP_LENGTH];
 
