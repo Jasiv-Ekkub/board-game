@@ -26,6 +26,14 @@ void HandleEndRound(Board* board);
 void HandleShowWinner(Board* board);
 void HandleEndGame(Board* board);
 
+
+static const Vector3 cameraTargets[4] = {
+	{-0.5,  0.0,  0.0},
+	{ 0.0,  0.0, -0.5},
+	{ 0.5,  0.0,  0.0},
+	{ 0.0,  0.0,  0.5},
+};
+
 void UpdateBoardLogic(Board* board)
 {	
 	Timer_Update(&board->gameTimer);
@@ -107,8 +115,20 @@ void UpdateBoardLogic(Board* board)
 	}
 }
 
+void SetSpecialCamera3DTarget(Board* board)
+{
+	Player* player = &board->players[board->currentPlayer];
+	Vector3 cameraTarget = cameraTargets[(4*player->position)/board->fieldCount];
+	cameraTarget.x += board->position.x;
+	cameraTarget.y += board->position.y;
+	cameraTarget.z += board->position.z;
+	SetCamera3DTarget(cameraTarget, 1);
+}
+
 void HandleStartRound(Board* board)
 {
+	SetSpecialCamera3DTarget(board);
+
 	Player* player = &board->players[board->currentPlayer];
 	bool skip = false;
 	if(player->turnSkips > 0)
@@ -173,6 +193,7 @@ void HandleMovePlayer(Board* board)
 	Vector3 playerModelPosition = CalculatePlayerPosition(*board, board->currentPlayer, player->position);
 	AddKeyframe(&animation, 1, playerModelPosition);
 	QueueAnimation(animation);
+	SetSpecialCamera3DTarget(board);
 	
 	board->currentDiceroll = 0;
 	board->phase = CHECK_FIELD;
@@ -351,6 +372,7 @@ void SellAllFields(Board* board)
 
 void HandleCheckWin(Board* board)
 {
+
 	//Bankrupts
 	board->phase = SHOW_WINNER;
 	for(int i=0; i<board->playerCount; ++i)
@@ -438,8 +460,9 @@ void HandleEndRound(Board* board)
 
 void HandleShowWinner(Board* board)
 {
+	SetCamera3DTarget(board->position, 1);
 	board->phase = END_GAME;
-	Timer_Set(&board->delayTimer, 2);
+	Timer_Set(&board->delayTimer, 3);
 }
 
 void HandleEndGame(Board* board)
