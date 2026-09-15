@@ -26,46 +26,32 @@ void HandleEndRound(Board* board);
 void HandleShowWinner(Board* board);
 void HandleEndGame(Board* board);
 
-
-static const Vector3 cameraTargets[4] = {
-	{-0.5,  0.0,  0.0},
-	{ 0.0,  0.0, -0.5},
-	{ 0.5,  0.0,  0.0},
-	{ 0.0,  0.0,  0.5},
-};
-
 void UpdateBoardLogic(Board* board)
 {	
-	Timer_Update(&board->gameTimer);
 	board->diceAngle += 90 * GetDeltaTime();
 	if(board->phase != END_GAME)
 	{
-		if(GuiButtonSfx(GetRectanglePlacement(10, 0, 100, 60, LEFT, CENTER), "Exit"))
-			Timer_Set(&board->gameTimer, 0);
+		if(GuiButtonSfx(GetRectanglePlacement(-10, -10, 140, 80, RIGHT, BOTTOM), "Exit"))
+			board->forceEnd = true;
 
-		if(Timer_HasEnded(board->gameTimer) && board->phase < CHECK_WIN)
+		if(board->forceEnd && board->phase < CHECK_WIN)
 		{
 			board->phase = CHECK_WIN; 
 			board->currentDiceroll = 0;
 			board->popupCount = 0;
 		}
 
-		char buffer[BUFFER_SIZE];
-		int gameTime = board->gameTimer.time;
-		snprintf(buffer, BUFFER_SIZE, "%02i:%02i", gameTime/60, gameTime%60);
-		
-		GuiBoxText(GetRectanglePlacement(260, 10, 225, 60, CENTER, TOP), boardPhaseNames[board->phase]);
-		GuiBoxText(GetRectanglePlacement(260, 70, 225, 60, CENTER, TOP), buffer);
-		GuiPlayerInfo(GetRectanglePlacement(-260, 10, 225, 120, CENTER, TOP), board->players[board->currentPlayer]);
+		GuiPlayerInfo(GetRectanglePlacement(0, 10, 225, 120, CENTER, TOP), board->players[board->currentPlayer]);
 
-		GuiPlayerInfo(GetRectanglePlacement( 10,  10, 225, 120, LEFT, TOP), board->players[0]);
-		GuiPlayerInfo(GetRectanglePlacement(-10,  10, 225, 120, RIGHT, TOP), board->players[1]);
-		GuiPlayerInfo(GetRectanglePlacement( 10, -10, 225, 120, LEFT, BOTTOM), board->players[2]);
-		GuiPlayerInfo(GetRectanglePlacement(-10, -10, 225, 120, RIGHT, BOTTOM), board->players[3]);
+		GuiPlayerInfo(GetRectanglePlacement(  10, 10, 220, 120, LEFT, TOP), board->players[0]);
+		GuiPlayerInfo(GetRectanglePlacement( 240, 10, 220, 120, LEFT, TOP), board->players[1]);
+
+		GuiPlayerInfo(GetRectanglePlacement(-240, 10, 220, 120, RIGHT, TOP), board->players[2]);
+		GuiPlayerInfo(GetRectanglePlacement( -10, 10, 220, 120, RIGHT, TOP), board->players[3]);
 	}
 	else
 	{
-		if(board->winnerId != -1)
+		if(board->winnerId > -1)
 			GuiGameOver(GetRectanglePlacement(0, 0, 500, 200, CENTER, CENTER), board->players[board->winnerId]);
 	}
 
@@ -115,19 +101,70 @@ void UpdateBoardLogic(Board* board)
 	}
 }
 
+#define CAMERA_TARGET_FACTOR 0.5
+
 void SetSpecialCamera3DTarget(Board* board)
 {
-	Player* player = &board->players[board->currentPlayer];
-	Vector3 cameraTarget = cameraTargets[(4*player->position)/board->fieldCount];
-	cameraTarget.x += board->position.x;
-	cameraTarget.y += board->position.y;
-	cameraTarget.z += board->position.z;
+	Vector3 cameraTarget = board->position;
+
+	int quarter = board->fieldCount/4;
+	Player player = board->players[board->currentPlayer];
+	
+	int side = player.position / quarter;
+	bool isCorner = player.position % quarter == 0;
+
+	switch(side)
+	{
+		case 0:
+		cameraTarget.x -= CAMERA_TARGET_FACTOR;
+		break;
+
+		case 1:
+		cameraTarget.z -= CAMERA_TARGET_FACTOR;
+		break;
+		
+		case 2:
+		cameraTarget.x += CAMERA_TARGET_FACTOR;
+		break;
+		
+		case 3:
+		cameraTarget.z += CAMERA_TARGET_FACTOR;
+		break;
+		
+		default:
+		break;
+	}
+	if(isCorner)
+	{
+		switch(side)
+		{
+			case 0:
+			cameraTarget.z += CAMERA_TARGET_FACTOR;
+			break;
+			
+			case 1:
+			cameraTarget.x -= CAMERA_TARGET_FACTOR;
+			break;
+			
+			case 2:
+			cameraTarget.z -= CAMERA_TARGET_FACTOR;
+			break;
+			
+			case 3:
+			cameraTarget.x += CAMERA_TARGET_FACTOR;
+			break;
+
+			default:
+			break;
+		}
+	}
+
 	SetCamera3DTarget(cameraTarget, 1);
 }
 
 void HandleStartRound(Board* board)
 {
-	SetSpecialCamera3DTarget(board);
+	SetCamera3DTarget(board->position, 1);
 
 	Player* player = &board->players[board->currentPlayer];
 	bool skip = false;
@@ -358,6 +395,7 @@ void HandleCheckDebt(Board* board)
 
 void SellAllFields(Board* board)
 {
+	bool playSound = false;
 	for(int i=0; i<board->fieldCount; ++i)
 	{
 		Field* field = &board->fields[i];
@@ -366,8 +404,10 @@ void SellAllFields(Board* board)
 			board->players[field->ownerId].money += GetFieldValue(*field);
 			field->ownerId = -1;
 			field->buildingLevel = 0;
+			playSound = true;
 		}
 	}
+	if(playSound) PlaySound(sounds[KA_CHING_SOUND]);
 }
 
 void HandleCheckWin(Board* board)
@@ -429,8 +469,8 @@ void HandleCheckWin(Board* board)
 		}
 	}
 
-	//Time is up
-	if(Timer_HasEnded(board->gameTimer))
+	//Exit
+	if(board->forceEnd)
 	{
 		SellAllFields(board);
 
@@ -463,6 +503,7 @@ void HandleShowWinner(Board* board)
 	SetCamera3DTarget(board->position, 1);
 	board->phase = END_GAME;
 	Timer_Set(&board->delayTimer, 3);
+	PlaySound(sounds[DING_SOUND]);
 }
 
 void HandleEndGame(Board* board)

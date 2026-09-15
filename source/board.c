@@ -35,7 +35,6 @@ Board GetBoard()
 	return (Board){
 		.layout = GetBoardLayout(),
 		.delayTimer = Timer_Get(),
-		.gameTimer = Timer_Get(),
 		.popupTimer = Timer_Get(),
 
 		.colors = {
@@ -66,9 +65,9 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 		board->players[i].modelPosition = CalculatePlayerPosition(*board, i, 0);
 	}
 
-	Timer_Set(&board->gameTimer, 1800);
 	Timer_Set(&board->popupTimer, 3);
 	board->phase = START_ROUND;
+	board->forceEnd = false;
 	board->hasGameEnded = false;
 }
 
@@ -116,25 +115,30 @@ static const struct {
 
 void DrawDice(Board board)
 {
+	Vector3 position = board.position;
+	position.x -= 0.3f;
+	position.y += 0.5f;
+	position.z += 0.3f;
+
 	const int roll = board.currentDiceroll;
 	if(roll > 0 && roll < 7)
 	{
 		DrawModelEx(
 			models[DICE_MODEL],
-			(Vector3){0},
+			position,
 			diceTransforms[roll-1].axis,
 			diceTransforms[roll-1].angle,
-			(Vector3){1,1,1}, WHITE
+			(Vector3){ 0.2, 0.2, 0.2 }, WHITE
 		);
 	}
 	else if(roll == -1)
 	{
 		DrawModelEx(
 			models[DICE_MODEL],
-			(Vector3){0},
+			position,
 			board.diceAxis,
 			board.diceAngle,
-			(Vector3){1,1,1}, WHITE
+			(Vector3){ 0.2, 0.2, 0.2 }, WHITE
 		);
 	}
 }
@@ -147,10 +151,6 @@ void UpdateBoard(Board* board)
 		DrawModel(models[BOARD_MODEL], board->position, 1, WHITE);
 		DrawPlayers(*board);
 		DrawBuildings(*board);
-	EndMode3D();
-
-
-	BeginMode3D(GetCameraDice());
 		DrawDice(*board);
 	EndMode3D();
 
@@ -161,9 +161,9 @@ void UpdateBoard(Board* board)
 		if(Timer_HasEnded(board->popupTimer))
 		{
 			PlaySound(sounds[POPUP_SOUND]);
-			Timer_Set(&board->popupTimer, 3);
+			Timer_Set(&board->popupTimer, 2);
 		}
-		GuiBoxText(GetRectanglePlacement(0,0,600,150,CENTER,CENTER), board->popups[board->popupCount-1]);
+		GuiBoxText(GetRectanglePlacement(0, -50, 600, 150, CENTER, BOTTOM), board->popups[board->popupCount-1]);
 		Timer_Update(&board->popupTimer);
 
 		if(Timer_HasEnded(board->popupTimer))

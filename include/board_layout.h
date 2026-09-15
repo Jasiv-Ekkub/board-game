@@ -16,6 +16,8 @@ typedef struct BoardLayout
 
 	float modelScaleMultiplier;
 	float modelScale;
+	
+	float cameraFovMultiplier;
 
 	float boardSize;
 

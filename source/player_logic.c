@@ -30,7 +30,7 @@ bool GetHumanPlayerResponse(Board* board)
 	Player player = board->players[board->currentPlayer];
 	Field field = board->fields[player.position];
 
-	Rectangle messageBounds = GetRectanglePlacement(0,0, 600, 300, CENTER, CENTER);
+	Rectangle messageBounds = GetRectanglePlacement(0,0, 600, 220, CENTER, CENTER);
 	char buffer[TEXT_BUFFER_SIZE];
 	char *options;
 	

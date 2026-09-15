@@ -11,6 +11,8 @@ enum { MAIN_MENU, BOARD } phase = MAIN_MENU;
 bool shouldClose = false;
 Board board;
 
+bool showOptions = false;
+
 void HandleMainMenu();
 void HandleBoard();
 
@@ -27,10 +29,23 @@ int main()
 		shouldClose = WindowShouldClose();
 		UpdateGameContext();
 		UpdateAnimator();
-		if(IsKeyPressed(KEY_F4)) ToggleFullscreen();
-		
+
 		BeginDrawing();
 			ClearBackground(bgrColor);
+			if(GuiButtonSfx(GetRectanglePlacement(10, -10, 140, 80, LEFT, BOTTOM), "Options"))
+			{
+				if(showOptions)
+				{
+					SetTimeSpeed(1);
+					showOptions = false;
+				}
+				else
+				{
+					SetTimeSpeed(0);
+					showOptions = true;
+				}
+			}
+			if(showOptions) GuiLock();
 			switch(phase)
 			{
 				case MAIN_MENU:
@@ -39,6 +54,28 @@ int main()
 				case BOARD:
 					HandleBoard();
 					break;
+			}
+			if(showOptions)
+			{
+				GuiUnlock();
+				GuiDrawBox(GetRectanglePlacement(0, 0, 800, 400, CENTER, CENTER));
+				
+				static int guiScale = 5;
+				if(GuiSpinnerSfx(GetRectanglePlacement(60, 40, 480, 70, CENTER, CENTER), "Gui scale ", &guiScale, 0, 10))
+				{
+					SetGuiScale((float)(guiScale - 5) / 20 + 1);
+				}
+
+				static int zoom = 0;
+				if(GuiSpinnerSfx(GetRectanglePlacement(60, -40, 480, 70, CENTER, CENTER), "Zoom ", &zoom, 0, 10))
+				{
+					SetCameraFov((float)(-zoom) / 20 + 2);
+				}
+
+				if(GuiButtonSfx(GetRectanglePlacement(0, 120, 600, 70, CENTER, CENTER), "Toggle fullscreen"))
+				{
+					ToggleFullscreen();
+				}
 			}
 		EndDrawing();
 

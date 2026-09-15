@@ -46,6 +46,8 @@ typedef struct Board
 	Player players[MAX_PLAYER_COUNT];
 	int currentPlayer;
 	int winnerId;
+	bool forceEnd;
+
 	PlayerResponse currentPlayerResponse;
 	int currentDiceroll;
 
@@ -65,7 +67,6 @@ typedef struct Board
 	bool hasGameEnded;
 
 	Timer delayTimer;
-	Timer gameTimer;
 	Timer popupTimer;
 } Board;
 

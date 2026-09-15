@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <player.h>
 
+void GuiDrawBox(Rectangle bounds);
 void GuiBoxText(Rectangle bounds, const char* text);
 void GuiPlayerInfo(Rectangle bounds, Player player);
 void GuiGameOver(Rectangle bounds, Player winner);

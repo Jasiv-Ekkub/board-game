@@ -8,10 +8,10 @@
 #include <animator.h>
 
 float deltaTime;
+float timeSpeed;
 Rectangle screenBounds;
 float guiScale;
 Camera3D camera3D;
-Camera3D cameraDice;
 
 void InitializeGameContext()
 {
@@ -24,6 +24,7 @@ void InitializeGameContext()
 	srand(time(0));
 
 	deltaTime = 0;
+	timeSpeed = 1;
 	guiScale = 1;
 	screenBounds = (Rectangle){0, 0, GetRenderWidth(), GetRenderHeight()};
 	camera3D = (Camera3D){
@@ -31,13 +32,6 @@ void InitializeGameContext()
 		.target = (Vector3){0, 0, 0},
 		.up = (Vector3){0, 1, 0},
 		.fovy = 2,
-		.projection = CAMERA_ORTHOGRAPHIC,
-	};
-	cameraDice = (Camera3D){
-		.position = (Vector3){0, 3, 0.1},
-		.target = (Vector3){0, 0, 0},
-		.up = (Vector3){0, 1, 0},
-		.fovy = 8,
 		.projection = CAMERA_ORTHOGRAPHIC,
 	};
 }
@@ -59,7 +53,9 @@ void TerminateGameContext()
 	CloseWindow();
 }
 
-float GetDeltaTime() { return deltaTime; }
+float GetDeltaTime() { return deltaTime * timeSpeed; }
+
+void SetTimeSpeed(float speed) { timeSpeed = speed; }
 
 void SetCamera3DTarget(Vector3 target, float time)
 {
@@ -67,12 +63,15 @@ void SetCamera3DTarget(Vector3 target, float time)
 	AddKeyframe(&animation, time, target);
 	QueueAnimation(animation);
 }
+void SetCameraFov(float fov)
+{
+	camera3D.fovy = fov;
+}
 
 Rectangle GetScreenBounds() { return screenBounds; }
 
 Camera3D GetCamera3D() { return camera3D; }
 
-Camera3D GetCameraDice() { return cameraDice; }
-
 float GetGuiScale() { return guiScale; }
 
+void SetGuiScale(float scale) { guiScale = scale; }

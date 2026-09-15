@@ -8,10 +8,12 @@ void UpdateGameContext();
 void TerminateGameContext();
 
 float GetDeltaTime();
+void SetTimeSpeed(float speed);
 Rectangle GetScreenBounds();
 Camera3D GetCamera3D();
 void SetCamera3DTarget(Vector3 target, float time);
-Camera3D GetCameraDice();
+void SetCameraFov(float fov);
 float GetGuiScale();
+void SetGuiScale(float scale);
 
 #endif //GAME_CONTEXT_H

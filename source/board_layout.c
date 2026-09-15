@@ -12,7 +12,7 @@ BoardLayout GetBoardLayout()
 	.pawnOffset = 40,
 
 	.modelScaleMultiplier = 0.9f,
-
+	
 	.fontSize = 48,
 	.fontSpacing = 1,
 
