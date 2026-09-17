@@ -25,9 +25,12 @@ Player GetBotPlayer(const char* name, Color color, int money)
 		.turnSkips = 0,
 
 		.timer = Timer_Get(),
+
 		.buyFieldRisk = GetRandomFloat(1, 5),
 		.buyFieldRatio = GetRandomFloat(1, 3),
-		.buyFieldRejects = 0,
+
+		.upgradeFieldRisk = GetRandomFloat(1, 5),
+		.upgradeFieldRatio = GetRandomFloat(5, 10),
 	};
 	strncpy(player.name, name, PLAYER_NAME_LENGTH);
 	return player;

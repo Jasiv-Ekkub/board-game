@@ -90,17 +90,20 @@ bool GetBotPlayerResponse(Board* board)
 	Field field = board->fields[player->position];
 
 	float likelihood = 0;
-	float costRatio = (float)(player->money)/GetFieldValue(field);
+	float costRatio = 0;
 	switch(board->phase)
 	{
 		case ROLL_DICE:
 			return true;
 		
 		case BUY_FIELD:
+			costRatio = (float)(player->money)/GetFieldValue(field);
 			likelihood = Sigmoid(player->buyFieldRisk * (costRatio - player->buyFieldRatio));
 			break;
 
 		case UPGRADE_BUILDING:
+			costRatio = (float)(player->money)/GetUpgradeValue(field);
+			likelihood = Sigmoid(player->upgradeFieldRisk * (costRatio - player->upgradeFieldRatio));
 			break;
 
 		default:
@@ -108,13 +111,8 @@ bool GetBotPlayerResponse(Board* board)
 	}
 	printf("Likelihood: %f\n", likelihood);
 
-	if(likelihood >= GetRandomFloat(0, 1))
-	{
-		board->currentPlayerResponse = POSITIVE;
-	}
-	else
-	{
-		board->currentPlayerResponse = NEGATIVE;
-	}
+	if(likelihood >= GetRandomFloat(0, 1)) board->currentPlayerResponse = POSITIVE;
+	else board->currentPlayerResponse = NEGATIVE;
+
 	return true;
 }

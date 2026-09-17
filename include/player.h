@@ -34,8 +34,12 @@ typedef struct Player
 
 	//Bot data
 	Timer timer;
+
 	float buyFieldRisk;
 	float buyFieldRatio;
+	
+	float upgradeFieldRisk;
+	float upgradeFieldRatio;
 } Player;
 
 Player GetHumanPlayer(const char* name, Color color, int money);
