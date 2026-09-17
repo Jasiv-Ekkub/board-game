@@ -1,11 +1,9 @@
-#define RAYGUI_IMPLEMENTATION
-#define RAYGUI_MESSAGEBOX_BUTTON_HEIGHT 60
 #include <raygui.h>
-#include <style_buisness.h>
 #include <game_context.h>
 #include <stdlib.h>
 #include <time.h>
 #include <animator.h>
+#include <gui_elements.h>
 
 float deltaTime;
 float timeSpeed;
@@ -16,8 +14,8 @@ Camera3D camera3D;
 void InitializeGameContext()
 {
 	InitWindow(1440, 810, "Board game");
+	LoadStyle();
 	InitAudioDevice();
-	GuiLoadStyleBuisness();
 	SetExitKey(0);
 	SetTargetFPS(60);
 

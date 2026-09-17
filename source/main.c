@@ -45,7 +45,7 @@ int main()
 			if(showOptions)
 			{
 				GuiUnlock();
-				GuiDrawBox(GetRectanglePlacement(0, 0, 800, 600, CENTER, CENTER));
+				GuiPanel(GetRectanglePlacement(0, 0, 800, 600, CENTER, CENTER), 0);
 				
 				static int volume = 10;
 				if(GuiSpinnerSfx(GetRectanglePlacement(60, -80, 480, 70, CENTER, CENTER), "Volume ", &volume, 0, 10))

@@ -1,47 +1,34 @@
-#include <gui_elements.h>
+#define RAYGUI_IMPLEMENTATION
+#define RAYGUI_MESSAGEBOX_BUTTON_HEIGHT 60
 #include <raygui.h>
+#include <style_buisness.h>
+
+#include <gui_elements.h>
 #include <stdio.h>
 #include <assets.h>
 
-void GuiDrawBox(Rectangle bounds)
+void LoadStyle()
 {
-	int border = GuiGetStyle(DEFAULT, BORDER_WIDTH);
-	DrawRectangleRec(bounds, GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL)));
-	DrawRectangleRec(
-		(Rectangle){
-				bounds.x + border,
-				bounds.y + border,
-				bounds.width - border*2,
-				bounds.height - border*2
-			},
-		GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_NORMAL))
-	);
-
+	GuiLoadStyleBuisness();
 }
 
-void DrawTextCentered(const char* text, Vector2 position, Color color)
-{
-	Font font = GuiGetFont();
-	int textSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
-	int textSpacing = GuiGetStyle(DEFAULT, TEXT_SPACING);
-
-	Vector2 offset = MeasureTextEx(font, text, textSize, textSpacing);
-	offset.x /= 2;
-	offset.y /= 2;
-	DrawTextPro(font, text, position, offset, 0, textSize, textSpacing, color);
-}
 
 void GuiBoxText(Rectangle bounds, const char* text)
 {
-	GuiDrawBox(bounds);
-	DrawTextCentered(text, (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height/2}, GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)));
+	GuiPanel(bounds, 0);
+	GuiDrawText(text, bounds, 1, GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)));
 }
 
 void GuiPlayerInfo(Rectangle bounds, Player player)
 {
-	GuiDrawBox(bounds);
+	GuiPanel(bounds, 0);
 
-	DrawTextCentered(player.name, (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height/3}, player.color);
+	Rectangle tmp = bounds;
+	tmp.height /= 2;
+	tmp.y += 20;
+	tmp.height -= 20;
+
+	GuiDrawText(player.name, tmp, 1, player.color);
 
 	char buffer[32];
 	if(player.money < 0)
@@ -52,18 +39,27 @@ void GuiPlayerInfo(Rectangle bounds, Player player)
 	{
 		snprintf(buffer, 32, "$%i", player.money);
 	}
-	DrawTextCentered(buffer, (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height/3 * 2}, player.color);
+	tmp.y += tmp.height;
+	GuiDrawText(buffer, tmp, 1, player.color);
 }
 
 void GuiGameOver(Rectangle bounds, Player winner)
 {
-	GuiDrawBox(bounds);
+	GuiPanel(bounds, 0);
+
 	Color textColor = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL));
-	DrawTextCentered("GAME OVER", (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height/4}, textColor);
-	DrawTextCentered("The winner is:", (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height*2/4}, textColor);
+	
+	Rectangle tmp = bounds;
+	tmp.height /= 2;
+	tmp.y += 20;
+	tmp.height -= 20;
+
+	GuiDrawText("GAME OVER\nThe winner is:", tmp, 1, textColor);
+	
 	char buffer[64];
+	tmp.y += tmp.height;
 	snprintf(buffer, 64, "%s $%i", winner.name, winner.money);
-	DrawTextCentered(buffer, (Vector2){bounds.x + bounds.width/2, bounds.y + bounds.height*3/4}, winner.color);
+	GuiDrawText(buffer, tmp, 1, winner.color);
 }
 
 int GuiMessageBoxSfx(Rectangle bounds, const char* message, const char* options)
