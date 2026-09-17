@@ -32,18 +32,10 @@ int main()
 
 		BeginDrawing();
 			ClearBackground(bgrColor);
-			if(GuiButtonSfx(GetRectanglePlacement(10, -10, 140, 80, LEFT, BOTTOM), "Options"))
+			if(!showOptions && GuiButtonSfx(GetRectanglePlacement(10, -10, 140, 80, LEFT, BOTTOM), "Options"))
 			{
-				if(showOptions)
-				{
-					SetTimeSpeed(1);
-					showOptions = false;
-				}
-				else
-				{
-					SetTimeSpeed(0);
-					showOptions = true;
-				}
+				SetTimeSpeed(0);
+				showOptions = true;
 			}
 			if(showOptions) GuiLock();
 			switch(phase)
@@ -58,23 +50,35 @@ int main()
 			if(showOptions)
 			{
 				GuiUnlock();
-				GuiDrawBox(GetRectanglePlacement(0, 0, 800, 400, CENTER, CENTER));
+				GuiDrawBox(GetRectanglePlacement(0, 0, 800, 600, CENTER, CENTER));
 				
-				static int guiScale = 5;
-				if(GuiSpinnerSfx(GetRectanglePlacement(60, 40, 480, 70, CENTER, CENTER), "Gui scale ", &guiScale, 0, 10))
+				static int volume = 10;
+				if(GuiSpinnerSfx(GetRectanglePlacement(60, -80, 480, 70, CENTER, CENTER), "Volume ", &volume, 0, 10))
 				{
-					SetGuiScale((float)(guiScale - 5) / 20 + 1);
+					SetMasterVolume((float)volume/10);
 				}
 
 				static int zoom = 0;
-				if(GuiSpinnerSfx(GetRectanglePlacement(60, -40, 480, 70, CENTER, CENTER), "Zoom ", &zoom, 0, 10))
+				if(GuiSpinnerSfx(GetRectanglePlacement(60, 0, 480, 70, CENTER, CENTER), "Zoom ", &zoom, 0, 10))
 				{
 					SetCameraFov((float)(-zoom) / 20 + 2);
 				}
 
-				if(GuiButtonSfx(GetRectanglePlacement(0, 120, 600, 70, CENTER, CENTER), "Toggle fullscreen"))
+				static int guiScale = 5;
+				if(GuiSpinnerSfx(GetRectanglePlacement(60, 80, 480, 70, CENTER, CENTER), "Gui scale ", &guiScale, 0, 10))
+				{
+					SetGuiScale((float)(guiScale - 5) / 20 + 1);
+				}
+
+				if(GuiButtonSfx(GetRectanglePlacement(0, 160, 600, 70, CENTER, CENTER), "Toggle fullscreen"))
 				{
 					ToggleFullscreen();
+				}
+
+				if(GuiButtonSfx(GetRectanglePlacement(0, 240, 600, 70, CENTER, CENTER), "Close"))
+				{
+					SetTimeSpeed(1);
+					showOptions = false;
 				}
 			}
 		EndDrawing();
