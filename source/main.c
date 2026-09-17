@@ -32,11 +32,6 @@ int main()
 
 		BeginDrawing();
 			ClearBackground(bgrColor);
-			if(!showOptions && GuiButtonSfx(GetRectanglePlacement(10, -10, 140, 80, LEFT, BOTTOM), "Options"))
-			{
-				SetTimeSpeed(0);
-				showOptions = true;
-			}
 			if(showOptions) GuiLock();
 			switch(phase)
 			{
@@ -81,6 +76,11 @@ int main()
 					showOptions = false;
 				}
 			}
+			else if(GuiButtonSfx(GetRectanglePlacement(10, -10, 140, 80, LEFT, BOTTOM), "Options"))
+			{
+				SetTimeSpeed(0);
+				showOptions = true;
+			}
 		EndDrawing();
 
 	}
@@ -99,7 +99,7 @@ void HandleMainMenu()
 
 	if(GuiButtonSfx(GetRectanglePlacement(-155,0,300,100,CENTER,CENTER), "PLAY"))
 	{
-		SetupBoard(&board, boardSize, playerCount, botCount);
+		SetupBoard(&board, boardSize, 0, 4);
 		phase = BOARD;
 	}
 	if(GuiButtonSfx(GetRectanglePlacement(155,0,300,100,CENTER,CENTER), "EXIT"))

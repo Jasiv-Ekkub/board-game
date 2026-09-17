@@ -3,4 +3,6 @@
 
 float GetRandomFloat(float min, float max);
 
+float Sigmoid(float x);
+
 #endif //HELPERS_H

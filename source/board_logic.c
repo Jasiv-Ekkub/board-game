@@ -307,7 +307,7 @@ void HandleBuyField(Board* board)
 			
 			int cost = GetFieldValue(*field);
 			char buffer[MAX_POPUP_LENGTH] = {0};
-			snprintf(buffer, MAX_POPUP_LENGTH, "%s was bought for $%i", field->name, cost);
+			snprintf(buffer, MAX_POPUP_LENGTH, "%s was bought\nfor $%i", field->name, cost);
 			AddPopupBoard(board, buffer);
 
 			if(field->ownerId != -1)
@@ -335,7 +335,7 @@ void HandleUpgradeBuilding(Board* board)
 
 			int cost = GetUpgradeValue(*field);
 			char buffer[MAX_POPUP_LENGTH] = {0};
-			snprintf(buffer, MAX_POPUP_LENGTH, "%s was developed for $%i", field->name, cost);
+			snprintf(buffer, MAX_POPUP_LENGTH, "%s was developed\nfor $%i", field->name, cost);
 			AddPopupBoard(board, buffer);
 			
 			player->money -= cost;
@@ -384,7 +384,7 @@ void HandleCheckDebt(Board* board)
 	if(count > 0)
 	{
 		char buffer[MAX_POPUP_LENGTH] = {0};
-		snprintf(buffer, MAX_POPUP_LENGTH, "%i field(s) sold for $%i to pay debt", count, sum_cost);
+		snprintf(buffer, MAX_POPUP_LENGTH, "%i field(s) sold for\n$%i to pay debt", count, sum_cost);
 		AddPopupBoard(board, buffer);
 		PlaySound(sounds[KA_CHING_SOUND]);
 	}
@@ -433,7 +433,7 @@ void HandleCheckWin(Board* board)
 	if(board->winnerId != -1)
 	{
 		SellAllFields(board);
-		AddPopupBoard(board, "There is only one active player left");
+		AddPopupBoard(board, "There is only one\nactive player left");
 		return;
 	}
 
@@ -464,7 +464,7 @@ void HandleCheckWin(Board* board)
 		{
 			board->winnerId = monopolyGroupOwner;
 			SellAllFields(board);
-			AddPopupBoard(board, "Player has achieved triple monopoly");
+			AddPopupBoard(board, "Player has achieved\ntriple monopoly");
 			return;
 		}
 	}
@@ -480,13 +480,12 @@ void HandleCheckWin(Board* board)
 			if(board->players[board->winnerId].money < board->players[i].money)
 				board->winnerId = i;
 		}
-		AddPopupBoard(board, "Time is up, the wealthiest wins");
+		AddPopupBoard(board, "Time is up,\n the wealthiest wins");
 		return;
 	}
 
 	//Continue
-	if(board->winnerId == -1)
-		board->phase = END_ROUND;
+	board->phase = END_ROUND;
 }
 
 void HandleEndRound(Board* board)

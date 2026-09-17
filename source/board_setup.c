@@ -6,8 +6,8 @@ void StartSuperaction(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
 
-	player->money += 500;
-	AddPopupBoard(board, "Earned $500 for walking through start");
+	player->money += 1500;
+	AddPopupBoard(board, "Earned $1500 for walking\nthrough start");
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
@@ -30,7 +30,7 @@ void PoliceAction(Board* board)
 	Player* player = &board->players[board->currentPlayer];
 
 	player->turnSkips += 2;
-	AddPopupBoard(board, "Player got sentenced to two turn skips");
+	AddPopupBoard(board, "Player got sentenced\nto two turn skips");
 }
  
 void ChanceAction(Board* board)

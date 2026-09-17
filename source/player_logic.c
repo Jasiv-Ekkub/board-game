@@ -3,6 +3,7 @@
 #include <raygui.h>
 #include <gui_elements.h>
 #include <stdio.h>
+#include <helpers.h>
 
 bool GetHumanPlayerResponse(Board* board);
 bool GetBotPlayerResponse(Board* board);
@@ -79,20 +80,41 @@ bool GetBotPlayerResponse(Board* board)
 	Timer* timer = &board->players[board->currentPlayer].timer;
 	if(Timer_HasEnded(*timer)) Timer_Set(timer, 1);
 	Timer_Update(timer);
+	if(!Timer_HasEnded(*timer))
+	{
+		board->currentPlayerResponse = NONE;
+		return false;
+	}
+	
+	Player* player = &board->players[board->currentPlayer];
+	Field field = board->fields[player->position];
 
+	float likelihood = 0;
+	float costRatio = (float)(player->money)/GetFieldValue(field);
 	switch(board->phase)
 	{
 		case ROLL_DICE:
+			return true;
+		
 		case BUY_FIELD:
+			likelihood = Sigmoid(player->buyFieldRisk * (costRatio - player->buyFieldRatio));
+			break;
+
 		case UPGRADE_BUILDING:
-			if(Timer_HasEnded(*timer))
-			{
-				board->currentPlayerResponse = POSITIVE;
-				return true;
-			}
+			break;
+
 		default:
 			break;
 	}
-	board->currentPlayerResponse = NONE;
-	return false;
+	printf("Likelihood: %f\n", likelihood);
+
+	if(likelihood >= GetRandomFloat(0, 1))
+	{
+		board->currentPlayerResponse = POSITIVE;
+	}
+	else
+	{
+		board->currentPlayerResponse = NEGATIVE;
+	}
+	return true;
 }
