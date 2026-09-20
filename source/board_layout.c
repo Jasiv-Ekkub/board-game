@@ -18,7 +18,8 @@ BoardLayout GetBoardLayout()
 
 	.nameOffsetEdge = 140,
 	.commentOffsetEdge = 200,
-	.imageSizeEdge = 200,
+	.imageSizeEdge = 240,
+	.imageOffsetEdge = -50,
 
 	.nameOffsetCorner = 105,
 	.commentOffsetCorner = 150,

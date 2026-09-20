@@ -201,7 +201,7 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 				(Rectangle){0, 0, (float)icon.width, (float)icon.height},
 				(Rectangle){
 					rectangle.x + (rectangle.width - layout.imageSizeEdge)/2,
-					rectangle.y + (rectangle.height - layout.imageSizeEdge)/2,
+					rectangle.y + (rectangle.height - layout.imageSizeEdge)/2 + layout.imageOffsetEdge,
 					layout.imageSizeEdge,
 					layout.imageSizeEdge,
 				},

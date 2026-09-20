@@ -93,15 +93,15 @@ void LoadFields(Board* board)
 					break;
 				
 				case 1:
-					board->fields[i] = GetActionField("Taxation", "Pay tax", TaxationAction, START_IMAGE);
+					board->fields[i] = GetActionField("Taxation", "Pay tax", TaxationAction, TAXATION_IMAGE);
 					break;
 				
 				case 2:
-					board->fields[i] = GetActionField("Lottery", "Chance for win", LotteryAction, START_IMAGE);
+					board->fields[i] = GetActionField("Lottery", "Chance for win", LotteryAction, LOTTERY_IMAGE);
 					break;
 
 				default:
-					board->fields[i] = GetActionField("Police", "Get arrested", PoliceAction, START_IMAGE);
+					board->fields[i] = GetActionField("Police", "Get arrested", PoliceAction, POLICEMAN_IMAGE);
 					break;
 			}
 			innerCounter = 0;
@@ -109,7 +109,7 @@ void LoadFields(Board* board)
 		}
 		else if(qi == quarter/2)
 		{
-			board->fields[i] = GetActionField("Chance", "Draw a card", ChanceAction, START_IMAGE);
+			board->fields[i] = GetActionField("Chance", "Draw a card", ChanceAction, CHANCE_IMAGE);
 			innerCounter = 0;
 			outerCounter++;
 		}

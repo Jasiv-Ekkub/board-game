@@ -41,9 +41,10 @@ void LoadAssets()
 	models[DICE_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[DICE_TEXTURE];
 	
 	images[START_IMAGE] = LoadImageDefault();
-	images[PRISON_IMAGE] = LoadImageDefault();
-	images[PARKING_IMAGE] = LoadImageDefault();
+	images[TAXATION_IMAGE] = LoadImageDefault();
+	images[LOTTERY_IMAGE] = LoadImage("resource/texture/fortune.png");
 	images[POLICEMAN_IMAGE] = LoadImageDefault();
+	images[CHANCE_IMAGE] = LoadImage("resource/texture/question_mark.png");
 }
 
 void UnloadAssets()

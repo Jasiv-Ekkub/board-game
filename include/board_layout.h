@@ -27,6 +27,7 @@ typedef struct BoardLayout
 	float nameOffsetEdge;
 	float commentOffsetEdge;
 	float imageSizeEdge;
+	float imageOffsetEdge;
 
 	float nameOffsetCorner;
 	float commentOffsetCorner;
