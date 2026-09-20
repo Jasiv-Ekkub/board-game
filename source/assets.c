@@ -40,10 +40,10 @@ void LoadAssets()
 	models[BOARD_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[BOARD_TEXTURE];
 	models[DICE_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[DICE_TEXTURE];
 	
-	images[START_IMAGE] = LoadImageDefault();
-	images[TAXATION_IMAGE] = LoadImageDefault();
+	images[START_IMAGE] = LoadImage("resource/texture/left_arrow.png");
+	images[TAXATION_IMAGE] = LoadImage("resource/texture/tax_papers.png");
 	images[LOTTERY_IMAGE] = LoadImage("resource/texture/fortune.png");
-	images[POLICEMAN_IMAGE] = LoadImageDefault();
+	images[POLICEMAN_IMAGE] = LoadImage("resource/texture/policeman.png");
 	images[CHANCE_IMAGE] = LoadImage("resource/texture/question_mark.png");
 }
 

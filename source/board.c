@@ -65,7 +65,7 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 		board->players[i].modelPosition = CalculatePlayerPosition(*board, i, 0);
 	}
 
-	Timer_Set(&board->popupTimer, 3);
+	Timer_Set(&board->popupTimer, 0);
 	board->phase = START_ROUND;
 	board->forceEnd = false;
 	board->hasGameEnded = false;

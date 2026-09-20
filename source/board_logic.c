@@ -39,6 +39,7 @@ void UpdateBoardLogic(Board* board)
 			board->phase = CHECK_WIN; 
 			board->currentDiceroll = 0;
 			board->popupCount = 0;
+			Timer_Set(&board->delayTimer, 0.5);
 		}
 
 		GuiPlayerInfo(GetRectanglePlacement(0, 10, 225, 120, CENTER, TOP), board->players[board->currentPlayer]);
