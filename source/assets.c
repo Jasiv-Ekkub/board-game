@@ -19,7 +19,7 @@ void LoadAssets()
 
 	font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 	shader = LoadShader("resource/shader/shader.vs", "resource/shader/shader.fs");
-
+	
 	textures[BOARD_TEXTURE] = LoadTextureDefault();
 	textures[DICE_TEXTURE] = LoadTexture("resource/texture/dice.png");
 
@@ -45,6 +45,14 @@ void LoadAssets()
 	images[LOTTERY_IMAGE] = LoadImage("resource/texture/fortune.png");
 	images[POLICEMAN_IMAGE] = LoadImage("resource/texture/policeman.png");
 	images[CHANCE_IMAGE] = LoadImage("resource/texture/question_mark.png");
+	for(int i=0; i<IMAGE_COUNT; ++i)
+	{
+		Image *image = &images[i];
+		if(!IsImageValid(*image))
+		{
+			*image = LoadImageDefault();
+		}
+	}
 }
 
 void UnloadAssets()
