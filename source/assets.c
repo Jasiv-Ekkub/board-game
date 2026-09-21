@@ -20,8 +20,14 @@ void LoadAssets()
 	font = LoadFontEx("resource/font/nihonium113.regular.ttf", 140, 0, 0);
 	shader = LoadShader("resource/shader/shader.vs", "resource/shader/shader.fs");
 	
-	textures[BOARD_TEXTURE] = LoadTextureDefault();
 	textures[DICE_TEXTURE] = LoadTexture("resource/texture/dice.png");
+	for(int i=0; i<TEXTURE_COUNT; ++i)
+	{
+		if(!IsTextureValid(textures[i]))
+		{
+			textures[i] = LoadTextureDefault();
+		}
+	}
 
 	models[BOARD_MODEL] = LoadModelFromMesh(GenMeshPlane(2, 2, 4, 4));
 	models[DICE_MODEL] = LoadModel("resource/model/dice.glb");
@@ -32,10 +38,11 @@ void LoadAssets()
 	models[APARTAMENT_MODEL] = LoadModel("resource/model/placeholder_cylinder.glb");
 	for(int i=0; i<MODEL_COUNT; ++i)
 	{
-		if(IsModelValid(models[i]))
+		if(!IsModelValid(models[i]))
 		{
-			models[i].materials[0].shader = shader;
+			models[i] = LoadModelFromMesh(GenMeshCube(1,1,1));
 		}
+		models[i].materials[0].shader = shader;
 	}
 	models[BOARD_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[BOARD_TEXTURE];
 	models[DICE_MODEL].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = textures[DICE_TEXTURE];

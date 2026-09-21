@@ -21,7 +21,6 @@ int main()
 	InitializeGameContext();
 	LoadAssets();
 	
-	/*
 	board = GetBoard();
 
 	Color bgrColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
@@ -86,7 +85,6 @@ int main()
 
 	}
 
-	*/
 	UnloadAssets();
 	TerminateGameContext();
 	return 0;
