@@ -63,20 +63,21 @@ void PrintField(Field field)
 	}
 }
 
-int GetFeeValue(Field field)
-{
-	int level = field.buildingLevel;
-	return field.value * (1 + level*level) / 2;
-}
+const static int valueMultiplier[4] = { 2, 4, 7, 10 };
+const static int feeMultiplier[4] = { 1, 5, 8, 14 };
+const static int upgradeMultiplier[4] = { 6, 9, 12, 15 };
 
 int GetFieldValue(Field field)
 {
-	int level = field.buildingLevel;
-	return field.value * (2 + level*level) / 2;
+	return field.value * valueMultiplier[field.buildingLevel] / 2;
+}
+
+int GetFeeValue(Field field)
+{
+	return field.value * feeMultiplier[field.buildingLevel] / 10;
 }
 
 int GetUpgradeValue(Field field)
 {
-	int level = field.buildingLevel;
-	return field.value * (1 + level*level) / 4;
+	return field.value * upgradeMultiplier[field.buildingLevel] / 10;
 }

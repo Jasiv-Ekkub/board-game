@@ -29,6 +29,7 @@ int main()
 		shouldClose = WindowShouldClose();
 		UpdateGameContext();
 		UpdateAnimator();
+		if(IsKeyPressed(KEY_P)) SetTimeSpeed(10);
 
 		BeginDrawing();
 			ClearBackground(bgrColor);

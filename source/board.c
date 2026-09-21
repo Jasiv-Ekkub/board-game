@@ -57,7 +57,7 @@ void SetupBoard(Board* board, int size, int humanCount, int botCount)
 
 	board->fieldCount = size;
 	LoadFields(board);
-	LoadPlayers(board, 3000, humanCount, botCount);
+	LoadPlayers(board, 2000, humanCount, botCount);
 	GenerateBoardTexture(board);
 	
 	for(int i=0; i<board->playerCount; ++i)

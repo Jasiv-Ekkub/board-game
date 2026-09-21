@@ -6,8 +6,8 @@ void StartSuperaction(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
 
-	player->money += 1500;
-	AddPopupBoard(board, "Earned $1500 for walking\nthrough start");
+	player->money += 500;
+	AddPopupBoard(board, "Earned $500 for walking\nthrough start");
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
@@ -15,8 +15,12 @@ void TaxationAction(Board* board)
 {
 	Player* player = &board->players[board->currentPlayer];
 
-	player->money -= 100;
-	AddPopupBoard(board, "Player paid $100 in tax");
+	int money = player->money;
+	player->money = money * 4 / 5;
+
+	char buffer[MAX_POPUP_LENGTH];
+	snprintf(buffer, MAX_POPUP_LENGTH, "Player paid $%i in tax", money - player->money);
+	AddPopupBoard(board, buffer);
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
@@ -118,7 +122,7 @@ void LoadFields(Board* board)
 
 			board->fields[i] = GetPropertyField(
 				groupData[outerCounter].cityNames[innerCounter],
-				100 * (i / 3 + 3),
+				50 * outerCounter + 300, 
 				outerCounter,
 				groupData[outerCounter].color
 			);

@@ -109,7 +109,6 @@ bool GetBotPlayerResponse(Board* board)
 		default:
 			break;
 	}
-	printf("Likelihood: %f\n", likelihood);
 
 	if(likelihood >= GetRandomFloat(0, 1)) board->currentPlayerResponse = POSITIVE;
 	else board->currentPlayerResponse = NEGATIVE;
