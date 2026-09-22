@@ -89,6 +89,19 @@ bool GetBotPlayerResponse(Board* board)
 	Player* player = &board->players[board->currentPlayer];
 	Field field = board->fields[player->position];
 
+	int fieldsInGroup = 0;
+	int fieldsOwnedInGroup = 0;
+	for(int i=0; i<board->fieldCount; ++i)
+	{
+		Field other = board->fields[i];
+		if(other.type == PROPERTY && other.groupId == field.groupId)
+		{
+			fieldsInGroup++;
+			if(other.ownerId == board->currentPlayer)
+				fieldsOwnedInGroup++;
+		}
+	}
+
 	float likelihood = 0;
 	float costRatio = 0;
 	switch(board->phase)
@@ -99,11 +112,13 @@ bool GetBotPlayerResponse(Board* board)
 		case BUY_FIELD:
 			costRatio = (float)(player->money)/GetFieldValue(field);
 			likelihood = Sigmoid(player->buyFieldRisk * (costRatio - player->buyFieldRatio));
+			likelihood += (float)(fieldsOwnedInGroup)/(fieldsInGroup - 1);
 			break;
 
 		case UPGRADE_BUILDING:
 			costRatio = (float)(player->money)/GetUpgradeValue(field);
 			likelihood = Sigmoid(player->upgradeFieldRisk * (costRatio - player->upgradeFieldRatio));
+			likelihood += 0.5 - (float)(field.buildingLevel)/6;
 			break;
 
 		default:

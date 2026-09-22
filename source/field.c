@@ -64,8 +64,8 @@ void PrintField(Field field)
 }
 
 const static int valueMultiplier[4] = { 2, 4, 7, 10 };
-const static int feeMultiplier[4] = { 1, 5, 8, 14 };
-const static int upgradeMultiplier[4] = { 6, 9, 12, 15 };
+const static int feeMultiplier[4] = { 1, 6, 9, 19 };
+const static int upgradeMultiplier[4] = { 4, 9, 16, 25 };
 
 int GetFieldValue(Field field)
 {

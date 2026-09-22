@@ -1,6 +1,8 @@
 #include <board_rendering.h>
 #include <board_setup.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <chance_action.h>
 
 void StartSuperaction(Board* board)
 {
@@ -26,7 +28,28 @@ void TaxationAction(Board* board)
 
 void LotteryAction(Board* board)
 {
-	AddPopupBoard(board, "Lottery");
+	int funds = 0;
+	for(int i=0; i<board->playerCount; ++i)
+	{
+		if(board->players[i].money < 0) continue;
+		int tmp = board->players[i].money / 10;
+		funds += tmp;
+		board->players[i].money -= tmp;
+	}
+	int winner = 0;
+	do
+	{
+		winner = rand() % board->playerCount;
+	}
+	while(board->players[winner].money < 0);
+	board->players[winner].money += funds;
+
+	char buffer[MAX_POPUP_LENGTH];
+	snprintf(buffer, MAX_POPUP_LENGTH, "%s wins $%i", board->players[winner].name, funds);
+	AddPopupBoard(board, buffer);
+
+	AddPopupBoard(board, "Lottery - everybody gives 10\% as a bet");
+	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
 void PoliceAction(Board* board)
@@ -37,11 +60,6 @@ void PoliceAction(Board* board)
 	AddPopupBoard(board, "Player got sentenced\nto two turn skips");
 }
  
-void ChanceAction(Board* board)
-{
-	AddPopupBoard(board, "Chance");
-}
-
 static const struct {
 	Color color;
 	const char* cityNames[8];

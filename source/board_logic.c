@@ -242,6 +242,7 @@ void HandleCheckField(Board* board)
 	Player* player = &board->players[board->currentPlayer];
 	
 	Field* field = &board->fields[player->position];
+	board->phase = CHECK_DEBT;
 	switch(field->type)
 	{
 		case PROPERTY:
@@ -274,7 +275,6 @@ void HandleCheckField(Board* board)
 		default:
 			break;
 	}
-	board->phase = CHECK_DEBT;
 }
 
 void HandlePayFee(Board* board)
