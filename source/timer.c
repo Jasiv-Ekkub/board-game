@@ -8,6 +8,11 @@ bool Timer_HasEnded(Timer timer)
 	return timer.time <= 0;
 }
 
+bool Timer_HasBeenSet(Timer timer)
+{
+	return timer.length > 0;
+}
+
 void Timer_Reset(Timer* timer)
 {
 	timer->time = timer->length;

@@ -14,5 +14,7 @@ typedef enum LayoutAnchor {
 } LayoutAnchor;
 
 Rectangle GetRectanglePlacement(float x, float y, float width, float height, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor);
+Vector2 GetVector2Placement(float x, float y, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor);
+Vector2 GetTextOffset(Font font, const char* text, int fontSize, int fontSpacing, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor);
 
 #endif //LAYOUT_ENGINE_H

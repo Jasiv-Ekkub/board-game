@@ -19,3 +19,28 @@ Rectangle GetRectanglePlacement(float x, float y, float width, float height, Lay
 		height,
 	};
 }
+
+Vector2 GetVector2Placement(float x, float y, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor)
+{
+	float guiScale = GetGuiScale();
+
+	x *= guiScale;
+	y *= guiScale;
+
+	Rectangle screenBounds = GetScreenBounds();
+
+	return (Vector2){
+		x + screenBounds.width * (float)horizontalAnchor / 2,
+		y + screenBounds.height * (float)verticalAnchor / 2,
+	};
+}
+
+Vector2 GetTextOffset(Font font, const char* text, int fontSize, int fontSpacing, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor)
+{
+	Vector2 offset = MeasureTextEx(font, text, fontSize, fontSpacing);
+
+	return (Vector2){
+		offset.x * (float)horizontalAnchor / 2,
+		offset.y * (float)verticalAnchor / 2,
+	};
+}
