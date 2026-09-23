@@ -32,10 +32,10 @@ void LoadAssets()
 	models[BOARD_MODEL] = LoadModelFromMesh(GenMeshPlane(2, 2, 4, 4));
 	models[DICE_MODEL] = LoadModel("resource/model/dice.glb");
 	models[PAWN_MODEL] = LoadModel("resource/model/pawn.glb");
-	models[SITE_MODEL] = LoadModel("resource/model/placeholder_box.glb");
-	models[HOUSE_MODEL] = LoadModel("resource/model/placeholder_cone.glb");
-	models[VILLA_MODEL] = LoadModel("resource/model/placeholder_sphere.glb");
-	models[APARTAMENT_MODEL] = LoadModel("resource/model/placeholder_cylinder.glb");
+	models[SITE_MODEL] = LoadModel("resource/model/plac.glb");
+	models[HOUSE_MODEL] = LoadModel("resource/model/dom.glb");
+	models[VILLA_MODEL] = LoadModel("resource/model/willa.glb");
+	models[APARTAMENT_MODEL] = LoadModel("resource/model/hotel.glb");
 	for(int i=0; i<MODEL_COUNT; ++i)
 	{
 		if(!IsModelValid(models[i]))
