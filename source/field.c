@@ -4,9 +4,9 @@
 
 const char* buildingLevelNames[MAX_BUILDING_LEVEL] = {
 	"Construction site",
-	"Family house",
+	"House",
 	"Villa",
-	"Apartament"
+	"Hotel"
 };
 
 Field GetPropertyField(const char* name, int value, int groupId, Color color)
