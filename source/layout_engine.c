@@ -3,14 +3,15 @@
 
 Rectangle GetRectanglePlacement(float x, float y, float width, float height, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor)
 {
-	float guiScale = GetGuiScale();
+	Rectangle screenBounds = GetScreenBounds();
+
+	float guiScale = GetGuiScale() * screenBounds.height / 810;
 
 	x *= guiScale;
 	y *= guiScale;
 	width *= guiScale;
 	height *= guiScale;
 
-	Rectangle screenBounds = GetScreenBounds();
 
 	return (Rectangle){
 		x + (screenBounds.width - width) * (float)horizontalAnchor / 2,
@@ -22,12 +23,12 @@ Rectangle GetRectanglePlacement(float x, float y, float width, float height, Lay
 
 Vector2 GetVector2Placement(float x, float y, LayoutAnchor horizontalAnchor, LayoutAnchor verticalAnchor)
 {
-	float guiScale = GetGuiScale();
+	Rectangle screenBounds = GetScreenBounds();
+
+	float guiScale = GetGuiScale() * screenBounds.height / 810;
 
 	x *= guiScale;
 	y *= guiScale;
-
-	Rectangle screenBounds = GetScreenBounds();
 
 	return (Vector2){
 		x + screenBounds.width * (float)horizontalAnchor / 2,

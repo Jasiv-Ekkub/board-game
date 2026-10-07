@@ -14,12 +14,12 @@ Color backgroundColor;
 Color textColorNormal;
 Color textColorFocused;
 
-enum { START_SCREEN, MAIN_MENU, HOW_TO_PLAY, BOARD, EXIT_SCREEN } phase = START_SCREEN;
+enum { START_SCREEN, MAIN_MENU, HOW_TO_PLAY, BOARD, EXIT_SCREEN } phase = MAIN_MENU;// START_SCREEN;
 static const bool showOptionsButton[] = {
 	[START_SCREEN] = false,
 	[MAIN_MENU] = true,
 	[BOARD] = true,
-	[HOW_TO_PLAY] = false,
+	[HOW_TO_PLAY] = true,
 	[EXIT_SCREEN] = false,
 };
 bool shouldClose = false;
@@ -209,17 +209,11 @@ void HandleBoard()
 	}
 }
 
-#define SLIDE_COUNT 5
-static const int slideLengths[SLIDE_COUNT] = { 15, 8, 15, 12, 8 };
+#define SLIDE_COUNT 4
 void HandleHowToPlay()
 {
 	static int slideId = 0;
-	if(!Timer_HasBeenSet(timer))
-	{
-		SetCameraFov(2);
-		Timer_Set(&timer, slideLengths[slideId]);
-	}
-
+	
 	const char *howToPlayText = "HOW TO PLAY";
 	DrawTextPro(
 		font,
@@ -230,82 +224,29 @@ void HandleHowToPlay()
 		textColorFocused
 	);
 	
-	switch(slideId)
+	const char *slideText = "";
+	switch(slideId-1)
 	{
 		case 0:
-			GuiBoxText(GetRectanglePlacement(0, 70, 800, 560, CENTER, CENTER),
-				"The goal of the game is to dominate the other players.\nThere are three ways to achieve this:\n\n1. Monopolise three regions by buying up\nall the properties in them\n\n2. Force the other players into bankruptcy\n\n3. Collect as much money as possible\nbefore the decision is made to end the game"
-			);
+			slideText = "The goal of the game is to dominate the other players.\nThere are three ways to achieve this:\n\n1. Monopolise three regions by buying up\nall the properties in them\n\n2. Force the other players into bankruptcy\n\n3. Collect as much money as possible\nbefore the decision is made to end the game";
 			break;
 		case 1:
-			GuiBoxText(GetRectanglePlacement(0, -100, 800, 100, CENTER, CENTER), "Players can construct buildings on their own fields");
-			
-			DrawTextPro(
-				font,
-				"Construction site",
-				GetVector2Placement(-430, 180, CENTER, CENTER),
-				GetTextOffset(font, "Construction site", 35, 1, CENTER, TOP),
-				0, 35, 1,
-				textColorNormal
-			);
-			DrawTextPro(
-				font,
-				"House",
-				GetVector2Placement(-143, 180, CENTER, CENTER),
-				GetTextOffset(font, "House", 35, 1, CENTER, TOP),
-				0, 35, 1,
-				textColorNormal
-			);
-			DrawTextPro(
-				font,
-				"Villa",
-				GetVector2Placement(143, 180, CENTER, CENTER),
-				GetTextOffset(font, "Villa", 35, 1, CENTER, TOP),
-				0, 35, 1,
-				textColorNormal
-			);
-			DrawTextPro(
-				font,
-				"Hotel",
-				GetVector2Placement(430, 180, CENTER, CENTER),
-				GetTextOffset(font, "Hotel", 35, 1, CENTER, TOP),
-				0, 35, 1,
-				textColorNormal
-			);
-			BeginMode3D(GetCamera3D());
-			DrawModel(models[SITE_MODEL], (Vector3){-1, 0, -0.5}, 0.1, RAYWHITE);
-			DrawModel(models[HOUSE_MODEL], (Vector3){-0.5, 0, 0}, 0.1, RAYWHITE);
-			DrawModel(models[VILLA_MODEL], (Vector3){0, 0, 0.5}, 0.1, RAYWHITE);
-			DrawModel(models[APARTAMENT_MODEL], (Vector3){0.5f, 0, 1}, 0.1, RAYWHITE);
-			EndMode3D();
+			slideText = "There are several special fields:\n\nStart - gives money when walked through\nChance - causes a random event to happen\nTaxation - takes a few per cent of the money\nLottery - takes a few per cent of the money from\nevery player and gives them to the random one\nPoliceman - stops you for a few turns";
 			break;
 		case 2:
-			GuiBoxText(GetRectanglePlacement(0, 70, 800, 560, CENTER, CENTER),
-				"There are several special fields:\n\nStart - gives money when walked through\n\nChance - causes a random event to happen\n\nTaxation - takes a few per cent of the money\n\nLottery - takes a few per cent of the money from\nevery player and gives them to the random one\n\nPoliceman - stops you for a few turns"
-			);
+			slideText = "A player who has entered another\nplayer's field must pay a fee.\n\nIf a player runs out of money to pay the fee,\ntheir properties will start to be sold off\nuntil they have enough money.\n\nThe properties will be sold off from\nthe cheapest to the most expensive";
 			break;
 		case 3:
-			GuiBoxText(GetRectanglePlacement(0, 70, 800, 560, CENTER, CENTER),
-				"A player who has entered another\nplayer's field must pay a fee.\n\nIf a player runs out of money to pay the fee,\ntheir properties will start to be sold off\nuntil they have enough money.\n\nThe properties will be sold off from\nthe cheapest to the most expensive"
-			);
-			break;
-		case 4:
-			GuiBoxText(GetRectanglePlacement(0, 70, 800, 560, CENTER, CENTER),
-				"A player can buy an unoccupied field\nor another player's field after paying them a fee.\n\nIf they have enough money,\nthey can upgrade it straight away\n\nAn upgraded square has a higher value\nand requires a higher parking fee"
-			);
+			slideText = "A player can buy an unoccupied field\nor another player's field after paying them a fee.\n\nIf they have enough money,\nthey can upgrade it straight away\n\nAn upgraded square has a higher value\nand requires a higher parking fee";
 			break;
 	}
+	GuiBoxText(GetRectanglePlacement(0, 0, 800, 500, CENTER, CENTER), slideText);
 
-	if(Timer_HasEnded(timer))
+	GuiSpinnerSfx(GetRectanglePlacement(0,-80,500,60,CENTER,BOTTOM), 0, &slideId, 1, SLIDE_COUNT);
+	if(GuiButton(GetRectanglePlacement(0,-10,500,60,CENTER,BOTTOM), "RETURN"))
 	{
-		slideId++;
 		PlaySound(sounds[DING_SOUND]);
-		Timer_Set(&timer, 0);
-		if(slideId >= SLIDE_COUNT)
-		{
-			phase = MAIN_MENU;
-			slideId = 0;
-		}
+		phase = MAIN_MENU;
 	}
 }
 
