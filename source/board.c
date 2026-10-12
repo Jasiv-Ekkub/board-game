@@ -39,7 +39,8 @@ Board GetBoard()
 
 		.colors = {
 			.light = GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_NORMAL)),
-			.dark = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
+			.dark = GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_NORMAL)),
+            .text = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)),
 		},
 
 		.diceAngle = 0,

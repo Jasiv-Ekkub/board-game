@@ -151,7 +151,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 		45,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.colors.dark
+		board.colors.text
 	);
 	ImageDrawTextSpec(
 		image,
@@ -164,7 +164,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 		45,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.colors.dark
+		board.colors.text
 	);
 }
 
@@ -223,7 +223,7 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 		0,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.colors.dark
+		board.colors.text
 	);
 	ImageDrawTextSpec(
 		image,
@@ -236,6 +236,6 @@ void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
 		0,
 		layout.fontSize,
 		layout.fontSpacing,
-		board.colors.dark
+		board.colors.text
 	);
 }

@@ -14,7 +14,7 @@ Color backgroundColor;
 Color textColorNormal;
 Color textColorFocused;
 
-enum { START_SCREEN, MAIN_MENU, HOW_TO_PLAY, BOARD, EXIT_SCREEN } phase = MAIN_MENU;// START_SCREEN;
+enum { START_SCREEN, MAIN_MENU, HOW_TO_PLAY, BOARD, EXIT_SCREEN } phase = START_SCREEN;
 static const bool showOptionsButton[] = {
 	[START_SCREEN] = false,
 	[MAIN_MENU] = true,
@@ -94,10 +94,10 @@ int main()
 						SetCameraFov((float)(-zoom) / 20 + 2);
 					}
 
-					static int guiScale = 5;
+					static int guiScale = 0;
 					if(GuiSpinnerSfx(GetRectanglePlacement(60, 80, 480, 70, CENTER, CENTER), "Gui scale ", &guiScale, 0, 10))
 					{
-						SetGuiScale((float)(guiScale - 5) / 20 + 1);
+						SetGuiScale((float)guiScale / 20 + 0.75);
 					}
 
 					if(GuiButtonSfx(GetRectanglePlacement(0, 160, 600, 70, CENTER, CENTER), "Toggle fullscreen"))
@@ -136,7 +136,7 @@ void HandleInitialScreen()
 		GetVector2Placement(0, 0, CENTER, CENTER),
 		GetTextOffset(font, GAME_NAME, 160, 1, CENTER, CENTER),
 		0, 160, 1,
-		textColorFocused
+		textColorNormal
 	);
 
 	if(Timer_HasEnded(timer))
@@ -159,7 +159,7 @@ void HandleMainMenu()
 		GetVector2Placement(0, 120, CENTER, TOP),
 		GetTextOffset(font, GAME_NAME, 160, 1, CENTER, TOP),
 		0, 160, 1,
-		textColorFocused
+		textColorNormal
 	);
 	if(GuiButtonSfx(GetRectanglePlacement(-310,0,300,100,CENTER,CENTER), "PLAY"))
 	{
@@ -221,7 +221,7 @@ void HandleHowToPlay()
 		GetVector2Placement(0, 30, CENTER, TOP),
 		GetTextOffset(font, howToPlayText , 100, 1, CENTER, TOP),
 		0, 100, 1,
-		textColorFocused
+		textColorNormal
 	);
 	
 	const char *slideText = "";
@@ -260,7 +260,7 @@ void HandleExitScreen()
 		GetVector2Placement(0, 120, CENTER, TOP),
 		GetTextOffset(font, GAME_NAME, 160, 1, CENTER, TOP),
 		0, 160, 1,
-		textColorFocused
+		textColorNormal
 	);
 
 	const char* thanks = "THANK YOU FOR PLAYING";
@@ -283,7 +283,7 @@ void HandleExitScreen()
 		textColorNormal
 	);
 
-	const char* credits2 = "\n3D model design:\n\nJakub Gora";
+	const char* credits2 = "\n3D model design:\n\nJakub Gora\nJakub Siwek";
 	DrawTextPro(
 		font,
 		credits2,

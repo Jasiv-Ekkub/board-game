@@ -25,7 +25,7 @@ void InitializeGameContext()
 
 	deltaTime = 0;
 	timeSpeed = 1;
-	guiScale = 1;
+    guiScale = 0.75;
 	screenBounds = (Rectangle){0, 0, GetRenderWidth(), GetRenderHeight()};
 	camera3D = (Camera3D){
 		.position = (Vector3){-2, 3, 2},

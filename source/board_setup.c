@@ -62,39 +62,39 @@ void PoliceAction(Board* board)
  
 static const struct {
 	Color color;
-	const char* cityNames[8];
+	const char* cityNames[4];
 } groupData[8] = {
 	{
-		YELLOW,
-		{ "Frankfurt", "Berlin", "Munchen", "Hamburg", "Stuttgart", "Hanover", "Augsburg", "Dortmund", },
+		BROWN,
+		{ "Frankfurt", "Berlin", "Munchen", "Hamburg" },
 	},
 	{
-		RED,
-		{ "Szczecin", "Warszawa", "Krakow", "Częstochowa", "Pszczyna", "Torun", "Gdansk", "Katowice", }
+		DARKBROWN,
+		{ "Szczecin", "Warszawa", "Krakow", "Katowice" }
 	},
 	{
-		BLACK,
-		{ "Copenhagen", "Stockholm", "Oslo", "Helsinki", "Bilund", "Bergen", "Gothenburg", "Turku", },
-	},
-	{
-		GRAY,
-		{ "Athens", "Ljubljana", "Zagreb", "Sarajevo", "Belgrad", "Kosovo", "Tirane", "Sofia", },
-	},
-	{
-		BLUE,
-		{ "Lyon", "Paris", "Rennes", "Nantes", "Orleans", "Toulouse", "Marseille", "Nice", },
+		DARKPURPLE,
+		{ "Copenhagen", "Stockholm", "Oslo", "Helsinki" },
 	},
 	{
 		PURPLE,
-		{ "Dublin", "London", "Glasgow", "Edinburgh", "Manchester", "Belfast", "Liverpool", "Manchester", },
+		{ "Dublin", "London", "Glasgow", "Manchester" },
+	},
+	{
+		LIME,
+		{ "Lyon", "Paris", "Rennes", "Orleans" },
+	},
+	{
+		DARKGREEN,
+		{ "Madrid", "Lisbon", "Seville", "Barcelona" },
 	},
 	{
 		ORANGE,
-		{ "Madrid", "Lisbon", "Valencia", "Porto", "Seville", "Zaragoza", "Barcelona", "Malaga", },
+		{ "Venice", "Rome", "Naples", "Florence" },
 	},
 	{
-		GREEN,
-		{ "Venice", "Rome", "Naples", "Florence", "Genoa", "Bologna", "Palermo", "Turin", },
+		YELLOW,
+		{ "Athens", "Zagreb", "Sarajevo", "Belgrad" },
 	},
 };
 
@@ -150,10 +150,10 @@ void LoadFields(Board* board)
 }
 
 static const Color playerColors[MAX_PLAYER_COUNT] = {
-	RED,
-	YELLOW,
-	GREEN,
-	BLUE
+	(Color){ 0xaf, 0x00, 0x00, 0xff },
+	(Color){ 0xaf, 0xaf, 0x00, 0xff },
+	(Color){ 0x00, 0xaf, 0x00, 0xff },
+	(Color){ 0x00, 0x00, 0xaf, 0xff },
 };
 
 void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
