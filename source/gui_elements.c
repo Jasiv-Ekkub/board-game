@@ -51,7 +51,7 @@ void GuiGameOver(Rectangle bounds, Player winner)
 	
 	Rectangle tmp = bounds;
 	tmp.height /= 2;
-	tmp.y += 20;
+	tmp.y += 30;
 	tmp.height -= 20;
 
 	GuiDrawText("GAME OVER\nThe winner is:", tmp, 1, textColor);

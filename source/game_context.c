@@ -15,7 +15,7 @@ void InitializeGameContext()
 {
 	InitWindow(1440, 810, "Board game");
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
-	SetWindowMinSize(800, 600);
+	SetWindowMinSize(1440, 810);
 	LoadStyle();
 	InitAudioDevice();
 	SetExitKey(0);

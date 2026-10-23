@@ -144,7 +144,7 @@ void LoadFields(Board* board)
 				outerCounter,
 				groupData[outerCounter].color
 			);
-			if(innerCounter < 7) innerCounter++;
+			if(innerCounter < 4) innerCounter++;
 		}
 	}
 }

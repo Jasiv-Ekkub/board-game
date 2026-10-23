@@ -13,17 +13,17 @@
 
 #define BUISNESS_STYLE_PROPS_COUNT  17
 
-// Custom style name: buisness
+// Custom style name: Buisness
 static const GuiStyleProp buisnessStyleProps[BUISNESS_STYLE_PROPS_COUNT] = {
-    { 0, 0, (int)0x00004bff },    // DEFAULT_BORDER_COLOR_NORMAL 
-    { 0, 1, (int)0x000019ff },    // DEFAULT_BASE_COLOR_NORMAL 
+    { 0, 0, (int)0x000096ff },    // DEFAULT_BORDER_COLOR_NORMAL 
+    { 0, 1, (int)0x000032ff },    // DEFAULT_BASE_COLOR_NORMAL 
     { 0, 2, (int)0xb4b464ff },    // DEFAULT_TEXT_COLOR_NORMAL 
     { 0, 3, (int)0xb4b464ff },    // DEFAULT_BORDER_COLOR_FOCUSED 
     { 0, 4, (int)0x646428ff },    // DEFAULT_BASE_COLOR_FOCUSED 
     { 0, 5, (int)0xffffb4ff },    // DEFAULT_TEXT_COLOR_FOCUSED 
     { 0, 6, (int)0x000096ff },    // DEFAULT_BORDER_COLOR_PRESSED 
-    { 0, 7, (int)0x000032ff },    // DEFAULT_BASE_COLOR_PRESSED 
-    { 0, 8, (int)0xdcdca0ff },    // DEFAULT_TEXT_COLOR_PRESSED 
+    { 0, 7, (int)0x000064ff },    // DEFAULT_BASE_COLOR_PRESSED 
+    { 0, 8, (int)0xffffb4ff },    // DEFAULT_TEXT_COLOR_PRESSED 
     { 0, 9, (int)0x8c8c78ff },    // DEFAULT_BORDER_COLOR_DISABLED 
     { 0, 10, (int)0xb4b48cff },    // DEFAULT_BASE_COLOR_DISABLED 
     { 0, 11, (int)0x8c8c78ff },    // DEFAULT_TEXT_COLOR_DISABLED 
@@ -416,7 +416,7 @@ static const GlyphInfo buisnessFontGlyphs[95] = {
     { 126, 0, 9, 10, { 0 }},
 };
 
-// Style loading function: buisness
+// Style loading function: Buisness
 static void GuiLoadStyleBuisness(void)
 {
     // Load style properties provided

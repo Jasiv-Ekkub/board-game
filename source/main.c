@@ -228,16 +228,30 @@ void HandleHowToPlay()
 	switch(slideId-1)
 	{
 		case 0:
-			slideText = "The goal of the game is to dominate the other players.\nThere are three ways to achieve this:\n\n1. Monopolise three regions by buying up\nall the properties in them\n\n2. Force the other players into bankruptcy\n\n3. Collect as much money as possible\nbefore the decision is made to end the game";
+			slideText = "The goal of the game is to achieve domination\n"
+                        "over other players. Player can do this by:\n"
+                        "1. Monopolizing three regions\n"
+                        "2. Bankrupting other players\n"
+                        "3. Accumulating largest wealth by the end of the game";
 			break;
 		case 1:
-			slideText = "There are several special fields:\n\nStart - gives money when walked through\nChance - causes a random event to happen\nTaxation - takes a few per cent of the money\nLottery - takes a few per cent of the money from\nevery player and gives them to the random one\nPoliceman - stops you for a few turns";
+			slideText = "There are two types of fields:\n"
+                        "1. Property fields, which can\nbe bought and developed\n"
+                        "2. Special fields, which causes\nspecial event to occur:";
 			break;
 		case 2:
-			slideText = "A player who has entered another\nplayer's field must pay a fee.\n\nIf a player runs out of money to pay the fee,\ntheir properties will start to be sold off\nuntil they have enough money.\n\nThe properties will be sold off from\nthe cheapest to the most expensive";
+			slideText = "2.1. Start - gives $500\n"
+                        "2.2. Taxation - takes 20\% of owned money\n"
+                        "2.3. Lottery - takes 10\% of owned money from\n"
+                             "every player and gives to one of them\n"
+                        "2.4. Policeman - stops player for two rounds\n"
+                        "2.5. Chance - causes random event";
 			break;
 		case 3:
-			slideText = "A player can buy an unoccupied field\nor another player's field after paying them a fee.\n\nIf they have enough money,\nthey can upgrade it straight away\n\nAn upgraded square has a higher value\nand requires a higher parking fee";
+			slideText = "Player must pay the fee,\n"
+                        "when trespassing on someone's property.\n\n"
+                        "The more developed it is\n"
+                        "the larger the fee is.";
 			break;
 	}
 	GuiBoxText(GetRectanglePlacement(0, 0, 800, 500, CENTER, CENTER), slideText);

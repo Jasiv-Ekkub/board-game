@@ -164,7 +164,7 @@ void UpdateBoard(Board* board)
 			PlaySound(sounds[POPUP_SOUND]);
 			Timer_Set(&board->popupTimer, 2);
 		}
-		GuiBoxText(GetRectanglePlacement(0, -50, 600, 150, CENTER, BOTTOM), board->popups[board->popupCount-1]);
+		GuiBoxText(GetRectanglePlacement(0, -50, 600, 200, CENTER, BOTTOM), board->popups[board->popupCount-1]);
 		Timer_Update(&board->popupTimer);
 
 		if(Timer_HasEnded(board->popupTimer))
