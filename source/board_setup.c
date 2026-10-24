@@ -1,5 +1,6 @@
 #include <board_rendering.h>
 #include <board_setup.h>
+#include <board_config.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <chance_action.h>
@@ -60,51 +61,59 @@ void PoliceAction(Board* board)
 	AddPopupBoard(board, "Player got sentenced\nto two turn skips");
 }
  
-static const struct {
-	Color color;
-	const char* cityNames[4];
-} groupData[8] = {
-	{
-		BROWN,
-		{ "Frankfurt", "Berlin", "Munchen", "Hamburg" },
-	},
-	{
-		DARKBROWN,
-		{ "Szczecin", "Warszawa", "Krakow", "Katowice" }
-	},
-	{
-		DARKPURPLE,
-		{ "Copenhagen", "Stockholm", "Oslo", "Helsinki" },
-	},
-	{
-		PURPLE,
-		{ "Dublin", "London", "Glasgow", "Manchester" },
-	},
-	{
-		LIME,
-		{ "Lyon", "Paris", "Rennes", "Orleans" },
-	},
-	{
-		DARKGREEN,
-		{ "Madrid", "Lisbon", "Seville", "Barcelona" },
-	},
-	{
-		ORANGE,
-		{ "Venice", "Rome", "Naples", "Florence" },
-	},
-	{
-		YELLOW,
-		{ "Athens", "Zagreb", "Sarajevo", "Belgrad" },
-	},
-};
-
 void LoadFields(Board* board)
 {
-	int innerCounter = 0;
-	int outerCounter = -1;
+    const BoardConfig config = GetBoardConfig();
+
+    int groupDataIds[8] = {};
+    int fieldDataIds[8][4] = {};
+    
+    for(int i=0; i<8;)
+    {
+        int id = rand()%config.groupDataCount;
+        bool reroll = false;
+        for(int j=0; j<i; ++j)
+        {
+            if(groupDataIds[j] == id)
+            {
+                reroll = true;
+                break;
+            }
+        }
+        if(reroll) continue;
+
+        groupDataIds[i] = id;
+        const GroupData groupData = config.groupDatas[id];
+
+        for(int j=0; j<4;)
+        {
+            int id2 = rand()%groupData.fieldDataCount;
+            bool reroll2 = false;
+            for(int k=0; k<j; ++k)
+            {
+                if(fieldDataIds[i][k] == id2)
+                {
+                    reroll2 = true;
+                    break;
+                }
+            }
+            if(reroll2) continue;
+
+            fieldDataIds[i][j] = id2;
+            j++;
+        }
+        i++;
+    }
+
+    int innerCounter = 0;
+    int outerCounter = -1;
+
 	int quarter = board->fieldCount/4;
 	for(int i=0; i<board->fieldCount; ++i)
 	{
+        if(innerCounter > 4) innerCounter = 4;
+        if(outerCounter > 8) outerCounter = 8;
+
 		int qi = i%quarter;
 		if(qi == 0)
 		{
@@ -126,25 +135,30 @@ void LoadFields(Board* board)
 					board->fields[i] = GetActionField("Police", "Get arrested", PoliceAction, POLICEMAN_IMAGE);
 					break;
 			}
-			innerCounter = 0;
-			outerCounter++;
+            outerCounter++;
+            innerCounter = 0;
 		}
 		else if(qi == quarter/2)
 		{
 			board->fields[i] = GetActionField("Chance", "Draw a card", ChanceAction, CHANCE_IMAGE);
-			innerCounter = 0;
-			outerCounter++;
+
+            outerCounter++;
+            innerCounter = 0;
 		}
 		else
 		{
+            const GroupData groupData = config.groupDatas[groupDataIds[outerCounter]];
+            const FieldData fieldData = groupData.fieldDatas[fieldDataIds[outerCounter][innerCounter]];
+
+            const int q = fieldData.minCost, p = fieldData.maxCost - q;  
 
 			board->fields[i] = GetPropertyField(
-				groupData[outerCounter].cityNames[innerCounter],
-				50 * outerCounter + 300, 
+				fieldData.name,
+				rand() % p + q, 
 				outerCounter,
-				groupData[outerCounter].color
+				groupData.color
 			);
-			if(innerCounter < 4) innerCounter++;
+            innerCounter++;
 		}
 	}
 }
