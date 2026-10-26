@@ -1,201 +1,496 @@
 [
     {
-        "color": 5888201,
+        "color": 16741023,
         "cities": [
             {
-                "name": "CA 1",
-                "minCost": 100,
+                "name": "Warszawa",
+                "minCost": 500,
+                "maxCost": 800
+            },
+            {
+                "name": "Krakow",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Gniezno",
+                "minCost": 300,
                 "maxCost": 500
             },
             {
-                "name": "CA 2",
-                "minCost": 100,
+                "name": "Lodz",
+                "minCost": 300,
+                "maxCost": 700
+            },
+            {
+                "name": "Bydgoszcz",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Czestochowa",
+                "minCost": 300,
+                "maxCost": 800
+            },
+            {
+                "name": "Pszczyna",
+                "minCost": 300,
+                "maxCost": 800
+            },
+            {
+                "name": "Belchatow",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Poznan",
+                "minCost": 300,
+                "maxCost": 600
+            },
+            {
+                "name": "Gdansk",
+                "minCost": 500,
+                "maxCost": 700
+            }
+        ]
+    },
+    {
+        "color": 2367264,
+        "cities": [
+            {
+                "name": "Berlin",
+                "minCost": 600,
+                "maxCost": 900
+            },
+            {
+                "name": "Frankfurt",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Munchen",
+                "minCost": 600,
+                "maxCost": 800
+            },
+            {
+                "name": "Aachen",
+                "minCost": 300,
+                "maxCost": 700
+            },
+            {
+                "name": "Cologne",
+                "minCost": 300,
                 "maxCost": 500
             },
             {
-                "name": "CA 3",
-                "minCost": 100,
+                "name": "Dortmund",
+                "minCost": 400,
                 "maxCost": 500
             },
             {
-                "name": "CA 4",
-                "minCost": 100,
+                "name": "Hamburg",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Dresden",
+                "minCost": 300,
+                "maxCost": 500
+            },
+            {
+                "name": "Stuttgard",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Lubeck",
+                "minCost": 300,
+                "maxCost": 900
+            }
+        ]
+    },
+    {
+        "color": 8274,
+        "cities": [
+            {
+                "name": "Paris",
+                "minCost": 300,
+                "maxCost": 900
+            },
+            {
+                "name": "Lyon",
+                "minCost": 400,
+                "maxCost": 700
+            },
+            {
+                "name": "Marseille",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Bordeaux",
+                "minCost": 600,
+                "maxCost": 800
+            },
+            {
+                "name": "Toulouse",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Orlean",
+                "minCost": 300,
+                "maxCost": 600
+            },
+            {
+                "name": "Nice",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Vendee",
+                "minCost": 700,
+                "maxCost": 800
+            }
+        ]
+    },
+    {
+        "color": 27676,
+        "cities": [
+            {
+                "name": "Rome",
+                "minCost": 800,
+                "maxCost": 1000
+            },
+            {
+                "name": "Naples",
+                "minCost": 300,
+                "maxCost": 600
+            },
+            {
+                "name": "Firenze",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Venice",
+                "minCost": 600,
+                "maxCost": 800
+            },
+            {
+                "name": "Milan",
+                "minCost": 700,
+                "maxCost": 900
+            },
+            {
+                "name": "Genoa",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Turin",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Palermo",
+                "minCost": 300,
+                "maxCost": 600
+            }
+        ]
+    },
+    {
+        "color": 16777152,
+        "cities": [
+            {
+                "name": "Vatican",
+                "minCost": 800,
+                "maxCost": 1000
+            },
+            {
+                "name": "San Marino",
+                "minCost": 600,
+                "maxCost": 800
+            },
+            {
+                "name": "Andora",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Malta",
+                "minCost": 300,
+                "maxCost": 500
+            },
+            {
+                "name": "Monaco",
+                "minCost": 400,
+                "maxCost": 600
+            }
+        ]
+    },
+    {
+        "color": 16753408,
+        "cities": [
+            {
+                "name": "Madrid",
+                "minCost": 700,
+                "maxCost": 900
+            },
+            {
+                "name": "Barcelona",
+                "minCost": 600,
+                "maxCost": 800
+            },
+            {
+                "name": "Sevilla",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Valencia",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Grenada",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Bilbao",
+                "minCost": 300,
+                "maxCost": 500
+            },
+            {
+                "name": "Cordoba",
+                "minCost": 300,
+                "maxCost": 500
+            },
+            {
+                "name": "Malaga",
+                "minCost": 300,
                 "maxCost": 500
             }
         ]
     },
     {
-        "color": 8858201,
+        "color": 18688,
         "cities": [
             {
-                "name": "CB 1",
-                "minCost": 100,
+                "name": "Lisbon",
+                "minCost": 600,
+                "maxCost": 700
+            },
+            {
+                "name": "Porto",
+                "minCost": 400,
+                "maxCost": 700
+            },
+            {
+                "name": "Braga",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Funchal",
+                "minCost": 300,
                 "maxCost": 500
             },
             {
-                "name": "CB 2",
-                "minCost": 100,
-                "maxCost": 500
-            },
-            {
-                "name": "CB 3",
-                "minCost": 100,
-                "maxCost": 500
-            },
-            {
-                "name": "CB 4",
-                "minCost": 100,
+                "name": "Coimbra",
+                "minCost": 300,
                 "maxCost": 500
             }
         ]
     },
     {
-        "color": 8887922,
+        "color": 6750208,
         "cities": [
             {
-                "name": "CC 1",
-                "minCost": 100,
+                "name": "London",
+                "minCost": 500,
+                "maxCost": 800
+            },
+            {
+                "name": "Manchester",
+                "minCost": 300,
+                "maxCost": 600
+            },
+            {
+                "name": "Liverpool",
+                "minCost": 400,
                 "maxCost": 500
             },
             {
-                "name": "CC 2",
-                "minCost": 100,
+                "name": "Edinburg",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Southampton",
+                "minCost": 300,
                 "maxCost": 500
             },
             {
-                "name": "CC 3",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Cardiff",
+                "minCost": 400,
+                "maxCost": 600
             },
             {
-                "name": "CC 4",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Glasgow",
+                "minCost": 500,
+                "maxCost": 600
             }
         ]
     },
     {
-        "color": 5977381,
+        "color": 44251,
         "cities": [
             {
-                "minCost": 100,
-                "name": "CD 1",
-                "maxCost": 500
+                "name": "Zagreb",
+                "minCost": 500,
+                "maxCost": 700
             },
             {
-                "name": "CD 2",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Belgrad",
+                "minCost": 400,
+                "maxCost": 600
             },
             {
-                "name": "CD 3",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Sarajevo",
+                "minCost": 400,
+                "maxCost": 600
             },
             {
-                "name": "CD 4",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Ljubljana",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Podgorica",
+                "minCost": 300,
+                "maxCost": 600
+            },
+            {
+                "name": "Skopje",
+                "minCost": 400,
+                "maxCost": 700
+            },
+            {
+                "name": "Athens",
+                "minCost": 700,
+                "maxCost": 1000
             }
         ]
     },
     {
-        "color": 16158529,
+        "color": 14802645,
         "cities": [
             {
-                "name": "CE 1",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Vienna",
+                "minCost": 700,
+                "maxCost": 1000
             },
             {
-                "name": "CE 2",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Budapest",
+                "minCost": 600,
+                "maxCost": 900
             },
             {
-                "name": "CE 3",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Salzburg",
+                "minCost": 400,
+                "maxCost": 600
             },
             {
-                "name": "CE 4",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Insbruck",
+                "minCost": 500,
+                "maxCost": 700
+            },
+            {
+                "name": "Debrecen",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Szeged",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Gyor",
+                "minCost": 500,
+                "maxCost": 700
             }
         ]
     },
     {
-        "color": 9293458,
+        "color": 4699238,
         "cities": [
             {
-                "name": "CF 1",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Praga",
+                "minCost": 600,
+                "maxCost": 900
             },
             {
-                "name": "CF 2",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Bratislava",
+                "minCost": 500,
+                "maxCost": 800
             },
             {
-                "name": "CF 3",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Ostrava",
+                "minCost": 400,
+                "maxCost": 700
             },
             {
-                "name": "CF 4",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Brno",
+                "minCost": 400,
+                "maxCost": 600
+            },
+            {
+                "name": "Trencin",
+                "minCost": 400,
+                "maxCost": 700
+            },
+            {
+                "name": "Kosice",
+                "minCost": 400,
+                "maxCost": 600
             }
         ]
     },
     {
-        "color": 2244963,
+        "color": 3145776,
         "cities": [
             {
-                "name": "CG 1",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Stockholm",
+                "minCost": 600,
+                "maxCost": 800
             },
             {
-                "name": "CG 2",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Oslo",
+                "minCost": 600,
+                "maxCost": 800
             },
             {
-                "name": "CG 3",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Copenhagen",
+                "minCost": 600,
+                "maxCost": 800
             },
             {
-                "name": "CG 4",
-                "minCost": 100,
-                "maxCost": 500
-            }
-        ]
-    },
-    {
-        "color": 3872536,
-        "cities": [
-            {
-                "name": "CH 1",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Narvik",
+                "minCost": 400,
+                "maxCost": 600
             },
             {
-                "name": "CH 2",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Bilund",
+                "minCost": 400,
+                "maxCost": 800
             },
             {
-                "name": "CH 3",
-                "minCost": 100,
-                "maxCost": 500
-            },
-            {
-                "name": "CH 4",
-                "minCost": 100,
-                "maxCost": 500
+                "name": "Malmo",
+                "minCost": 400,
+                "maxCost": 600
             }
         ]
     }

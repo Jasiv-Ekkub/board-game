@@ -8,8 +8,8 @@
 #include <player.h>
 #include <timer.h>
 
-#define MAX_FIELD_COUNT 44
-#define MIN_FIELD_COUNT 28 
+#define MAX_FIELD_COUNT 40
+#define MIN_FIELD_COUNT 24 
 #define MAX_PLAYER_COUNT 4
 #define MAX_POPUP_COUNT 16
 #define MAX_POPUP_LENGTH 128
