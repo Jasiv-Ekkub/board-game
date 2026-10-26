@@ -1,0 +1,202 @@
+[
+    {
+        "color": 5888201,
+        "cities": [
+            {
+                "name": "CA 1",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CA 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CA 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CA 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    },
+    {
+        "color": 8858201,
+        "cities": [
+            {
+                "name": "CB 1",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CB 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CB 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CB 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    },
+    {
+        "color": 8887922,
+        "cities": [
+            {
+                "name": "CC 1",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CC 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CC 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CC 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    },
+    {
+        "color": 5977381,
+        "cities": [
+            {
+                "minCost": 100,
+                "name": "CD 1",
+                "maxCost": 500
+            },
+            {
+                "name": "CD 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CD 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CD 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    },
+    {
+        "color": 16158529,
+        "cities": [
+            {
+                "name": "CE 1",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CE 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CE 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CE 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    },
+    {
+        "color": 9293458,
+        "cities": [
+            {
+                "name": "CF 1",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CF 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CF 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CF 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    },
+    {
+        "color": 2244963,
+        "cities": [
+            {
+                "name": "CG 1",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CG 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CG 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CG 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    },
+    {
+        "color": 3872536,
+        "cities": [
+            {
+                "name": "CH 1",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CH 2",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CH 3",
+                "minCost": 100,
+                "maxCost": 500
+            },
+            {
+                "name": "CH 4",
+                "minCost": 100,
+                "maxCost": 500
+            }
+        ]
+    }
+]

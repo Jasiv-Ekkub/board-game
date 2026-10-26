@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <animator.h>
 
-#define GAME_NAME "Buissnessland"
+#define GAME_NAME "Buisnessland"
 
 Color backgroundColor;
 Color textColorNormal;

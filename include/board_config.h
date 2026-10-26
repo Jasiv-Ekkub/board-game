@@ -3,28 +3,33 @@
 
 #include <field.h>
 
-#define MAX_GROUP_DATA_LENGTH 16
-#define MAX_GROUP_DATA_COUNT 16
+#define MAX_CITY_COUNT 16
+#define MIN_CITY_COUNT 4
 
-typedef struct FieldData
+#define MAX_GROUP_COUNT 16
+#define MIN_GROUP_COUNT 8
+
+typedef struct City
 {
     char name[FIELD_TEXT_LENGTH];
     int minCost;
     int maxCost;
-} FieldData;
+} City;
 
-typedef struct GroupData
+typedef struct Group
 {
     Color color;
-    int fieldDataCount;
-    FieldData fieldDatas[MAX_GROUP_DATA_LENGTH];
-} GroupData;
+    int cityCount;
+    City cities[MAX_CITY_COUNT];
+} Group;
 
 typedef struct BoardConfig
 {
-    int groupDataCount;
-    GroupData groupDatas[MAX_GROUP_DATA_COUNT];
+    int groupCount;
+    Group groups[MAX_GROUP_COUNT];
 } BoardConfig;
+
+void PrintConfig(BoardConfig config);
 
 BoardConfig GetBoardConfig();
 

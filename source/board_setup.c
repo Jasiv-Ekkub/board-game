@@ -64,17 +64,18 @@ void PoliceAction(Board* board)
 void LoadFields(Board* board)
 {
     const BoardConfig config = GetBoardConfig();
+    PrintConfig(config);
 
-    int groupDataIds[8] = {};
-    int fieldDataIds[8][4] = {};
+    int groupIds[8] = {};
+    int cityIds[8][4] = {};
     
     for(int i=0; i<8;)
     {
-        int id = rand()%config.groupDataCount;
+        int id = rand()%config.groupCount;
         bool reroll = false;
         for(int j=0; j<i; ++j)
         {
-            if(groupDataIds[j] == id)
+            if(groupIds[j] == id)
             {
                 reroll = true;
                 break;
@@ -82,16 +83,16 @@ void LoadFields(Board* board)
         }
         if(reroll) continue;
 
-        groupDataIds[i] = id;
-        const GroupData groupData = config.groupDatas[id];
+        groupIds[i] = id;
+        const Group group = config.groups[id];
 
         for(int j=0; j<4;)
         {
-            int id2 = rand()%groupData.fieldDataCount;
+            int id2 = rand()%group.cityCount;
             bool reroll2 = false;
             for(int k=0; k<j; ++k)
             {
-                if(fieldDataIds[i][k] == id2)
+                if(cityIds[i][k] == id2)
                 {
                     reroll2 = true;
                     break;
@@ -99,7 +100,7 @@ void LoadFields(Board* board)
             }
             if(reroll2) continue;
 
-            fieldDataIds[i][j] = id2;
+            cityIds[i][j] = id2;
             j++;
         }
         i++;
@@ -147,16 +148,23 @@ void LoadFields(Board* board)
 		}
 		else
 		{
-            const GroupData groupData = config.groupDatas[groupDataIds[outerCounter]];
-            const FieldData fieldData = groupData.fieldDatas[fieldDataIds[outerCounter][innerCounter]];
+            const Group group = config.groups[groupIds[outerCounter]];
+            const City city = group.cities[cityIds[outerCounter][innerCounter]];
 
-            const int q = fieldData.minCost, p = fieldData.maxCost - q;  
+            int q = city.minCost, p = city.maxCost;
+            if(p < q)
+            {
+                int tmp = p;
+                p = q;
+                q = tmp;
+            }
+            p -= q - 1;
 
 			board->fields[i] = GetPropertyField(
-				fieldData.name,
+				city.name,
 				rand() % p + q, 
 				outerCounter,
-				groupData.color
+				group.color
 			);
             innerCounter++;
 		}
