@@ -19,4 +19,4 @@ buisnessland: $(SRC_FILES) $(INC_FILES)
 	gcc -o $@ $(SRC_FILES) -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -I $(INC_PATH) -Wall -Werror -Wno-unused-function
 
 ship-linux: buisnessland
-	zip -r Buisnessland-Linux.zip ./resource ./buisnessland
+	zip -r Buisnessland-Linux.zip ./resource ./buisnessland ./config.json
