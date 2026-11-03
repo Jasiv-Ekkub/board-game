@@ -3,6 +3,6 @@
 
 #include <board.h>
 
-void ChanceAction(Board* board);
+void ChanceAction();
 
 #endif //CHANCE_ACTION_H

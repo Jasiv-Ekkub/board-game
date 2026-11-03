@@ -13,6 +13,9 @@
 #define MAX_PLAYER_COUNT 4
 #define MAX_POPUP_COUNT 16
 #define MAX_POPUP_LENGTH 128
+#define MAX_START_MONEY 10000
+#define MIN_START_MONEY 1000
+#define START_MONEY_STEP 500
 
 typedef enum BoardPhase
 {
@@ -30,8 +33,6 @@ typedef enum BoardPhase
 	SHOW_WINNER,
 	END_GAME,
 } BoardPhase;
-
-extern const char* boardPhaseNames[];
 
 typedef struct Board
 {
@@ -71,10 +72,12 @@ typedef struct Board
 	Timer popupTimer;
 } Board;
 
-Board GetBoard();
-void SetupBoard(Board* board, int size, int humanCount, int botCount);
-void UpdateBoard(Board* board);
-bool HasGameEndedBoard(Board board);
-void AddPopupBoard(Board* board, const char* popup);
+extern Board board;
+
+void InitializeBoard();
+void SetupBoard(int size, int humanCount, int botCount, int startMoney);
+void UpdateBoard();
+bool HasGameEndedBoard();
+void AddPopupBoard(const char* popup);
 
 #endif //BOARD_H

@@ -7,7 +7,7 @@
 Image LoadImageDefault();
 Texture2D LoadTextureDefault();
 Texture2D LoadTextureDice();
-void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id);
-void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id);
+void DrawBoardCorner(Image* image, Rectangle rectangle, int id);
+void DrawBoardEdge(Image* image, Rectangle rectangle, int id);
 
 #endif //BOARD_RENDERING_H

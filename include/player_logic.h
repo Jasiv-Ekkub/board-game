@@ -5,6 +5,6 @@
 #include <game_context.h>
 #include <player.h>
 
-bool GetPlayerResponse(Board* board);
+bool GetPlayerResponse();
 
 #endif //PLAYER_LOGIC_H

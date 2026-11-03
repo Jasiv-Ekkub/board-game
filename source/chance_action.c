@@ -4,60 +4,60 @@
 
 #define CARDS_COUNT 5
 
-void FoundMoney(Board* board)
+void FoundMoney()
 {
-	Player* player = &board->players[board->currentPlayer];
+	Player* player = &board.players[board.currentPlayer];
 
     int amount = (rand()%19) * 50 + 100;
 	player->money += amount;
 
     char buffer[MAX_POPUP_LENGTH];
     snprintf(buffer, MAX_POPUP_LENGTH, "Player found $%i on a street", amount);
-	AddPopupBoard(board, buffer);
+	AddPopupBoard(buffer);
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
-void LostMoney(Board* board)
+void LostMoney()
 {
-	Player* player = &board->players[board->currentPlayer];
+	Player* player = &board.players[board.currentPlayer];
 
     int amount = (rand()%19) * 50 + 100;
 	player->money -= amount;
 
     char buffer[MAX_POPUP_LENGTH];
     snprintf(buffer, MAX_POPUP_LENGTH, "Player lost $%i on a street", amount);
-	AddPopupBoard(board, buffer);
+	AddPopupBoard(buffer);
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
-void LostLicence(Board* board)
+void LostLicence()
 {
-	Player* player = &board->players[board->currentPlayer];
+	Player* player = &board.players[board.currentPlayer];
 	
     int amount = rand()%3 + 1;
     player->turnSkips = amount;
 
     char buffer[MAX_POPUP_LENGTH];
     snprintf(buffer, MAX_POPUP_LENGTH, "Player lost their driving licence\nThey will be unable to move for %i rounds", amount);
-	AddPopupBoard(board, buffer);
+	AddPopupBoard(buffer);
 }
 
-void RollDiceAgain(Board* board)
+void RollDiceAgain()
 {
-	board->phase = START_ROUND;
-	AddPopupBoard(board, "Player roll dice again");
+	board.phase = START_ROUND;
+	AddPopupBoard("Player roll dice again");
 }
 
-void MoveForward(Board* board)
+void MoveForward()
 {
-    board->phase = MOVE_PLAYER;
+    board.phase = MOVE_PLAYER;
     
     int amount = rand()%3 + 1;
-    board->currentDiceroll = amount;
+    board.currentDiceroll = amount;
 
     char buffer[MAX_POPUP_LENGTH];
     snprintf(buffer, MAX_POPUP_LENGTH, "Player moves %i fields forward", amount);
-	AddPopupBoard(board, buffer);
+	AddPopupBoard(buffer);
 }
 
 FieldAction cards[CARDS_COUNT] = {
@@ -68,8 +68,8 @@ FieldAction cards[CARDS_COUNT] = {
 	RollDiceAgain
 };
 
-void ChanceAction(Board* board)
+void ChanceAction()
 {
-	cards[rand()%CARDS_COUNT](board);
-	AddPopupBoard(board, "Chance - draw a card");
+	cards[rand()%CARDS_COUNT]();
+	AddPopupBoard("Chance - draw a card");
 }

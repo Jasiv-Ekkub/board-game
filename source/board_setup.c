@@ -5,63 +5,63 @@
 #include <stdlib.h>
 #include <chance_action.h>
 
-void StartSuperaction(Board* board)
+void StartSuperaction()
 {
-	Player* player = &board->players[board->currentPlayer];
+	Player* player = &board.players[board.currentPlayer];
 
-	player->money += 500;
-	AddPopupBoard(board, "Earned $500 for walking\nthrough start");
+	player->money += 1000;
+	AddPopupBoard("Earned $1000 for walking\nthrough start");
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
-void TaxationAction(Board* board)
+void TaxationAction()
 {
-	Player* player = &board->players[board->currentPlayer];
+	Player* player = &board.players[board.currentPlayer];
 
 	int money = player->money;
 	player->money = money * 4 / 5;
 
 	char buffer[MAX_POPUP_LENGTH];
 	snprintf(buffer, MAX_POPUP_LENGTH, "Player paid $%i in tax", money - player->money);
-	AddPopupBoard(board, buffer);
+	AddPopupBoard(buffer);
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
-void LotteryAction(Board* board)
+void LotteryAction()
 {
 	int funds = 0;
-	for(int i=0; i<board->playerCount; ++i)
+	for(int i=0; i<board.playerCount; ++i)
 	{
-		if(board->players[i].money < 0) continue;
-		int tmp = board->players[i].money / 10;
+		if(board.players[i].money < 0) continue;
+		int tmp = board.players[i].money / 10;
 		funds += tmp;
-		board->players[i].money -= tmp;
+		board.players[i].money -= tmp;
 	}
 	int winner = 0;
 	do
 	{
-		winner = rand() % board->playerCount;
+		winner = rand() % board.playerCount;
 	}
-	while(board->players[winner].money < 0);
-	board->players[winner].money += funds;
+	while(board.players[winner].money < 0);
+	board.players[winner].money += funds;
 
 	char buffer[MAX_POPUP_LENGTH];
-	snprintf(buffer, MAX_POPUP_LENGTH, "%s wins $%i", board->players[winner].name, funds);
-	AddPopupBoard(board, buffer);
+	snprintf(buffer, MAX_POPUP_LENGTH, "%s wins $%i", board.players[winner].name, funds);
+	AddPopupBoard(buffer);
 
-	AddPopupBoard(board, "Lottery - everybody gives 10\% as a bet");
+	AddPopupBoard("Lottery - everybody gives 10\% as a bet");
 	PlaySound(sounds[KA_CHING_SOUND]);
 }
 
-void PoliceAction(Board* board)
+void PoliceAction()
 {
-	Player* player = &board->players[board->currentPlayer];
+	Player* player = &board.players[board.currentPlayer];
 
 	player->turnSkips += 2;
-	AddPopupBoard(board, "Player got sentenced\nto two turn skips");
+	AddPopupBoard("Player got sentenced\nto two turn skips");
 }
  
-void LoadFields(Board* board)
+void LoadFields()
 {
     const BoardConfig config = GetBoardConfig();
     PrintConfig(config);
@@ -109,8 +109,8 @@ void LoadFields(Board* board)
     int innerCounter = 0;
     int outerCounter = -1;
 
-	int quarter = board->fieldCount/4;
-	for(int i=0; i<board->fieldCount; ++i)
+	int quarter = board.fieldCount/4;
+	for(int i=0; i<board.fieldCount; ++i)
 	{
         if(innerCounter > 4) innerCounter = 4;
         if(outerCounter > 8) outerCounter = 8;
@@ -121,19 +121,19 @@ void LoadFields(Board* board)
 			switch(i/quarter)
 			{
 				case 0:
-					board->fields[i] = GetSuperactionField("Start", "Get salary", StartSuperaction, START_IMAGE);
+					board.fields[i] = GetSuperactionField("Start", "Get salary", StartSuperaction, START_IMAGE);
 					break;
 				
 				case 1:
-					board->fields[i] = GetActionField("Taxation", "Pay tax", TaxationAction, TAXATION_IMAGE);
+					board.fields[i] = GetActionField("Taxation", "Pay tax", TaxationAction, TAXATION_IMAGE);
 					break;
 				
 				case 2:
-					board->fields[i] = GetActionField("Lottery", "Chance for win", LotteryAction, LOTTERY_IMAGE);
+					board.fields[i] = GetActionField("Lottery", "Chance for win", LotteryAction, LOTTERY_IMAGE);
 					break;
 
 				default:
-					board->fields[i] = GetActionField("Police", "Get arrested", PoliceAction, POLICEMAN_IMAGE);
+					board.fields[i] = GetActionField("Police", "Get arrested", PoliceAction, POLICEMAN_IMAGE);
 					break;
 			}
             outerCounter++;
@@ -141,7 +141,7 @@ void LoadFields(Board* board)
 		}
 		else if(qi == quarter/2)
 		{
-			board->fields[i] = GetActionField("Chance", "Draw a card", ChanceAction, CHANCE_IMAGE);
+			board.fields[i] = GetActionField("Chance", "Draw a card", ChanceAction, CHANCE_IMAGE);
 
             outerCounter++;
             innerCounter = 0;
@@ -160,7 +160,7 @@ void LoadFields(Board* board)
             }
             p -= q - 1;
 
-			board->fields[i] = GetPropertyField(
+			board.fields[i] = GetPropertyField(
 				city.name,
 				rand() % p + q, 
 				outerCounter,
@@ -178,9 +178,9 @@ static const Color playerColors[MAX_PLAYER_COUNT] = {
 	(Color){ 0x00, 0x00, 0xaf, 0xff },
 };
 
-void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
+void LoadPlayers(int startMoney, int humanCount, int botCount)
 {
-	board->playerCount = humanCount + botCount;
+	board.playerCount = humanCount + botCount;
 
 	char buffer[PLAYER_NAME_LENGTH];
 	for(int i=0; i<MAX_PLAYER_COUNT; ++i)
@@ -188,61 +188,61 @@ void LoadPlayers(Board* board, int startMoney, int humanCount, int botCount)
 		if(i < humanCount)
 		{
 			snprintf(buffer, PLAYER_NAME_LENGTH, "Player %c", i+'A');
-			board->players[i] = GetHumanPlayer(buffer, playerColors[i], startMoney);
+			board.players[i] = GetHumanPlayer(buffer, playerColors[i], startMoney);
 		}
 		else if(i - humanCount < botCount)
 		{
 			snprintf(buffer, PLAYER_NAME_LENGTH, "Bot %c", i+'A'-humanCount);
-			board->players[i] = GetBotPlayer(buffer, playerColors[i], startMoney);
+			board.players[i] = GetBotPlayer(buffer, playerColors[i], startMoney);
 		}
 		else
 		{
-			board->players[i] = GetBotPlayer("No player", GRAY, 0);
+			board.players[i] = GetBotPlayer("No player", GRAY, 0);
 		}
 	}
-	board->currentPlayer = 0;
-	board->winnerId = -1;
+	board.currentPlayer = 0;
+	board.winnerId = -1;
 }
 
-void GenerateBoardTexture(Board* board)
+void GenerateBoardTexture()
 {
-	BoardLayout layout = board->layout;
-	int quarter = board->fieldCount/4;
+	BoardLayout layout = board.layout;
+	int quarter = board.fieldCount/4;
 
 	float cornerOffset = layout.fieldHeight + layout.borderWidth * 2;
 	float edgeOffset = layout.fieldWidth + layout.borderWidth;
 
 	float sideOffset = cornerOffset + edgeOffset * (float)(quarter-1) - layout.borderWidth;
 	float boardSize = sideOffset + cornerOffset;
-	board->layout.boardSize = boardSize;
-	board->layout.modelScale = layout.modelScaleMultiplier * layout.dividerOffset / boardSize;
+	board.layout.boardSize = boardSize;
+	board.layout.modelScale = layout.modelScaleMultiplier * layout.dividerOffset / boardSize;
 	
-	Image image = GenImageColor((int)boardSize, (int)boardSize, board->colors.dark);
-	ImageDrawRectangleRec(&image, (Rectangle){cornerOffset, cornerOffset, sideOffset-cornerOffset, sideOffset-cornerOffset}, board->colors.light);
+	Image image = GenImageColor((int)boardSize, (int)boardSize, board.colors.dark);
+	ImageDrawRectangleRec(&image, (Rectangle){cornerOffset, cornerOffset, sideOffset-cornerOffset, sideOffset-cornerOffset}, board.colors.light);
 
 	//Down
-	DrawBoardCorner(&image, *board, (Rectangle){
+	DrawBoardCorner(&image, (Rectangle){
 		layout.borderWidth,
 		layout.borderWidth + sideOffset,
 		layout.fieldHeight,
 		layout.fieldHeight,
 		}, 0);
 	//Left
-	DrawBoardCorner(&image, *board, (Rectangle){
+	DrawBoardCorner(&image, (Rectangle){
 		layout.borderWidth,
 		layout.borderWidth,
 		layout.fieldHeight,
 		layout.fieldHeight,
 		}, quarter);
 	//Up
-	DrawBoardCorner(&image, *board, (Rectangle){
+	DrawBoardCorner(&image, (Rectangle){
 		layout.borderWidth + sideOffset,
 		layout.borderWidth,
 		layout.fieldHeight,
 		layout.fieldHeight,
 		}, quarter * 2);
 	//Right
-	DrawBoardCorner(&image, *board, (Rectangle){
+	DrawBoardCorner(&image, (Rectangle){
 		layout.borderWidth + sideOffset,
 		layout.borderWidth + sideOffset,
 		layout.fieldHeight,
@@ -251,14 +251,14 @@ void GenerateBoardTexture(Board* board)
 
 	for(int i=1; i<quarter; ++i)
 	{
-		DrawBoardEdge(&image, *board, (Rectangle){
+		DrawBoardEdge(&image, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
 			layout.borderWidth,
 			layout.fieldWidth,
 			layout.fieldHeight,
 			}, quarter + i);
 		
-		DrawBoardEdge(&image, *board, (Rectangle){
+		DrawBoardEdge(&image, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
 			layout.borderWidth + sideOffset,
 			layout.fieldWidth,
@@ -268,14 +268,14 @@ void GenerateBoardTexture(Board* board)
 	ImageRotateCCW(&image);
 	for(int i=1; i<quarter; ++i)
 	{
-		DrawBoardEdge(&image, *board, (Rectangle){
+		DrawBoardEdge(&image, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
 			layout.borderWidth,
 			layout.fieldWidth,
 			layout.fieldHeight,
 			}, 2*quarter + i);
 		
-		DrawBoardEdge(&image, *board, (Rectangle){
+		DrawBoardEdge(&image, (Rectangle){
 			cornerOffset + (float)(i-1) * edgeOffset,
 			layout.borderWidth + sideOffset,
 			layout.fieldWidth,

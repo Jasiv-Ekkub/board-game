@@ -86,7 +86,7 @@ void ImageDrawTextSpec(Image* image, Font font, const char* text, Vector2 positi
 
 
 
-void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
+void DrawBoardCorner(Image* image, Rectangle rectangle, int id)
 {
 	Field field = board.fields[id];
 	BoardLayout layout = board.layout;
@@ -168,7 +168,7 @@ void DrawBoardCorner(Image* image, Board board, Rectangle rectangle, int id)
 	);
 }
 
-void DrawBoardEdge(Image* image, Board board, Rectangle rectangle, int id)
+void DrawBoardEdge(Image* image, Rectangle rectangle, int id)
 {
 	Field field = board.fields[id];
 	BoardLayout layout = board.layout;

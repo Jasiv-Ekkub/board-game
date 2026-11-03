@@ -23,7 +23,6 @@ static const bool showOptionsButton[] = {
 	[EXIT_SCREEN] = false,
 };
 bool shouldClose = false;
-Board board;
 
 Timer timer;
 
@@ -42,7 +41,7 @@ int main()
 	
 	timer = Timer_Get();
 
-	board = GetBoard();
+	InitializeBoard();
 
 	backgroundColor = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 	textColorNormal = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL));
@@ -95,7 +94,7 @@ int main()
 					}
 
 					static int guiScale = 0;
-					if(GuiSpinnerSfx(GetRectanglePlacement(60, 80, 480, 70, CENTER, CENTER), "Gui scale ", &guiScale, 0, 10))
+					if(GuiSpinnerSfx(GetRectanglePlacement(60, 80, 480, 70, CENTER, CENTER), "Gui scale ", &guiScale, 0, 5))
 					{
 						SetGuiScale((float)guiScale / 20 + 0.75);
 					}
@@ -152,6 +151,7 @@ void HandleMainMenu()
 	static int boardSize = MIN_FIELD_COUNT;
 	static int playerCount = 1;
 	static int botCount = 1;
+	static int startMoney = MIN_START_MONEY;
 
 	DrawTextPro(
 		font,
@@ -163,7 +163,7 @@ void HandleMainMenu()
 	);
 	if(GuiButtonSfx(GetRectanglePlacement(-310,0,300,100,CENTER,CENTER), "PLAY"))
 	{
-		SetupBoard(&board, boardSize, playerCount, botCount);
+		SetupBoard(boardSize, playerCount, botCount, startMoney);
 		phase = BOARD;
 	}
 	if(GuiButtonSfx(GetRectanglePlacement(0,0,300,100,CENTER,CENTER), "HOW TO PLAY"))
@@ -197,6 +197,20 @@ void HandleMainMenu()
 	{
 		if(botCount == 0 && playerCount < 2) playerCount = 2;
 		else if(playerCount + botCount > 4) playerCount = 4 - botCount;
+	}
+	if(GuiSpinnerSfx(GetRectanglePlacement(0,335,500,70,CENTER,CENTER), "Start money ", &startMoney, MIN_START_MONEY, MAX_START_MONEY))
+	{
+		switch(startMoney % START_MONEY_STEP)
+		{
+			case 1:
+				startMoney += START_MONEY_STEP - 1;
+				break;
+			case START_MONEY_STEP - 1:
+				startMoney -= START_MONEY_STEP - 1;
+				break;
+			default:
+				break;
+		}
 	}
 }
 

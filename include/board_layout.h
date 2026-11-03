@@ -35,8 +35,8 @@ typedef struct BoardLayout
 } BoardLayout;
 
 BoardLayout GetBoardLayout();
-Vector3 CalculatePlayerPosition(Board board, int playerId, int playerPosition);
-Vector3 CalculateHousePosition(Board board, int fieldId);
-float GetModelScale(Board board);
+Vector3 CalculatePlayerPosition(int playerId, int playerPosition);
+Vector3 CalculateHousePosition(int fieldId);
+float GetModelScale();
 
 #endif //BOARD_LAYOUT_H

@@ -8,13 +8,11 @@
 #define FIELD_TEXT_LENGTH 32
 #define MAX_BUILDING_LEVEL 4
 
-typedef struct Board Board;
-
 typedef enum FieldType { PROPERTY, ACTION, SUPERACTION} FieldType;
 
 extern const char* buildingLevelNames[MAX_BUILDING_LEVEL];
 
-typedef void(*FieldAction)(Board*);
+typedef void(*FieldAction)();
 
 typedef struct Field
 {

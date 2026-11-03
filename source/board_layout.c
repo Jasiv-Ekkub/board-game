@@ -29,7 +29,7 @@ BoardLayout GetBoardLayout()
 	return layout;
 }
 
-Vector2 CalculateFieldCenter(Board board, int fieldNumber)
+Vector2 CalculateFieldCenter(int fieldNumber)
 {
 	BoardLayout layout = board.layout;
 	int quarter = board.fieldCount/4;
@@ -107,11 +107,11 @@ Vector2 CalculateFieldCenter(Board board, int fieldNumber)
 	return position;
 }
 
-Vector3 CalculatePlayerPosition(Board board, int playerId, int playerPosition)
+Vector3 CalculatePlayerPosition(int playerId, int playerPosition)
 {
 	float pawnOffset = board.layout.pawnOffset;
 
-	Vector2 pixelPosition = CalculateFieldCenter(board, playerPosition);
+	Vector2 pixelPosition = CalculateFieldCenter(playerPosition);
 	
 	pixelPosition.x += (playerId&1 ? pawnOffset : -pawnOffset);
 	pixelPosition.y += (playerId&2 ? pawnOffset : -pawnOffset);
@@ -123,14 +123,14 @@ Vector3 CalculatePlayerPosition(Board board, int playerId, int playerPosition)
 	};
 }
 
-Vector3 CalculateHousePosition(Board board, int fieldId)
+Vector3 CalculateHousePosition(int fieldId)
 {
 	int half = board.fieldCount/2;
 	int quarter = half/2;
 
 	BoardLayout layout = board.layout;
 
-	Vector2 pixelPosition = CalculateFieldCenter(board, fieldId);
+	Vector2 pixelPosition = CalculateFieldCenter(fieldId);
 
 	if(fieldId%quarter == 0)
 	{

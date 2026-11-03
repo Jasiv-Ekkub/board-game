@@ -5,19 +5,18 @@
 #include <stdio.h>
 #include <helpers.h>
 
-bool GetHumanPlayerResponse(Board* board);
-bool GetBotPlayerResponse(Board* board);
+bool GetHumanPlayerResponse();
+bool GetBotPlayerResponse();
 
-bool GetPlayerResponse(Board* board)
+bool GetPlayerResponse()
 {
-	Player player = board->players[board->currentPlayer];
-	switch(player.type)
+	switch(board.players[board.currentPlayer].type)
 	{
 		case HUMAN:
-			return GetHumanPlayerResponse(board);
+			return GetHumanPlayerResponse();
 
 		case BOT:
-			return GetBotPlayerResponse(board);
+			return GetBotPlayerResponse();
 		
 		default:
 		 	return false;
@@ -26,16 +25,16 @@ bool GetPlayerResponse(Board* board)
 
 #define TEXT_BUFFER_SIZE 128
 
-bool GetHumanPlayerResponse(Board* board)
+bool GetHumanPlayerResponse()
 {
-	Player player = board->players[board->currentPlayer];
-	Field field = board->fields[player.position];
+	Player player = board.players[board.currentPlayer];
+	Field field = board.fields[player.position];
 
 	Rectangle messageBounds = GetRectanglePlacement(0,0, 600, 300, CENTER, CENTER);
 	char buffer[TEXT_BUFFER_SIZE];
 	char *options;
 	
-	switch(board->phase)
+	switch(board.phase)
 	{
 		case ROLL_DICE:
 			snprintf(buffer, TEXT_BUFFER_SIZE, "Roll dice");
@@ -63,48 +62,48 @@ bool GetHumanPlayerResponse(Board* board)
 	switch(response)
 	{
 		case 1:
-			board->currentPlayerResponse = POSITIVE;
+			board.currentPlayerResponse = POSITIVE;
 			return true;
 		case 0:
 		case 2:
-			board->currentPlayerResponse = NEGATIVE;
+			board.currentPlayerResponse = NEGATIVE;
 			return true;
 		default:
-			board->currentPlayerResponse = NONE;
+			board.currentPlayerResponse = NONE;
 			return false;
 	}
 }
 
-bool GetBotPlayerResponse(Board* board)
+bool GetBotPlayerResponse()
 {
-	Timer* timer = &board->players[board->currentPlayer].timer;
+	Timer* timer = &board.players[board.currentPlayer].timer;
 	if(Timer_HasEnded(*timer)) Timer_Set(timer, 1);
 	Timer_Update(timer);
 	if(!Timer_HasEnded(*timer))
 	{
-		board->currentPlayerResponse = NONE;
+		board.currentPlayerResponse = NONE;
 		return false;
 	}
 	
-	Player* player = &board->players[board->currentPlayer];
-	Field field = board->fields[player->position];
+	Player* player = &board.players[board.currentPlayer];
+	Field field = board.fields[player->position];
 
 	int fieldsInGroup = 0;
 	int fieldsOwnedInGroup = 0;
-	for(int i=0; i<board->fieldCount; ++i)
+	for(int i=0; i<board.fieldCount; ++i)
 	{
-		Field other = board->fields[i];
+		Field other = board.fields[i];
 		if(other.type == PROPERTY && other.groupId == field.groupId)
 		{
 			fieldsInGroup++;
-			if(other.ownerId == board->currentPlayer)
+			if(other.ownerId == board.currentPlayer)
 				fieldsOwnedInGroup++;
 		}
 	}
 
 	float likelihood = 0;
 	float costRatio = 0;
-	switch(board->phase)
+	switch(board.phase)
 	{
 		case ROLL_DICE:
 			return true;
@@ -125,8 +124,8 @@ bool GetBotPlayerResponse(Board* board)
 			break;
 	}
 
-	if(likelihood >= GetRandomFloat(0, 1)) board->currentPlayerResponse = POSITIVE;
-	else board->currentPlayerResponse = NEGATIVE;
+	if(likelihood >= GetRandomFloat(0, 1)) board.currentPlayerResponse = POSITIVE;
+	else board.currentPlayerResponse = NEGATIVE;
 
 	return true;
 }
