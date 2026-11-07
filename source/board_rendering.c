@@ -92,7 +92,7 @@ void DrawBoardCorner(Image* image, Rectangle rectangle, int id)
 	BoardLayout layout = board.layout;
 
 	char commentBuffer[FIELD_TEXT_LENGTH];
-	int commentOffset;
+	int commentOffset = 0;
 	switch(field.type)
 	{
 		case PROPERTY:
