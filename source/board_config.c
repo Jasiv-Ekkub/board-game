@@ -220,7 +220,7 @@ int GetGroupInfo(Group* group, json_value* json)
     }
     if(flags != 3)
     {
-        TraceLog(LOG_WARNING, "Couldn't all necessary group data");
+        TraceLog(LOG_WARNING, "Couldn't load all necessary group data");
         return 1;
     }
     return 0;
